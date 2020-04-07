@@ -1,0 +1,73 @@
+{
+  "name": "@adv-ui/boros-tcf",
+  "version": "0.0.1",
+  "description": "Adevinta GDPR - Transparency and Consent Framework - API",
+  "main": "dist",
+  "scripts": {
+    "clean": "rm -Rf dist",
+    "phoenix": "rm -Rf node_modules && rm -Rf package-lock.json && npm i",
+    "prepack": "npm run clean && npm run build",
+    "test": "mocha --recursive --require @babel/register \"src/test/**/*Test.js\"",
+    "coverage": "nyc --reporter=html --exclude=\"src/test\" npm run test",
+    "coverage:ci": "nyc --reporter=cobertura --exclude=\"src/test\" npm run test && codecov",
+    "lint": "sui-lint js",
+    "check": "npm run lint && npm run test",
+    "build": "npm run clean && babel src/main --out-dir dist",
+    "start": "webpack-dev-server --config src/build/webpack.config.js",
+    "versiona": "node versiona.js"
+  },
+  "repository": "github:scm-spain/boros-tcf",
+  "bugs": "https://github.com/scm-spain/boros-tcf/issues",
+  "keywords": [
+    "ads",
+    "advertising",
+    "schibsted",
+    "adevinta",
+    "gdpr",
+    "cmp",
+    "tcf",
+    "tcfv2",
+    "consent-string",
+    "iab",
+    "boros"
+  ],
+  "author": "One Punch Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "7.8.0",
+    "@babel/core": "7.8.0",
+    "@babel/plugin-transform-modules-commonjs": "7.8.0",
+    "@babel/register": "7.8.0",
+    "@babel/runtime": "7.8.0",
+    "@s-ui/lint": "3",
+    "babel-loader": "8.0.6",
+    "babel-preset-sui": "3",
+    "chai": "4.2.0",
+    "clean-webpack-plugin": "3.0.0",
+    "codecov": "3.6.1",
+    "html-webpack-plugin": "4.0.4",
+    "mocha": "5.2.0",
+    "nyc": "15.0.0",
+    "versiona": "4",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "3.10.3"
+  },
+  "babel": {
+    "presets": [
+      "sui"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-modules-commonjs"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "./node_modules/@s-ui/lint/eslintrc.js"
+    ]
+  },
+  "prettier": "./node_modules/@s-ui/lint/.prettierrc.js",
+  "stylelint": {
+    "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
+  }
+}

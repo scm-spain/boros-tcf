@@ -1,0 +1,10 @@
+src
+coverage
+.travis.yml
+.idea
+.eslintignore
+.github
+resources
+package
+*.tgz
+versiona.js
