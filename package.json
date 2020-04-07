@@ -44,7 +44,7 @@
     "babel-preset-sui": "3",
     "chai": "4.2.0",
     "clean-webpack-plugin": "3.0.0",
-    "codecov": "3.6.1",
+    "codecov": "3.6.5",
     "html-webpack-plugin": "4.0.4",
     "mocha": "5.2.0",
     "nyc": "15.0.0",
