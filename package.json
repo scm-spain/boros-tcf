@@ -7,7 +7,7 @@
     "clean": "rm -Rf dist",
     "phoenix": "rm -Rf node_modules && rm -Rf package-lock.json && npm i",
     "prepack": "npm run clean && npm run build",
-    "test": "mocha --recursive --require @babel/register \"src/test/**/*Test.js\"",
+    "test": "sui-test server --pattern \"src/test/**/*Test.js\"",
     "coverage": "nyc --reporter=html --exclude=\"src/test\" npm run test",
     "coverage:ci": "nyc --reporter=cobertura --exclude=\"src/test\" npm run test && codecov",
     "lint": "sui-lint js",
@@ -40,12 +40,15 @@
     "@babel/register": "7.8.0",
     "@babel/runtime": "7.8.0",
     "@s-ui/lint": "3",
+    "@s-ui/test": "2",
     "babel-loader": "8.0.6",
     "babel-preset-sui": "3",
     "chai": "4.2.0",
     "clean-webpack-plugin": "3.0.0",
     "codecov": "3.6.5",
     "html-webpack-plugin": "4.0.4",
+    "jsdom": "16.2.2",
+    "jsdom-global": "3.0.2",
     "mocha": "5.2.0",
     "nyc": "15.0.0",
     "versiona": "4",
@@ -69,5 +72,8 @@
   "prettier": "./node_modules/@s-ui/lint/.prettierrc.js",
   "stylelint": {
     "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
+  },
+  "dependencies": {
+    "brusc": "1"
   }
 }
