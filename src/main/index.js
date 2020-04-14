@@ -1,4 +1,3 @@
-const BorosTcfApi = {}
-const BorosTcfStub = {}
+import {TcfApiInitializer} from './infrastructure/bootstrap/TcfApiInitializer'
 
-export {BorosTcfApi, BorosTcfStub}
+export default TcfApiInitializer
