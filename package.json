@@ -7,7 +7,7 @@
     "clean": "rm -Rf dist",
     "phoenix": "rm -Rf node_modules && rm -Rf package-lock.json && npm i",
     "prepack": "npm run clean && npm run build",
-    "test": "sui-test server --pattern \"src/test/*Test.js  src/test/**/*Test.js src/test/**/**/*Test.js\"",
+    "test": "sui-test server --pattern \"src/test/**/*Test.js\"",
     "coverage": "nyc --reporter=html --exclude=\"src/test\" npm run test",
     "coverage:ci": "nyc --reporter=cobertura --exclude=\"src/test\" npm run test && codecov",
     "lint": "sui-lint js",

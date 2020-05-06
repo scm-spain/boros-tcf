@@ -12,6 +12,7 @@ describe('ping', () => {
     tcfapi(command, version, (pingReturn, success) => {
       expect(success).to.be.true
       expect(pingReturn).to.be.instanceOf(PingReturn)
+      expect(pingReturn.cmpVersion).to.be.equals('0')
     })
   })
 })
