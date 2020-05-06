@@ -1,5 +1,8 @@
-import {name, version} from '../../../package'
+// TODO solve this issue
+// import {name, version} from '../../../package'
 
+const name = '@adv-ui/boros-tcf'
+const version = 'version'
 /**
  * Package Name
  */

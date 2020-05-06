@@ -7,10 +7,10 @@ import {SaveUserConsentUseCase} from './vendor_consent/SaveUserConsentUseCase'
 
 class BorosTcf {
   constructor({
-    getVendorListUseCase = new GetVendorListUseCase() /*inject(GetVendorListUseCase)*/,
-    getConsentStatusUseCase = new GetConsentStatusUseCase() /*inject(GetConsentStatusUseCase)*/,
-    loadUserConsentUseCase = new LoadUserConsentUseCase() /*inject(LoadUserConsentUseCase)*/,
-    saveUserConsentUseCase = new  SaveUserConsentUseCase() /*inject(SaveUserConsentUseCase)*/
+    getVendorListUseCase = inject(GetVendorListUseCase),
+    getConsentStatusUseCase = inject(GetConsentStatusUseCase),
+    loadUserConsentUseCase = inject(LoadUserConsentUseCase),
+    saveUserConsentUseCase = inject(SaveUserConsentUseCase)
   } = {}) {
     this.getVendorListUseCase = getVendorListUseCase
     this.getConsentStatusUseCase = getConsentStatusUseCase
