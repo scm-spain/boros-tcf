@@ -4,10 +4,11 @@ import {TcfApiInitializer} from '../../main/infrastructure/bootstrap/TcfApiIniti
 import {PingReturn} from '../../main/domain/ping/PingReturn'
 
 describe('ping', () => {
-  const tcfapi = TcfApiInitializer.init({window})
+  TcfApiInitializer.init({window})
   const command = 'ping'
   const version = 2
   it('should return a PingReturn object', () => {
+    const tcfapi = window.__tcfapi
     tcfapi(command, version, (pingReturn, success) => {
       expect(success).to.be.true
       expect(pingReturn).to.be.instanceOf(PingReturn)
