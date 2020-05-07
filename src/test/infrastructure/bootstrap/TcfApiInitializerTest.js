@@ -17,7 +17,6 @@ describe('TcfApiInitializer', () => {
     TcfApiInitializer.init({window})
     const tcfapi = window.__tcfapi
     expect(tcfapi).to.be.a('function')
-    expect(tcfapi).to.equal(window.__tcfapi)
   })
   it('should register the __tcfapiLocator iframe', () => {
     TcfApiInitializer.init({window})
