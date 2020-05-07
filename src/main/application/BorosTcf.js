@@ -1,9 +1,9 @@
 import {inject} from '../core/ioc/ioc'
 
-import {GetVendorListUseCase} from './vendor_list/GetVendorListUseCase'
-import {GetConsentStatusUseCase} from './vendor_consent/GetConsentStatusUseCase'
-import {LoadUserConsentUseCase} from './vendor_consent/LoadUserConsentUseCase'
-import {SaveUserConsentUseCase} from './vendor_consent/SaveUserConsentUseCase'
+import {GetVendorListUseCase} from './services/vendor_list/GetVendorListUseCase'
+import {GetConsentStatusUseCase} from './services/vendor_consent/GetConsentStatusUseCase'
+import {LoadUserConsentUseCase} from './services/vendor_consent/LoadUserConsentUseCase'
+import {SaveUserConsentUseCase} from './services/vendor_consent/SaveUserConsentUseCase'
 
 class BorosTcf {
   constructor({

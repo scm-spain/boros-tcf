@@ -2,7 +2,7 @@
  * TCF Api Facade for the Version 2
  */
 import {inject} from '../core/ioc/ioc'
-import {PingUseCase} from './ping/PingUseCase'
+import {PingUseCase} from './services/ping/PingUseCase'
 
 class TcfApiV2 {
   constructor({pingUseCase = inject(PingUseCase)} = {}) {
