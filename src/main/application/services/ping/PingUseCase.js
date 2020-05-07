@@ -1,4 +1,4 @@
-import {PingReturn} from '../../domain/ping/PingReturn'
+import {PingReturn} from '../../../domain/ping/PingReturn.js'
 
 class PingUseCase {
   execute() {

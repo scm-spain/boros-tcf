@@ -2,12 +2,21 @@ import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TcfApiInitializer} from '../../../main/infrastructure/bootstrap/TcfApiInitializer'
 import {waitCondition} from '../../../main/core/service/waitCondition'
+import {BorosTcf} from '../../../main/application/BorosTcf'
 
 describe('TcfApiInitializer', () => {
-  it('should return the registered the window.__tcfapi command consumer', () => {
-    const tcfapi = TcfApiInitializer.init({window})
+  it('should return instance of BorosTcf with the methods', () => {
+    const borosTcf = TcfApiInitializer.init({window})
+    expect(borosTcf instanceof BorosTcf).to.be.true
+    expect(typeof borosTcf.getVendorList === 'function').to.be.true
+    expect(typeof borosTcf.saveUserConsent === 'function').to.be.true
+    expect(typeof borosTcf.loadUserConsent === 'function').to.be.true
+    expect(typeof borosTcf.saveUserConsent === 'function').to.be.true
+  })
+  it('should register the window.__tcfapi command consumer', () => {
+    TcfApiInitializer.init({window})
+    const tcfapi = window.__tcfapi
     expect(tcfapi).to.be.a('function')
-    expect(tcfapi).to.equal(window.__tcfapi)
   })
   it('should register the __tcfapiLocator iframe', () => {
     TcfApiInitializer.init({window})
