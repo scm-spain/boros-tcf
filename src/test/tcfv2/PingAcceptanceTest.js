@@ -4,7 +4,7 @@ import {TcfApiInitializer} from '../../main/infrastructure/bootstrap/TcfApiIniti
 import {PingReturn} from '../../main/domain/ping/PingReturn'
 
 describe('ping', () => {
-  TcfApiInitializer.init({window})
+  TcfApiInitializer.init()
   const command = 'ping'
   const version = 2
   it('should return a PingReturn object', () => {
