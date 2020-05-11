@@ -68,6 +68,7 @@
     "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
   },
   "dependencies": {
+    "axios": "0.19.2",
     "brusc": "1"
   }
 }
