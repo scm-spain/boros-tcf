@@ -1,16 +1,15 @@
-import {name, version} from '../../../package'
-
+/* eslint-disable no-undef */
 /**
  * Package Name
  */
-export const PACKAGE_NAME = name
+export const PACKAGE_NAME = __PACKAGE_NAME__
 
 /**
  * Boros TCF Version is the current version.
  * It'll be the minor version as once developed, the IAB's TCF defined API should not change,
  * so major versions are useless to define this information value required by the PingReturn object.
  */
-export const BOROS_TCF_VERSION = version.split('.')[1]
+export const BOROS_TCF_VERSION = __PACKAGE_MINOR_VERSION__
 
 /**
  * Boros TCF IAB's registered ID
