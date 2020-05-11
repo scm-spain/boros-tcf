@@ -13,7 +13,7 @@
     "lint": "sui-lint js",
     "check": "npm run lint && npm run test",
     "build": "npm run clean && babel src/main --out-dir dist",
-    "start": "webpack-dev-server --config src/build/webpack.config.js",
+    "start": "webpack-dev-server --config src/webpack/webpack.config.js",
     "versiona": "node versiona.js"
   },
   "repository": "github:scm-spain/boros-tcf",
