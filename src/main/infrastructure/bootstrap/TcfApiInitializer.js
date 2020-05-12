@@ -12,6 +12,7 @@ import {HttpClient} from '../repository/http/HttpClient'
 import {AxiosHttpClient} from '../repository/http/AxiosHttpClient'
 import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository'
 import {HttpVendorListRepository} from '../repository/HttpVendorListRepository'
+import {iocAdapter} from '../aop/iocAdapter'
 
 class TcfApiInitializer {
   static init() {
@@ -30,7 +31,8 @@ class TcfApiInitializer {
 
         singleton(VendorListRepository, () => new HttpVendorListRepository())
         singleton(HttpClient, () => new AxiosHttpClient())
-      }
+      },
+      adapter: iocAdapter
     })
 
     TcfApiRegistryService.start()

@@ -9,10 +9,13 @@ class HttpVendorListRepository extends VendorListRepository {
     this._httpClient = httpClient
   }
 
+  /**
+   * @param {Version} version
+   * @param {Language} language
+   * @returns {PromiseLike<VendorList>}
+   */
   getVendorList({version, language}) {
-    const versionPath = version ? `/${version}` : ''
-    const queryString = language ? `?language=${language}` : ''
-    const url = `${VENDOR_LIST_ENDPOINT}${versionPath}${queryString}`
+    const url = `${VENDOR_LIST_ENDPOINT}/${version.value}?language=${language.value}`
     return this._httpClient
       .get({url})
       .then(response => response.data)

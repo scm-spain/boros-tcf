@@ -18,8 +18,11 @@ class BorosTcf {
     this.saveUserConsentUseCase = saveUserConsentUseCase
   }
 
-  getVendorList({version, language}) {
-    return this.getVendorListUseCase.execute({version, language})
+  getVendorList({version, language} = {}) {
+    return this.getVendorListUseCase.execute({
+      vendorListVersion: version,
+      translationLanguage: language
+    })
   }
 
   getConsentStatus() {

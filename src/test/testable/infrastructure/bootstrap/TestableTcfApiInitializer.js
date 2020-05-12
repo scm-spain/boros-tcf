@@ -2,13 +2,13 @@ import {iocModule, iocReset} from 'brusc'
 import {IOC_MODULE} from '../../../../main/core/ioc/ioc'
 import {TcfApiInitializer} from '../../../../main/infrastructure/bootstrap/TcfApiInitializer'
 
-class TestableInitializer {
+class TestableTcfApiInitializer {
   constructor() {
     this._mocks = new Map()
   }
 
   static create() {
-    return new TestableInitializer()
+    return new TestableTcfApiInitializer()
   }
 
   mock(key, instance) {
@@ -31,4 +31,4 @@ class TestableInitializer {
   }
 }
 
-export {TestableInitializer}
+export {TestableTcfApiInitializer}

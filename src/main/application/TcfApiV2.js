@@ -6,6 +6,10 @@ import {PingUseCase} from './services/ping/PingUseCase'
 import {GetVendorListUseCase} from './services/vendorlist/GetVendorListUseCase'
 
 class TcfApiV2 {
+  /**
+   * @param {PingUseCase} pingUseCase
+   * @param {GetVendorListUseCase} getVendorListUseCase
+   */
   constructor({
     pingUseCase = inject(PingUseCase),
     getVendorListUseCase = inject(GetVendorListUseCase)
@@ -35,7 +39,7 @@ class TcfApiV2 {
 
   getVendorList(callback, vendorListVersion) {
     return this._getVendorListUseCase
-      .execute({version: vendorListVersion})
+      .execute({vendorListVersion})
       .then(vendorList => callback(vendorList, true))
       .catch(error => {
         console.log('Error obtaining the vendor list', error)

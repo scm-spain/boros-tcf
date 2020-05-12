@@ -6,11 +6,11 @@ class VendorList {
   }
 
   get version() {
-    return this._version;
+    return this._version
   }
 
   get language() {
-    return this._language;
+    return this._language
   }
 
   get value() {
