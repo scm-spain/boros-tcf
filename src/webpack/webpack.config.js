@@ -5,7 +5,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/main/index.js'
+    app: './src/webpack/local.index.js'
   },
   devtool: 'inline-source-map',
   plugins: [
@@ -14,8 +14,22 @@ module.exports = {
       title: 'Development'
     })
   ],
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['sui']
+          }
+        }
+      }
+    ]
+  },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'bundle')
   }
 }

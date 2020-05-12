@@ -10,7 +10,7 @@ import {TcfApiController} from '../controller/TcfApiController'
 import {BorosTcf} from '../../application/BorosTcf'
 
 class TcfApiInitializer {
-  static init({window}) {
+  static init() {
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
