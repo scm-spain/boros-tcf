@@ -1,4 +1,5 @@
 import {InvalidLanguageValueError} from './error/InvalidLanguageValueError'
+import {VENDOR_LIST_DEFAULT_LANGUAGE} from '../../core/constants'
 
 class Language {
   constructor(languageValue) {
@@ -10,8 +11,8 @@ class Language {
   }
 
   _extractValue(languageValue) {
-    if (!languageValue || DEFAULT_LANGUAGE_VALUE === languageValue) {
-      return DEFAULT_LANGUAGE_VALUE
+    if (!languageValue || VENDOR_LIST_DEFAULT_LANGUAGE === languageValue) {
+      return VENDOR_LIST_DEFAULT_LANGUAGE
     }
     if (languageValue.toLowerCase() !== languageValue) {
       throw new InvalidLanguageValueError(languageValue)
@@ -22,7 +23,5 @@ class Language {
     return languageValue
   }
 }
-
-const DEFAULT_LANGUAGE_VALUE = 'en'
 
 export {Language}

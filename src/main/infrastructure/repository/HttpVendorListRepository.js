@@ -2,6 +2,10 @@ import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository
 import {inject} from '../../core/ioc/ioc'
 import {HttpClient} from './http/HttpClient'
 import {VendorList} from '../../domain/vendorlist/VendorList'
+import {
+  VENDOR_LIST_DEFAULT_LANGUAGE,
+  VENDOR_LIST_ENDPOINT
+} from '../../core/constants'
 
 class HttpVendorListRepository extends VendorListRepository {
   constructor({httpClient = inject(HttpClient)} = {}) {
@@ -23,14 +27,11 @@ class HttpVendorListRepository extends VendorListRepository {
         value =>
           new VendorList({
             version: value.vendorListVersion,
-            language: language || DEFAULT_VENDOR_LIST_VALUE_LANGUAGE,
+            language: language || VENDOR_LIST_DEFAULT_LANGUAGE,
             value
           })
       )
   }
 }
-
-const VENDOR_LIST_ENDPOINT = 'https://a.dcdn.es/borostcf/v2/vendorlist'
-const DEFAULT_VENDOR_LIST_VALUE_LANGUAGE = 'en'
 
 export {HttpVendorListRepository}

@@ -2,7 +2,7 @@
  * @interface
  */
 class HttpClient {
-  post({url, data, options}) {}
+  get({url, data, options}) {}
 }
 
 export {HttpClient}

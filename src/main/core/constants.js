@@ -25,3 +25,18 @@ export const TCF_API_VERSION = 2
  * TCF API version supported as string
  */
 export const TCF_API_SUPPORTED_VERSION = '2.0'
+
+/**
+ * Vendor List language if no translation is requested for the remote resource
+ */
+export const VENDOR_LIST_DEFAULT_LANGUAGE = 'en'
+
+/**
+ * Vendor List version to be requested to get the latest remote resource
+ */
+export const VENDOR_LIST_LATEST_VERSION = 'LATEST'
+
+/**
+ * Base endpoint to get access to remote Vendor List resources
+ */
+export const VENDOR_LIST_ENDPOINT = 'https://a.dcdn.es/borostcf/v2/vendorlist'
