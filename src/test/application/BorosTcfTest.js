@@ -1,65 +1,65 @@
-import {BorosTcf} from '../../main/application/BorosTcf.js'
-import sinon from 'sinon'
+import 'jsdom-global/register'
 import {expect} from 'chai'
+import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
+import {TestableHttpClientMock} from '../testable/infrastructure/repository/TestableHttpClientMock'
+import {HttpClient} from '../../main/infrastructure/repository/http/HttpClient'
+import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
 
-describe('BorosTcf should', () => {
-  const getVendorListUseCase = {
-    execute: () => null
-  }
-  const getConsentStatusUseCase = {
-    execute: () => null
-  }
-  const loadUserConsentUseCase = {
-    execute: () => null
-  }
-  const saveUserConsentUseCase = {
-    execute: () => null
-  }
+describe('BorosTcf', () => {
+  describe('getVendorList use case', () => {
+    let httpClientMock
+    let borosTcf
+    beforeEach(() => {
+      httpClientMock = new TestableHttpClientMock()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(HttpClient, httpClientMock)
+        .init()
+    })
 
-  const borosTcf = new BorosTcf({
-    getVendorListUseCase,
-    getConsentStatusUseCase,
-    loadUserConsentUseCase,
-    saveUserConsentUseCase
-  })
+    it('should return the untranslated latest vendor list if nothing is specified', async () => {
+      httpClientMock.setResolver(() => VendorListValue)
+      const vendorList = await borosTcf.getVendorList()
+      expect(httpClientMock.requests).to.have.length(1)
+      const request = httpClientMock.requests[0]
+      expect(request.url).to.include('/v2/vendorlist/LATEST?language=en')
+      expect(vendorList).to.deep.equal(VendorListValue.data)
+    })
 
-  it('getVendorList should delegate to getVendorListUseCase', () => {
-    const getVendorListUseCaseSpy = sinon.spy(getVendorListUseCase, 'execute')
+    it('should return the translation of a specific version if parameters are specified', async () => {
+      httpClientMock.setResolver(() => VendorListValue)
+      const givenVersion = 33
+      const givenLanguage = 'es'
+      const vendorList = await borosTcf.getVendorList({
+        version: givenVersion,
+        language: givenLanguage
+      })
+      expect(httpClientMock.requests).to.have.length(1)
+      const request = httpClientMock.requests[0]
+      expect(request.url).to.include(
+        `/v2/vendorlist/${givenVersion}?language=${givenLanguage}`
+      )
+      expect(vendorList).to.deep.equal(VendorListValue.data)
+    })
 
-    borosTcf.getVendorList()
-    expect(getVendorListUseCaseSpy.calledOnce).to.be.true
-  })
-  it('getConsentStatus should delegate to getConsentStatusUseCase', () => {
-    const getConsentStatusUseCaseSpy = sinon.spy(
-      getConsentStatusUseCase,
-      'execute'
-    )
-    borosTcf.getConsentStatus()
-    expect(getConsentStatusUseCaseSpy.calledOnce).to.be.true
-  })
-  it('loadUserConsent should delegate to loadUserConsentUseCase', () => {
-    const loadUserConsentUseCaseSpy = sinon.spy(
-      loadUserConsentUseCase,
-      'execute'
-    )
-    borosTcf.loadUserConsent()
-    expect(loadUserConsentUseCaseSpy.calledOnce).to.be.true
-  })
-  it('saveUserConsent should delegate to saveUserConsentUseCase and use Same Arguments', () => {
-    const saveUserConsentUseCaseSpy = sinon.spy(
-      saveUserConsentUseCase,
-      'execute'
-    )
-
-    const givenPurposeVendor = {
-      purpose: 'aPurpose',
-      vendor: 'aVendor'
-    }
-
-    borosTcf.saveUserConsent(givenPurposeVendor)
-    expect(saveUserConsentUseCaseSpy.calledOnce).to.be.true
-    expect(saveUserConsentUseCaseSpy.getCall(0).args[0]).to.deep.equal(
-      givenPurposeVendor
-    )
+    it('should cache the remote vendor list if same version and language are requested', async () => {
+      httpClientMock.setResolver(() => VendorListValue)
+      await borosTcf.getVendorList()
+      await borosTcf.getVendorList({
+        version: 10,
+        language: 'es'
+      })
+      await borosTcf.getVendorList({version: 'LATEST'})
+      await borosTcf.getVendorList({
+        version: 10,
+        language: 'es'
+      })
+      expect(httpClientMock.requests).to.have.length(2)
+      expect(httpClientMock.requests[0].url).to.include(
+        `/v2/vendorlist/LATEST?language=en`
+      )
+      expect(httpClientMock.requests[1].url).to.include(
+        `/v2/vendorlist/10?language=es`
+      )
+    })
   })
 })

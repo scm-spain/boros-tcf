@@ -3,10 +3,19 @@
  */
 import {inject} from '../core/ioc/ioc'
 import {PingUseCase} from './services/ping/PingUseCase'
+import {GetVendorListUseCase} from './services/vendorlist/GetVendorListUseCase'
 
 class TcfApiV2 {
-  constructor({pingUseCase = inject(PingUseCase)} = {}) {
+  /**
+   * @param {PingUseCase} pingUseCase
+   * @param {GetVendorListUseCase} getVendorListUseCase
+   */
+  constructor({
+    pingUseCase = inject(PingUseCase),
+    getVendorListUseCase = inject(GetVendorListUseCase)
+  } = {}) {
     this._pingUseCase = pingUseCase
+    this._getVendorListUseCase = getVendorListUseCase
   }
 
   getTCData(callback, vendorIds = []) {
@@ -28,9 +37,14 @@ class TcfApiV2 {
     callback(null, false)
   }
 
-  getVendorList(callback, vendorListVersion = 'LATEST') {
-    console.log('getVendorList: NOT DEVELOPED YET')
-    callback(null, false)
+  getVendorList(callback, vendorListVersion) {
+    return this._getVendorListUseCase
+      .execute({vendorListVersion})
+      .then(vendorList => callback(vendorList, true))
+      .catch(error => {
+        console.log('Error obtaining the vendor list', error)
+        callback(null, false)
+      })
   }
 }
 
