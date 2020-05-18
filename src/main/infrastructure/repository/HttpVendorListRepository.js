@@ -7,6 +7,10 @@ import {
   VENDOR_LIST_ENDPOINT
 } from '../../core/constants'
 
+/**
+ * @deprecated
+ * TODO: we need to replace HttpVendorListRepository for a IABVendorListRepository using its GVL object, configured with URL and name templates
+ */
 class HttpVendorListRepository extends VendorListRepository {
   constructor({httpClient = inject(HttpClient)} = {}) {
     super()
