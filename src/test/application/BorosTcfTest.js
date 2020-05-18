@@ -7,6 +7,7 @@ import {HttpClient} from '../../main/infrastructure/repository/http/HttpClient'
 import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
+import {BOROS_TCF_ID} from '../../main/core/constants'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -83,6 +84,8 @@ describe('BorosTcf', () => {
         .then(() => {
           const savedConsent = cookieStorageMock.storage.get('euconsentv2')
           expect(savedConsent).to.be.a('string')
+          const userConsent = TCString.decode(savedConsent)
+          expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
         })
     })
   })
