@@ -1,9 +1,9 @@
 import {inject} from '../core/ioc/ioc'
 
 import {GetVendorListUseCase} from './services/vendorlist/GetVendorListUseCase'
-import {GetConsentStatusUseCase} from './services/vendor_consent/GetConsentStatusUseCase'
-import {LoadUserConsentUseCase} from './services/vendor_consent/LoadUserConsentUseCase'
-import {SaveUserConsentUseCase} from './services/vendor_consent/SaveUserConsentUseCase'
+import {GetConsentStatusUseCase} from './services/vendorconsent/GetConsentStatusUseCase'
+import {LoadUserConsentUseCase} from './services/vendorconsent/LoadUserConsentUseCase'
+import {SaveUserConsentUseCase} from './services/vendorconsent/SaveUserConsentUseCase'
 
 class BorosTcf {
   /**
@@ -39,8 +39,8 @@ class BorosTcf {
     return this.loadUserConsentUseCase.execute()
   }
 
-  saveUserConsent({purpose, vendor}) {
-    this.saveUserConsentUseCase.execute({purpose, vendor})
+  async saveUserConsent({purpose, vendor}) {
+    return this.saveUserConsentUseCase.execute({purpose, vendor})
   }
 }
 

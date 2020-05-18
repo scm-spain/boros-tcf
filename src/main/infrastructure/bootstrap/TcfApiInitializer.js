@@ -2,9 +2,9 @@ import {iocModule} from 'brusc'
 import {IOC_MODULE} from '../../core/ioc/ioc'
 import {PingUseCase} from '../../application/services/ping/PingUseCase'
 import {GetVendorListUseCase} from '../../application/services/vendorlist/GetVendorListUseCase'
-import {GetConsentStatusUseCase} from '../../application/services/vendor_consent/GetConsentStatusUseCase'
-import {LoadUserConsentUseCase} from '../../application/services/vendor_consent/LoadUserConsentUseCase'
-import {SaveUserConsentUseCase} from '../../application/services/vendor_consent/SaveUserConsentUseCase'
+import {GetConsentStatusUseCase} from '../../application/services/vendorconsent/GetConsentStatusUseCase'
+import {LoadUserConsentUseCase} from '../../application/services/vendorconsent/LoadUserConsentUseCase'
+import {SaveUserConsentUseCase} from '../../application/services/vendorconsent/SaveUserConsentUseCase'
 import {TcfApiRegistryService} from '../service/TcfApiRegistryService'
 import {TcfApiController} from '../controller/TcfApiController'
 import {BorosTcf} from '../../application/BorosTcf'
@@ -17,6 +17,8 @@ import {ConsentRepository} from '../../domain/consent/ConsentRepository'
 import {CookieConsentRepository} from '../repository/CookieConsentRepository'
 import {CookieStorage} from '../repository/cookie/CookieStorage'
 import {BrowserCookieStorage} from '../repository/cookie/BrowserCookieStorage'
+import {ConsentEncoderService} from '../../domain/consent/ConsentEncoderService'
+import {IABConsentEncoderService} from '../service/IABConsentEncoderService'
 
 class TcfApiInitializer {
   static init() {
@@ -38,6 +40,7 @@ class TcfApiInitializer {
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(CookieStorage, () => new BrowserCookieStorage())
+        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
       },
       adapter: iocAdapter
     })

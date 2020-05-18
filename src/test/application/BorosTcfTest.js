@@ -1,5 +1,6 @@
 import 'jsdom-global/register'
 import {expect} from 'chai'
+import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {TestableHttpClientMock} from '../testable/infrastructure/repository/TestableHttpClientMock'
 import {HttpClient} from '../../main/infrastructure/repository/http/HttpClient'
@@ -77,12 +78,12 @@ describe('BorosTcf', () => {
     it('should work', () => {
       const givenPurpose = {}
       const givenVendor = {}
-      borosTcf.saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
-
-      const savedConsent = cookieStorageMock.storage.get('euconsentv2')
-      const userConsent = JSON.parse(savedConsent)
-      expect(userConsent.purpose).to.not.undefined
-      expect(userConsent.vendor).to.not.undefined
+      return borosTcf
+        .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
+        .then(() => {
+          const savedConsent = cookieStorageMock.storage.get('euconsentv2')
+          expect(savedConsent).to.be.a('string')
+        })
     })
   })
 })
