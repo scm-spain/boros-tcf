@@ -4,6 +4,8 @@ import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/Te
 import {TestableHttpClientMock} from '../testable/infrastructure/repository/TestableHttpClientMock'
 import {HttpClient} from '../../main/infrastructure/repository/http/HttpClient'
 import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
+import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
+import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -60,6 +62,27 @@ describe('BorosTcf', () => {
       expect(httpClientMock.requests[1].url).to.include(
         `/v2/vendorlist/10?language=es`
       )
+    })
+  })
+  describe('saveUserConsent', () => {
+    let borosTcf
+    let cookieStorageMock
+    beforeEach(() => {
+      cookieStorageMock = new TestableCookieStorageMock()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
+    })
+
+    it('should work', () => {
+      const givenPurpose = {}
+      const givenVendor = {}
+      borosTcf.saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
+
+      const savedConsent = cookieStorageMock.storage.get('euconsentv2')
+      const userConsent = JSON.parse(savedConsent)
+      expect(userConsent.purpose).to.not.undefined
+      expect(userConsent.vendor).to.not.undefined
     })
   })
 })

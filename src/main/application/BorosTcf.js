@@ -6,6 +6,12 @@ import {LoadUserConsentUseCase} from './services/vendor_consent/LoadUserConsentU
 import {SaveUserConsentUseCase} from './services/vendor_consent/SaveUserConsentUseCase'
 
 class BorosTcf {
+  /**
+   * @param {GetVendorListUseCase} getVendorListUseCase
+   * @param {GetConsentStatusUseCase} getConsentStatusUseCase
+   * @param {LoadUserConsentUseCase} loadUserConsentUseCase
+   * @param {SaveUserConsentUseCase} saveUserConsentUseCase
+   */
   constructor({
     getVendorListUseCase = inject(GetVendorListUseCase),
     getConsentStatusUseCase = inject(GetConsentStatusUseCase),

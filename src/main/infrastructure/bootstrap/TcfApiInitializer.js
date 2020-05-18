@@ -13,6 +13,10 @@ import {AxiosHttpClient} from '../repository/http/AxiosHttpClient'
 import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository'
 import {HttpVendorListRepository} from '../repository/HttpVendorListRepository'
 import {iocAdapter} from '../aop/iocAdapter'
+import {ConsentRepository} from '../../domain/consent/ConsentRepository'
+import {CookieConsentRepository} from '../repository/CookieConsentRepository'
+import {CookieStorage} from '../repository/cookie/CookieStorage'
+import {BrowserCookieStorage} from '../repository/cookie/BrowserCookieStorage'
 
 class TcfApiInitializer {
   static init() {
@@ -31,6 +35,9 @@ class TcfApiInitializer {
 
         singleton(VendorListRepository, () => new HttpVendorListRepository())
         singleton(HttpClient, () => new AxiosHttpClient())
+
+        singleton(ConsentRepository, () => new CookieConsentRepository())
+        singleton(CookieStorage, () => new BrowserCookieStorage())
       },
       adapter: iocAdapter
     })
