@@ -78,14 +78,29 @@ describe('BorosTcf', () => {
 
     it('should work', () => {
       const givenPurpose = {}
-      const givenVendor = {}
+      const givenVendor = {
+        consents: {
+          '1': false,
+          '2': true
+        },
+        legitimateInterests: {
+          '1': false,
+          '2': true
+        }
+      }
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() => {
           const savedConsent = cookieStorageMock.storage.get('euconsentv2')
           expect(savedConsent).to.be.a('string')
+
           const userConsent = TCString.decode(savedConsent)
+
           expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
+          expect(userConsent.vendorConsents.has(2)).to.be.true
+          expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
+          expect(userConsent.vendorConsents.has(1)).to.be.false
+          expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
         })
     })
   })
