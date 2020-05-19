@@ -31,8 +31,12 @@ class BorosTcf {
     return this.loadUserConsentUseCase.execute()
   }
 
-  async saveUserConsent({purpose, vendor}) {
-    return this.saveUserConsentUseCase.execute({purpose, vendor})
+  async saveUserConsent({purpose, vendor, specialFeatures}) {
+    return this.saveUserConsentUseCase.execute({
+      purpose,
+      vendor,
+      specialFeatures
+    })
   }
 }
 

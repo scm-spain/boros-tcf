@@ -12,11 +12,13 @@ class LoadUserConsentUseCase {
   }
 
   execute() {
-    const consent = this._consentRepository.loadUserConsent()
-    if (!consent) {
+    const encodedConsent = this._consentRepository.loadUserConsent()
+    if (!encodedConsent) {
+      // TODO
       return null
     }
-    return this._consentDecoderService.decode({encodedConsent: consent})
+    const consent = this._consentDecoderService.decode({encodedConsent})
+    return consent
   }
 }
 

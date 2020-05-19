@@ -110,5 +110,37 @@ describe('BorosTcf', () => {
           expect(consentModel.purpose).to.deep.equal(givenPurpose)
         })
     })
+
+    /* it('should allow a first execution', () => {
+      return Promise.resolve()
+        .then(() => borosTcf.loadUserConsent())
+        .then(userConsent => {
+          if (!userConsent) {
+            // start ui
+            const uiModel = {
+              vendor: {}
+            }
+          }
+        })
+
+      borosTcf
+        .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
+        .then(() => {
+          const savedConsent = cookieStorageMock.storage.get('euconsentv2')
+          expect(savedConsent).to.be.a('string')
+
+          const userConsent = TCString.decode(savedConsent)
+
+          expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
+          expect(userConsent.vendorConsents.has(2)).to.be.true
+          expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
+          expect(userConsent.vendorConsents.has(1)).to.be.false
+          expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
+
+          const consentModel = borosTcf.loadUserConsent()
+          expect(consentModel.vendor).to.deep.equal(givenVendor)
+          expect(consentModel.purpose).to.deep.equal(givenPurpose)
+        })
+    }) */
   })
 })

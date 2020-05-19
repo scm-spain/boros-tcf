@@ -2,7 +2,7 @@
  * @interface
  */
 class ConsentEncoderService {
-  encode({purpose, vendor}) {}
+  encode({vendor, purpose, specialFeatures, previousEncodedConsent}) {}
 }
 
 export {ConsentEncoderService}

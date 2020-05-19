@@ -1,11 +1,12 @@
 import {ConsentDecoderService} from '../../domain/consent/ConsentDecoderService'
 import {TCString} from '@iabtcf/core'
+import {Consent} from '../../domain/consent/Consent'
 
 class IABConsentDecoderService extends ConsentDecoderService {
   decode({encodedConsent}) {
     const tcModel = TCString.decode(encodedConsent)
 
-    const ourModel = {
+    const model = {
       vendor: {
         consents: {},
         legitimateInterests: {}
@@ -24,26 +25,31 @@ class IABConsentDecoderService extends ConsentDecoderService {
 
     mapToModel({
       vector: tcModel.vendorConsents,
-      model: ourModel.vendor.consents
+      model: model.vendor.consents
     })
     mapToModel({
       vector: tcModel.vendorLegitimateInterests,
-      model: ourModel.vendor.legitimateInterests
+      model: model.vendor.legitimateInterests
     })
     mapToModel({
       vector: tcModel.purposeConsents,
-      model: ourModel.purpose.consents
+      model: model.purpose.consents
     })
     mapToModel({
       vector: tcModel.purposeLegitimateInterests,
-      model: ourModel.purpose.legitimateInterests
+      model: model.purpose.legitimateInterests
     })
     mapToModel({
       vector: tcModel.specialFeatureOptins,
-      model: ourModel.specialFeatures
+      model: model.specialFeatures
     })
 
-    return ourModel
+    return new Consent({
+      encodedValue: encodedConsent,
+      vendor: model.vendor,
+      purpose: model.purpose,
+      specialFeatures: model.specialFeatures
+    })
   }
 }
 

@@ -15,8 +15,14 @@ class SaveUserConsentUseCase {
     this._consentRepository = consentRepository
   }
 
-  async execute({purpose, vendor}) {
-    const consent = await this._consentEncoderService.encode({purpose, vendor})
+  async execute({purpose, vendor, specialFeatures}) {
+    const previousEncodedConsent = this._consentRepository.loadUserConsent()
+    const consent = await this._consentEncoderService.encode({
+      purpose,
+      vendor,
+      specialFeatures,
+      previousEncodedConsent
+    })
     this._consentRepository.saveUserConsent({consent})
   }
 }
