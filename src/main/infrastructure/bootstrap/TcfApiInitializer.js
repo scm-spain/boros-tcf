@@ -2,7 +2,6 @@ import {iocModule} from 'brusc'
 import {IOC_MODULE} from '../../core/ioc/ioc'
 import {PingUseCase} from '../../application/services/ping/PingUseCase'
 import {GetVendorListUseCase} from '../../application/services/vendorlist/GetVendorListUseCase'
-import {GetConsentStatusUseCase} from '../../application/services/vendorconsent/GetConsentStatusUseCase'
 import {LoadUserConsentUseCase} from '../../application/services/vendorconsent/LoadUserConsentUseCase'
 import {SaveUserConsentUseCase} from '../../application/services/vendorconsent/SaveUserConsentUseCase'
 import {TcfApiRegistryService} from '../service/TcfApiRegistryService'
@@ -31,7 +30,6 @@ class TcfApiInitializer {
 
         singleton(PingUseCase, () => new PingUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
-        singleton(GetConsentStatusUseCase, () => new GetConsentStatusUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
 
