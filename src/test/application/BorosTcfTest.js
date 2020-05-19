@@ -77,7 +77,10 @@ describe('BorosTcf', () => {
     })
 
     it('should work', () => {
-      const givenPurpose = {}
+      const givenPurpose = {
+        consents: {},
+        legitimateInterests: {}
+      }
       const givenVendor = {
         consents: {
           '1': false,
@@ -101,6 +104,10 @@ describe('BorosTcf', () => {
           expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
           expect(userConsent.vendorConsents.has(1)).to.be.false
           expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
+
+          const consentModel = borosTcf.loadUserConsent()
+          expect(consentModel.vendor).to.deep.equal(givenVendor)
+          expect(consentModel.purpose).to.deep.equal(givenPurpose)
         })
     })
   })

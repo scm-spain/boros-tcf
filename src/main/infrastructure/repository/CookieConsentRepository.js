@@ -8,6 +8,10 @@ class CookieConsentRepository extends ConsentRepository {
     this._cookieStorage = cookieStorage
   }
 
+  loadUserConsent() {
+    return this._cookieStorage.load({key: CONSENT_COOKIE_KEY})
+  }
+
   saveUserConsent({consent}) {
     this._cookieStorage.save({key: CONSENT_COOKIE_KEY, data: consent})
   }

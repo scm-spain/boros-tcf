@@ -1,6 +1,10 @@
 import {CookieStorage} from './CookieStorage'
 
 class BrowserCookieStorage extends CookieStorage {
+  load({key}) {
+    throw new Error('Not developed')
+  }
+
   save({key, data}) {
     // TODO
     /* return Promise.all([

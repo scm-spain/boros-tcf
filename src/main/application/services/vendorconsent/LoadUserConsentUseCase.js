@@ -1,6 +1,22 @@
+import {inject} from '../../../core/ioc/ioc'
+import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
+import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
+
 class LoadUserConsentUseCase {
+  constructor({
+    consentRepository = inject(ConsentRepository),
+    consentDecoderService = inject(ConsentDecoderService)
+  } = {}) {
+    this._consentRepository = consentRepository
+    this._consentDecoderService = consentDecoderService
+  }
+
   execute() {
-    throw new Error('LoadUserConstentUseCase: NOT DEVELOPED YET')
+    const consent = this._consentRepository.loadUserConsent()
+    if (!consent) {
+      return null
+    }
+    return this._consentDecoderService.decode({encodedConsent: consent})
   }
 }
 

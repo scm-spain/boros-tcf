@@ -6,6 +6,10 @@ class TestableCookieStorageMock extends CookieStorage {
     this._storage = new Map()
   }
 
+  load({key}) {
+    return this._storage.get(key)
+  }
+
   save({key, data}) {
     this._storage.set(key, data)
   }

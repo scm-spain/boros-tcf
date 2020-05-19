@@ -2,11 +2,7 @@
  * @interface
  */
 class ConsentRepository {
-  /**
-   *
-   * @param {array<number>} purpose
-   * @param vendor
-   */
+  loadUserConsent() {}
   saveUserConsent({consent}) {}
 }
 

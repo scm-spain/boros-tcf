@@ -18,6 +18,8 @@ import {CookieStorage} from '../repository/cookie/CookieStorage'
 import {BrowserCookieStorage} from '../repository/cookie/BrowserCookieStorage'
 import {ConsentEncoderService} from '../../domain/consent/ConsentEncoderService'
 import {IABConsentEncoderService} from '../service/IABConsentEncoderService'
+import {ConsentDecoderService} from '../../domain/consent/ConsentDecoderService'
+import {IABConsentDecoderService} from '../service/IABConsentDecoderService'
 
 class TcfApiInitializer {
   static init() {
@@ -39,6 +41,7 @@ class TcfApiInitializer {
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(CookieStorage, () => new BrowserCookieStorage())
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
+        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
       },
       adapter: iocAdapter
     })

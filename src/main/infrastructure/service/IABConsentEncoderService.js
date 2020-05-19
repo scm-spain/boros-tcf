@@ -10,9 +10,13 @@ class IABConsentEncoderService extends ConsentEncoderService {
   }
 
   // create a new TC string
-  encode({vendor, purpose, specialFeatures}) {
-    // TODO extract to a factory
-    const tcModel = new TCModel(new GVL())
+  encode({vendor, purpose, specialFeatures, previousEncodedConsent}) {
+    // TODO we can do it better :)
+
+    const tcModel = previousEncodedConsent
+      ? TCString.decode(previousEncodedConsent)
+      : new TCModel(new GVL())
+
     tcModel.cmpId = BOROS_TCF_ID
     tcModel.cmpVersion = BOROS_TCF_VERSION
 
