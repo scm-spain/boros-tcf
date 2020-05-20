@@ -1,13 +1,9 @@
 export class Consent {
-  constructor({encodedValue, vendor, purpose, specialFeatures}) {
-    this._encodedValue = encodedValue
+  constructor({vendor, purpose, specialFeatures, valid}) {
     this._vendor = vendor
     this._purpose = purpose
     this._specialFeatures = specialFeatures
-  }
-
-  get encodedValue() {
-    return this._encodedValue
+    this._valid = valid
   }
 
   get vendor() {
@@ -20,5 +16,14 @@ export class Consent {
 
   get specialFeatures() {
     return this._specialFeatures
+  }
+
+  toJSON() {
+    return {
+      vendor: this._vendor,
+      purpose: this._purpose,
+      specialFeatures: this._specialFeatures,
+      valid: this._valid
+    }
   }
 }

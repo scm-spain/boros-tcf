@@ -10,8 +10,10 @@ class IABConsentEncoderService extends ConsentEncoderService {
   }
 
   // create a new TC string
-  encode({vendor, purpose, specialFeatures, previousEncodedConsent}) {
+  encode({consent = {}, previousEncodedConsent}) {
     // TODO we can do it better :)
+
+    const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
 
     const tcModel = previousEncodedConsent
       ? TCString.decode(previousEncodedConsent)

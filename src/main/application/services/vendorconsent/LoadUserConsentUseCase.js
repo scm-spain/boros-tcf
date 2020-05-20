@@ -1,24 +1,20 @@
 import {inject} from '../../../core/ioc/ioc'
-import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
 import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
+import {LoadConsentService} from '../../../domain/consent/LoadConsentService'
 
 class LoadUserConsentUseCase {
   constructor({
-    consentRepository = inject(ConsentRepository),
-    consentDecoderService = inject(ConsentDecoderService)
+    consentDecoderService = inject(ConsentDecoderService),
+    loadConsentService = inject(LoadConsentService)
   } = {}) {
-    this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
+    this._loadConsentService = loadConsentService
   }
 
   execute() {
-    const encodedConsent = this._consentRepository.loadUserConsent()
-    if (!encodedConsent) {
-      // TODO
-      return null
-    }
-    const consent = this._consentDecoderService.decode({encodedConsent})
-    return consent
+    //dispatch evento
+    const consent = this._loadConsentService.loadConsent()
+    return consent.toJSON()
   }
 }
 
