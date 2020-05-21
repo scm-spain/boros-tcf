@@ -14,7 +14,7 @@ export class ConsentFactory {
 
   createEmptyConsent() {
     const encodedValue = this._consentEncoderService.encode()
-    return this._consentDecoderService(encodedValue)
+    return new Consent(this._consentDecoderService(encodedValue))
   }
 
   createConsent({vendor, purpose, specialFeatures}) {

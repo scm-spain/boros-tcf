@@ -1,24 +1,26 @@
 import {inject} from '../../core/ioc/ioc'
 import {ConsentRepository} from '../consent/ConsentRepository'
-import {Consentfactory} from '../consent/Consentfactory'
+import {ConsentFactory} from '../consent/ConsentFactory'
 import {ConsentDecoderService} from '../consent/ConsentDecoderService'
 
 export class LoadConsentService {
   constructor({
     consentRepository = inject(ConsentRepository),
-    consentfactory = inject(Consentfactory),
+    consentFactory = inject(ConsentFactory),
     consentDecoderService = inject(ConsentDecoderService)
   } = {}) {
     this._consentRepository = consentRepository
-    this._consentfactory = consentfactory
+    this._consentFactory = consentFactory
     this._consentDecoderService = consentDecoderService
   }
 
   loadConsent() {
     const encodedConsent = this._consentRepository.loadUserConsent()
     if (!encodedConsent) {
-      return this._consentfactory.createEmptyConsent()
+      return this._consentFactory.createEmptyConsent()
     }
-    return this._consentDecoderService.decode({encodedConsent})
+    return this._consentFactory.createConsent(
+      this._consentDecoderService.decode({encodedConsent})
+    )
   }
 }

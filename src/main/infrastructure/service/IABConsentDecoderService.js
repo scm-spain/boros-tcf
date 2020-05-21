@@ -4,11 +4,6 @@ import {TCString} from '@iabtcf/core'
 import {inject} from '../../core/ioc/ioc'
 
 class IABConsentDecoderService extends ConsentDecoderService {
-  constructor({consentFactory = inject(ConsentFactory)} = {}) {
-    super()
-    this._consentFactory = consentFactory
-  }
-
   decode({encodedConsent}) {
     const tcModel = TCString.decode(encodedConsent)
 
@@ -50,11 +45,11 @@ class IABConsentDecoderService extends ConsentDecoderService {
       model: model.specialFeatures
     })
 
-    return this._consentFactory.createConsent({
+    return {
       vendor: model.vendor,
       purpose: model.purpose,
       specialFeatures: model.specialFeatures
-    })
+    }
   }
 }
 
