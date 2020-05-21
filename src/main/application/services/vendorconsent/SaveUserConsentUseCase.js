@@ -7,6 +7,7 @@ class SaveUserConsentUseCase {
   /**
    * @param {ConsentEncoderService} consentEncoderService
    * @param {ConsentRepository} consentRepository
+   * @param {ConsentFactory} consentFactory
    */
   constructor({
     consentEncoderService = inject(ConsentEncoderService),
