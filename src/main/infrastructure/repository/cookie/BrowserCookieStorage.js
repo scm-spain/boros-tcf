@@ -1,24 +1,30 @@
 import {CookieStorage} from './CookieStorage'
 
 class BrowserCookieStorage extends CookieStorage {
-  load({key}) {
-    throw new Error('Not developed')
+  load() {
+    const cookieParts = `; ${window.document.cookie}`.split(
+      `; ${VENDOR_CONSENT_COOKIE_NAME}=`
+    )
+    return (
+      (cookieParts.length === 2 &&
+        cookieParts
+          .pop()
+          .split(';')
+          .shift()) ||
+      undefined
+    )
   }
 
-  save({key, data}) {
-    // TODO
-    /* return Promise.all([
-      Promise.resolve(maxAgeSeconds ? `;max-age=${maxAgeSeconds}` : ''),
-      Promise.resolve(cookieDomain ? `;domain=${cookieDomain}` : ''),
-      Promise.resolve(secure ? `;${secure}` : '')
-    ])
-      .then(
-        ([maxAge, domain, secure]) =>
-          `${cookieName}=${value}${domain};path=${path}${maxAge};SameSite=${sameSite}${secure}`
-      )
-      .then(cookieValue => (this._dom.cookie = cookieValue)) */
-    window.document.cookie = `${key}=${data}`
+  save({data}) {
+    const cookieValue = `${VENDOR_CONSENT_COOKIE_NAME}=${data};domain=${VENDOR_CONSENT_COOKIE_DOMAIN};path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH};max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE};SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
+    window.document.cookie = cookieValue
   }
 }
 
 export {BrowserCookieStorage}
+
+const VENDOR_CONSENT_COOKIE_DOMAIN = '*'
+const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
+const VENDOR_CONSENT_COOKIE_MAX_AGE = 33696000
+const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
+const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
