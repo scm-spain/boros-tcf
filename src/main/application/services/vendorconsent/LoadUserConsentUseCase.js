@@ -7,7 +7,7 @@ class LoadUserConsentUseCase {
   }
 
   execute() {
-    // dispatch evento
+    // TODO dispatch required IAB event
     const consent = this._loadConsentService.loadConsent()
     return consent.toJSON()
   }

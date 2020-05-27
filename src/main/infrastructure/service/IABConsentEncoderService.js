@@ -9,10 +9,7 @@ class IABConsentEncoderService extends ConsentEncoderService {
     GVL.latestFilename = 'LATEST'
   }
 
-  // create a new TC string
   encode({consent = {}, previousEncodedConsent}) {
-    // TODO we can do it better :)
-
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
 
     const tcModel = previousEncodedConsent
