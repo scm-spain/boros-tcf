@@ -1,7 +1,5 @@
 import {ConsentDecoderService} from '../../domain/consent/ConsentDecoderService'
-import {ConsentFactory} from '../../domain/consent/ConsentFactory'
 import {TCString} from '@iabtcf/core'
-import {inject} from '../../core/ioc/ioc'
 
 class IABConsentDecoderService extends ConsentDecoderService {
   decode({encodedConsent}) {
