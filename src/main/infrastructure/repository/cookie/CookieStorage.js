@@ -2,8 +2,8 @@
  * @interface
  */
 class CookieStorage {
-  load({key}) {}
-  save({key, data}) {}
+  load() {}
+  save({data}) {}
 }
 
 export {CookieStorage}

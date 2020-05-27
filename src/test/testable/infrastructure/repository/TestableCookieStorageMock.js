@@ -6,12 +6,12 @@ class TestableCookieStorageMock extends CookieStorage {
     this._storage = new Map()
   }
 
-  load({key}) {
-    return this._storage.get(key)
+  load() {
+    return this._storage.get(VENDOR_CONSENT_COOKIE_NAME)
   }
 
-  save({key, data}) {
-    this._storage.set(key, data)
+  save({data}) {
+    this._storage.set(VENDOR_CONSENT_COOKIE_NAME, data)
   }
 
   get storage() {
@@ -19,4 +19,5 @@ class TestableCookieStorageMock extends CookieStorage {
   }
 }
 
+const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
 export {TestableCookieStorageMock}

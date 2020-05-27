@@ -9,14 +9,12 @@ class CookieConsentRepository extends ConsentRepository {
   }
 
   loadUserConsent() {
-    return this._cookieStorage.load({key: CONSENT_COOKIE_KEY})
+    return this._cookieStorage.load()
   }
 
   saveUserConsent({consent}) {
-    this._cookieStorage.save({key: CONSENT_COOKIE_KEY, data: consent})
+    this._cookieStorage.save({data: consent})
   }
 }
-
-const CONSENT_COOKIE_KEY = 'euconsentv2'
 
 export {CookieConsentRepository}
