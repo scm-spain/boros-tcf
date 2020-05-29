@@ -7,17 +7,18 @@ class IABConsentEncoderService extends ConsentEncoderService {
     super()
     GVL.baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist'
     GVL.latestFilename = 'LATEST'
+    this._gvl = new GVL()
   }
 
-  encode({consent = {}, previousEncodedConsent}) {
+  encode({consent = {}, previousEncodedConsent} = {}) {
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
 
     const tcModel = previousEncodedConsent
       ? TCString.decode(previousEncodedConsent)
-      : new TCModel(new GVL())
-
+      : new TCModel(this._gvl)
     tcModel.cmpId = BOROS_TCF_ID
     tcModel.cmpVersion = BOROS_TCF_VERSION
+    tcModel.gvl = this._gvl
 
     const setIabVector = ({value = {}, vector}) =>
       Object.keys(value).forEach(k =>

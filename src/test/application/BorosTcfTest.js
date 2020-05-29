@@ -69,6 +69,20 @@ describe('BorosTcf', () => {
   describe('saveUserConsent', () => {
     let borosTcf
     let cookieStorageMock
+    const givenPurpose = {
+      consents: {},
+      legitimateInterests: {}
+    }
+    const givenVendor = {
+      consents: {
+        '1': false,
+        '2': true
+      },
+      legitimateInterests: {
+        '1': false,
+        '2': true
+      }
+    }
     beforeEach(() => {
       cookieStorageMock = new TestableCookieStorageMock()
       borosTcf = TestableTcfApiInitializer.create()
@@ -76,21 +90,7 @@ describe('BorosTcf', () => {
         .init()
     })
 
-    it('should work', () => {
-      const givenPurpose = {
-        consents: {},
-        legitimateInterests: {}
-      }
-      const givenVendor = {
-        consents: {
-          '1': false,
-          '2': true
-        },
-        legitimateInterests: {
-          '1': false,
-          '2': true
-        }
-      }
+    it('should generate and save correctly the user consent', () => {
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() => {
@@ -104,11 +104,49 @@ describe('BorosTcf', () => {
           expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
           expect(userConsent.vendorConsents.has(1)).to.be.false
           expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
+        })
+    })
+  })
 
-          const consentModel = borosTcf.loadUserConsent()
+  describe('loadUserConsent', () => {
+    let borosTcf
+    let cookieStorageMock
+    const givenPurpose = {
+      consents: {},
+      legitimateInterests: {}
+    }
+    const givenVendor = {
+      consents: {
+        '1': false,
+        '2': true
+      },
+      legitimateInterests: {
+        '1': false,
+        '2': true
+      }
+    }
+    beforeEach(() => {
+      cookieStorageMock = new TestableCookieStorageMock()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
+    })
+
+    it('should load the saved user consent', () => {
+      return borosTcf
+        .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
+        .then(() => {
+          return borosTcf.loadUserConsent()
+        })
+        .then(consentModel => {
           expect(consentModel.vendor).to.deep.equal(givenVendor)
           expect(consentModel.purpose).to.deep.equal(givenPurpose)
         })
+    })
+    it('should load an empty consent if there was not saved user consent', async () => {
+      const consentModel = await borosTcf.loadUserConsent()
+      expect(consentModel).to.not.be.undefined
+      expect(consentModel.valid).to.be.false
     })
   })
 })

@@ -14,7 +14,7 @@ export class LoadConsentService {
     this._consentDecoderService = consentDecoderService
   }
 
-  loadConsent() {
+  async loadConsent() {
     const encodedConsent = this._consentRepository.loadUserConsent()
     if (!encodedConsent) {
       return this._consentFactory.createEmptyConsent()

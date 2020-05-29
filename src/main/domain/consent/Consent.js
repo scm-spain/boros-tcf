@@ -1,5 +1,5 @@
 export class Consent {
-  constructor({vendor, purpose, specialFeatures, valid}) {
+  constructor({vendor, purpose, specialFeatures, valid = false}) {
     this._vendor = vendor
     this._purpose = purpose
     this._specialFeatures = specialFeatures
