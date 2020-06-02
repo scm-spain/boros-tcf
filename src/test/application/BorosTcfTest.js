@@ -190,6 +190,7 @@ describe('BorosTcf', () => {
         .then(consentModel => {
           expect(consentModel.vendor).to.deep.equal(givenVendor)
           expect(consentModel.purpose).to.deep.equal(givenPurpose)
+          expect(consentModel.valid).to.be.true
         })
     })
     it('should load an empty consent if there was not saved user consent', async () => {
