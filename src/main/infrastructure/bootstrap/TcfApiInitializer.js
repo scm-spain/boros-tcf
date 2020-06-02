@@ -7,11 +7,7 @@ import {SaveUserConsentUseCase} from '../../application/services/vendorconsent/S
 import {TcfApiRegistryService} from '../service/TcfApiRegistryService'
 import {TcfApiController} from '../controller/TcfApiController'
 import {BorosTcf} from '../../application/BorosTcf'
-import {HttpClient} from '../repository/http/HttpClient'
-import {AxiosHttpClient} from '../repository/http/AxiosHttpClient'
 import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository'
-import {HttpVendorListRepository} from '../repository/HttpVendorListRepository'
-import {iocAdapter} from '../aop/iocAdapter'
 import {ConsentRepository} from '../../domain/consent/ConsentRepository'
 import {CookieConsentRepository} from '../repository/CookieConsentRepository'
 import {CookieStorage} from '../repository/cookie/CookieStorage'
@@ -22,6 +18,8 @@ import {ConsentDecoderService} from '../../domain/consent/ConsentDecoderService'
 import {IABConsentDecoderService} from '../service/IABConsentDecoderService'
 import {LoadConsentService} from '../../domain/consent/LoadConsentService'
 import {ConsentFactory} from '../../domain/consent/ConsentFactory'
+import {IABVendorListRepository} from '../repository/iab/IABVendorListRepository'
+import {GVLFactory} from '../repository/iab/GVLFactory'
 
 class TcfApiInitializer {
   static init() {
@@ -37,8 +35,8 @@ class TcfApiInitializer {
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
 
-        singleton(VendorListRepository, () => new HttpVendorListRepository())
-        singleton(HttpClient, () => new AxiosHttpClient())
+        singleton(VendorListRepository, () => new IABVendorListRepository())
+        singleton(GVLFactory, () => new GVLFactory())
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(CookieStorage, () => new BrowserCookieStorage())
@@ -46,8 +44,7 @@ class TcfApiInitializer {
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
         singleton(LoadConsentService, () => new LoadConsentService())
         singleton(ConsentFactory, () => new ConsentFactory())
-      },
-      adapter: iocAdapter
+      }
     })
 
     TcfApiRegistryService.start()
