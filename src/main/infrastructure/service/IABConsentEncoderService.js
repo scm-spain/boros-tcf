@@ -1,24 +1,24 @@
-import {TCModel, TCString, GVL} from '@iabtcf/core'
+import {TCModel, TCString} from '@iabtcf/core'
 import {ConsentEncoderService} from '../../domain/consent/ConsentEncoderService'
 import {BOROS_TCF_ID, BOROS_TCF_VERSION} from '../../core/constants'
+import {inject} from '../../core/ioc/ioc'
+import {GVLFactory} from '../repository/iab/GVLFactory'
 
 class IABConsentEncoderService extends ConsentEncoderService {
-  constructor() {
+  constructor({gvlFactory = inject(GVLFactory)} = {}) {
     super()
-    GVL.baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist'
-    GVL.latestFilename = 'LATEST'
-    this._gvl = new GVL()
+    this._gvlFactory = gvlFactory
   }
 
   encode({consent = {}, previousEncodedConsent} = {}) {
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
-
+    const latestGVL = this._gvlFactory.create()
     const tcModel = previousEncodedConsent
       ? TCString.decode(previousEncodedConsent)
-      : new TCModel(this._gvl)
+      : new TCModel(latestGVL)
     tcModel.cmpId = BOROS_TCF_ID
     tcModel.cmpVersion = BOROS_TCF_VERSION
-    tcModel.gvl = this._gvl
+    tcModel.gvl = latestGVL
 
     const setIabVector = ({value = {}, vector}) =>
       Object.keys(value).forEach(k =>
