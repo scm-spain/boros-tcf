@@ -12,13 +12,17 @@ class IABConsentEncoderService extends ConsentEncoderService {
 
   encode({consent = {}, previousEncodedConsent} = {}) {
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
-    const latestGVL = this._gvlFactory.create()
-    const tcModel = previousEncodedConsent
-      ? TCString.decode(previousEncodedConsent)
-      : new TCModel(latestGVL)
+    let tcModel
+    if (previousEncodedConsent) {
+      tcModel = TCString.decode(previousEncodedConsent)
+      tcModel.gvl = this._gvlFactory.create({
+        version: tcModel.vendorListVersion
+      })
+    } else {
+      tcModel = new TCModel(this._gvlFactory.create())
+    }
     tcModel.cmpId = BOROS_TCF_ID
     tcModel.cmpVersion = BOROS_TCF_VERSION
-    tcModel.gvl = latestGVL
 
     const setIabVector = ({value = {}, vector}) =>
       Object.keys(value).forEach(k =>
