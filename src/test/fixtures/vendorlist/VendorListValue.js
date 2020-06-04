@@ -3,7 +3,7 @@ export const VendorListValue = {
     gvlSpecificationVersion: 2,
     vendorListVersion: 36,
     tcfPolicyVersion: 2,
-    lastUpdated: '2020-04-30T16:05:17Z',
+    lastUpdated: '2020-04-30T16:05:17.000Z',
     purposes: {
       '1': {
         id: 1,

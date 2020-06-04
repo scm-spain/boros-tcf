@@ -51,6 +51,7 @@
     "jsdom": "16.2.2",
     "jsdom-global": "3.0.2",
     "mocha": "5.2.0",
+    "nock": "12.0.3",
     "nyc": "15.0.0",
     "sinon": "9.0.2",
     "versiona": "4",
@@ -68,7 +69,7 @@
     "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
   },
   "dependencies": {
-    "axios": "0.19.2",
+    "@iabtcf/core": "^1.0.1",
     "brusc": "1"
   }
 }
