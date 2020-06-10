@@ -20,6 +20,10 @@ import {LoadConsentService} from '../../domain/consent/LoadConsentService'
 import {ConsentFactory} from '../../domain/consent/ConsentFactory'
 import {IABVendorListRepository} from '../repository/iab/IABVendorListRepository'
 import {GVLFactory} from '../repository/iab/GVLFactory'
+import {CmpStatusRepository} from '../../domain/status/CmpStatusRepository'
+import {InMemoryCmpStatusRepository} from '../../application/services/status/InMemoryCmpStatusRepository'
+import {DisplayStatusRepository} from '../../domain/status/DisplayStatusRepository'
+import {InMemoryDisplayStatusRepository} from '../../application/services/status/InMemoryDisplayStatusRepository'
 
 class TcfApiInitializer {
   static init() {
@@ -29,6 +33,12 @@ class TcfApiInitializer {
         singleton('window', () => window)
 
         singleton(TcfApiController, () => new TcfApiController())
+
+        singleton(CmpStatusRepository, () => new InMemoryCmpStatusRepository())
+        singleton(
+          DisplayStatusRepository,
+          () => new InMemoryDisplayStatusRepository()
+        )
 
         singleton(PingUseCase, () => new PingUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
