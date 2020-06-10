@@ -44,6 +44,7 @@ class IABConsentDecoderService extends ConsentDecoderService {
     })
 
     return {
+      vendorListVersion: tcModel.vendorListVersion,
       vendor: model.vendor,
       purpose: model.purpose,
       specialFeatures: model.specialFeatures

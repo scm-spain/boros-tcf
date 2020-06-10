@@ -5,16 +5,21 @@ import {
   TCF_API_SUPPORTED_VERSION,
   TCF_API_VERSION
 } from '../../core/constants'
-
 class PingReturn {
-  constructor() {
+  /**
+   *
+   * @param {Object} param
+   * @param {import('../status/CmpStatus').CmpStatus} param.cmpStatus
+   * @param {import('../status/CmpStatus').CmpStatus} param.cmpStatus
+   */
+  constructor({cmpStatus, displayStatus} = {}) {
     /**
      * true - GDPR Applies
      * false - GDPR Does not apply
      * undefined - unknown whether GDPR Applies
      * see the section: "What does the gdprApplies value mean?"
      */
-    this._gdprApplies = undefined
+    this._gdprApplies = true
 
     /**
      * true - CMP main script is loaded
@@ -30,7 +35,8 @@ class PingReturn {
     /**
      * see Ping Status Codes in following table
      */
-    this._displayStatus = HIDDEN
+    // TODO: define what property needs to be in DisplayStatus
+    this._displayStatus = displayStatus
 
     /**
      * version of the CMP API that is supported e.g. "2.0"
@@ -47,15 +53,13 @@ class PingReturn {
      * IAB Assigned CMP ID
      * undefined if still the stub
      */
-    // TODO this is a constant
     this._cmpId = BOROS_TCF_ID
 
     /**
      * Version of the GVL currently loaded by the CMP
      * undefined if still the stub
      */
-    // TODO not developed yet
-    this._gvlVersion = undefined
+    this._gvlVersion = cmpStatus.gvlVersion
 
     /**
      * Number of the supported TCF version
@@ -98,6 +102,20 @@ class PingReturn {
 
   get tcfPolicyVersion() {
     return this._tcfPolicyVersion
+  }
+
+  value() {
+    return {
+      gdprApplies: this._gdprApplies,
+      cmpLoaded: this._cmpLoaded,
+      cmpStatus: this._cmpStatus,
+      displayStatus: this._displayStatus,
+      apiVersion: this._apiVersion,
+      cmpVersion: this._cmpVersion,
+      cmpId: this._cmpId,
+      gvlVersion: this._gvlVersion,
+      tcfPolicyVersion: this._tcfPolicyVersion
+    }
   }
 }
 
