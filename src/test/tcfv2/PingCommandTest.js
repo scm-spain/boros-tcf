@@ -1,30 +1,41 @@
 import 'jsdom-global/register'
 import {expect} from 'chai'
-import {PingReturn} from '../../main/domain/ping/PingReturn'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
-import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/TestableGVLFactory'
-import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 
 describe('ping', () => {
   const command = 'ping'
   const version = 2
-  it('should return a PingReturn object', () => {
+  it('should return a PingReturn object according to specs', () => {
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, (pingReturn, success) => {
       expect(success).to.be.true
-      expect(pingReturn).to.be.instanceOf(PingReturn)
+      const expectedPingReturnProperties = [
+        'gdprApplies',
+        'cmpLoaded',
+        'cmpStatus',
+        'displayStatus',
+        'apiVersion',
+        'cmpVersion',
+        'cmpId',
+        'gvlVersion',
+        'tcfPolicyVersion'
+      ]
+      expect(pingReturn).to.have.all.keys(expectedPingReturnProperties)
     })
   })
 
-  it('should return fixed settings', () => {
-    const givenCmpId = 129
+  it('should return the fixed settings', () => {
+    const expectedCmpId = 129
+    const expectedApiVersion = '2.0'
+    const expectedTcfPolicyVersion = 2
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, pingReturn => {
       expect(pingReturn.gdprApplies).to.be.true
-      expect(pingReturn.cmpId).to.be.equal(givenCmpId)
+      expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
+      expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
+      expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
     })
   })
 
