@@ -19,6 +19,10 @@ export class PingUseCase {
   }
 
   execute() {
-    return new PingReturn({cmpStatus: this._cmpStatusRepository.getCmpStatus()})
+    const pingReturn = new PingReturn({
+      cmpStatus: this._cmpStatusRepository.getCmpStatus(),
+      displayStatus: this._displayStatusRepository.getDisplayStatus()
+    })
+    return pingReturn.value()
   }
 }
