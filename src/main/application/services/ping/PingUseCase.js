@@ -1,11 +1,28 @@
+import {inject} from '../../../core/ioc/ioc'
 import {PingReturn} from '../../../domain/ping/PingReturn.js'
+import {CmpStatusRepository} from '../../../domain/status/CmpStatusRepository'
+import {DisplayStatusRepository} from '../../../domain/status/DisplayStatusRepository'
 
-class PingUseCase {
+export class PingUseCase {
+  /**
+   *
+   * @param {Object} param
+   * @param {CmpStatusRepository} param.cmpStatusRepository
+   * @param {DisplayStatusRepository} param.displayStatusRepository
+   */
+  constructor({
+    cmpStatusRepository = inject(CmpStatusRepository),
+    displayStatusRepository = inject(DisplayStatusRepository)
+  } = {}) {
+    this._cmpStatusRepository = cmpStatusRepository
+    this._displayStatusRepository = displayStatusRepository
+  }
+
   execute() {
-    // TODO
-    console.log('PingUseCase: returning mock response')
-    return new PingReturn()
+    const pingReturn = new PingReturn({
+      cmpStatus: this._cmpStatusRepository.getCmpStatus(),
+      displayStatus: this._displayStatusRepository.getDisplayStatus()
+    })
+    return pingReturn.value()
   }
 }
-
-export {PingUseCase}
