@@ -10,7 +10,7 @@ import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/TestableGVLFactory'
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import sinon from 'sinon'
-import {EVENT_STATUS, EventStatus} from '../../main/domain/status/EventStatus'
+import {EventStatus} from '../../main/domain/status/EventStatus'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
