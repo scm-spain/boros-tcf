@@ -49,12 +49,11 @@ class TcfApiInitializer {
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
-        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+
         singleton(
           RemoveEventListenerUseCase,
           () => new RemoveEventListenerUseCase()
         )
-        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
 
         singleton(VendorListRepository, () => new IABVendorListRepository())
         singleton(GVLFactory, () => new GVLFactory())
@@ -63,7 +62,6 @@ class TcfApiInitializer {
         singleton(CookieStorage, () => new BrowserCookieStorage())
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
-        singleton(EventStatusService, () => new EventStatusService())
         singleton(
           DomainEventBus,
           () =>
@@ -72,6 +70,9 @@ class TcfApiInitializer {
                 new ObservableEventStatus({observer})
             })
         )
+        singleton(EventStatusService, () => new EventStatusService())
+        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
         singleton(LoadConsentService, () => new LoadConsentService())
         singleton(ConsentFactory, () => new ConsentFactory())
       }

@@ -2,16 +2,19 @@ import {inject} from '../../core/ioc/ioc'
 import {CmpStatusRepository} from '../status/CmpStatusRepository'
 import {DisplayStatusRepository} from '../status/DisplayStatusRepository'
 import {CmpStatus} from '../status/CmpStatus'
-import {EventStatus} from '../status/EventStatus'
+import {EVENT_STATUS, EventStatus} from '../status/EventStatus'
 import {DisplayStatus} from '../status/DisplayStatus'
+import {DomainEventBus} from './DomainEventBus'
 
 export class EventStatusService {
   constructor({
     cmpStatusRepository = inject(CmpStatusRepository),
-    displayStatusRepository = inject(DisplayStatusRepository)
+    displayStatusRepository = inject(DisplayStatusRepository),
+    domainEventBus = inject(DomainEventBus)
   } = {}) {
     this._cmpStatusRepository = cmpStatusRepository
     this._displayStatusRepository = displayStatusRepository
+    this._domainEventBus = domainEventBus
   }
 
   getEventStatus() {
@@ -25,5 +28,25 @@ export class EventStatusService {
       eventStatus = EventStatus.CMPUISHOWN
     }
     return eventStatus
+  }
+
+  updateUiStatus() {
+    const displayStatus = this._displayStatusRepository.getDisplayStatus()
+    const eventStatus =
+      displayStatus === DisplayStatus.VISIBLE
+        ? EventStatus.CMPUISHOWN
+        : EventStatus.USERACTIONCOMPLETE
+
+    // TODO  get TCData
+    const TCData = {
+      description: 'This TCData should be get from repository',
+      eventStatus
+    }
+    this._domainEventBus.raise({
+      eventName: EVENT_STATUS,
+      payload: {
+        TCData
+      }
+    })
   }
 }
