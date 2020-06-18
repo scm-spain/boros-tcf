@@ -4,6 +4,8 @@
 import {inject} from '../core/ioc/ioc'
 import {PingUseCase} from './services/ping/PingUseCase'
 import {GetVendorListUseCase} from './services/vendorlist/GetVendorListUseCase'
+import {AddEventListenerUseCase} from './services/event/AddEventListenerUseCase'
+import {RemoveEventListenerUseCase} from './services/event/RemoveEventListenerUseCase'
 
 class TcfApiV2 {
   /**
@@ -12,14 +14,17 @@ class TcfApiV2 {
    */
   constructor({
     pingUseCase = inject(PingUseCase),
-    getVendorListUseCase = inject(GetVendorListUseCase)
+    getVendorListUseCase = inject(GetVendorListUseCase),
+    addEventListenerUseCase = inject(AddEventListenerUseCase),
+    removeEventListenerUseCase = inject(RemoveEventListenerUseCase)
   } = {}) {
     this._pingUseCase = pingUseCase
     this._getVendorListUseCase = getVendorListUseCase
+    this._addEventListenerUseCase = addEventListenerUseCase
+    this._removeEventListenerUseCase = removeEventListenerUseCase
   }
 
   getTCData(callback, vendorIds = []) {
-    console.log('getTCData: NOT DEVELOPED YET')
     callback(null, false)
   }
 
@@ -28,13 +33,11 @@ class TcfApiV2 {
   }
 
   addEventListener(callback) {
-    console.log('addEventListener: NOT DEVELOPED YET')
-    callback(null, false)
+    this._addEventListenerUseCase.execute({callback})
   }
 
   removeEventListener(callback, listenerId) {
-    console.log('removeEventListener: NOT DEVELOPED YET')
-    callback(null, false)
+    this._removeEventListenerUseCase.execute({callback, listenerId})
   }
 
   getVendorList(callback, vendorListVersion) {
