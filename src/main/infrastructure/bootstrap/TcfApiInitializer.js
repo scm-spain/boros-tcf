@@ -26,7 +26,7 @@ import {DisplayStatusRepository} from '../../domain/status/DisplayStatusReposito
 import {InMemoryDisplayStatusRepository} from '../../application/services/status/InMemoryDisplayStatusRepository'
 import {AddEventListenerUseCase} from '../../application/services/event/AddEventListenerUseCase'
 import {DomainEventBus} from '../../domain/service/DomainEventBus'
-import ChangeUiVisibleUseCase from '../../application/services/ui/ChangeUiVisibleUseCase'
+import {ChangeUiVisibleUseCase} from '../../application/services/ui/ChangeUiVisibleUseCase'
 import {RemoveEventListenerUseCase} from '../../application/services/event/RemoveEventListenerUseCase'
 import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
 import {EventStatusService} from '../../domain/service/EventStatusService'

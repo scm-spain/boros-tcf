@@ -3,7 +3,7 @@ import {inject} from '../core/ioc/ioc'
 import {GetVendorListUseCase} from './services/vendorlist/GetVendorListUseCase'
 import {LoadUserConsentUseCase} from './services/vendorconsent/LoadUserConsentUseCase'
 import {SaveUserConsentUseCase} from './services/vendorconsent/SaveUserConsentUseCase'
-import ChangeUiVisibleUseCase from './services/ui/ChangeUiVisibleUseCase'
+import {ChangeUiVisibleUseCase} from './services/ui/ChangeUiVisibleUseCase'
 
 class BorosTcf {
   /**

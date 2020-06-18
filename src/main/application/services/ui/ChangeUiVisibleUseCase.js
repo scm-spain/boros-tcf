@@ -4,7 +4,7 @@ import {DisplayStatusRepository} from '../../../domain/status/DisplayStatusRepos
 import {DisplayStatus} from '../../../domain/status/DisplayStatus'
 import {EVENT_STATUS, EventStatus} from '../../../domain/status/EventStatus'
 
-export default class ChangeUiVisibleUseCase {
+export class ChangeUiVisibleUseCase {
   constructor({
     domainEventBus = inject(DomainEventBus),
     displayStatusRepository = inject(DisplayStatusRepository)
