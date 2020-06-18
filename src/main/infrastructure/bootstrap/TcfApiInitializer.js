@@ -24,6 +24,7 @@ import {CmpStatusRepository} from '../../domain/status/CmpStatusRepository'
 import {InMemoryCmpStatusRepository} from '../../application/services/status/InMemoryCmpStatusRepository'
 import {DisplayStatusRepository} from '../../domain/status/DisplayStatusRepository'
 import {InMemoryDisplayStatusRepository} from '../../application/services/status/InMemoryDisplayStatusRepository'
+import {GetTCDataUseCase} from '../../application/services/tcdata/GetTCDataUseCase'
 
 class TcfApiInitializer {
   static init() {
@@ -44,6 +45,7 @@ class TcfApiInitializer {
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
+        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
 
         singleton(VendorListRepository, () => new IABVendorListRepository())
         singleton(GVLFactory, () => new GVLFactory())
