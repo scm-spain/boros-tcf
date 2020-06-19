@@ -49,4 +49,37 @@ export class EventStatusService {
       }
     })
   }
+
+  addEventListener({callback}) {
+    let reference
+
+    try {
+      reference = this._domainEventBus.register({
+        eventName: EVENT_STATUS,
+        observer: callback
+      })
+    } catch (error) {
+      callback(null, false)
+      return
+    }
+
+    // TODO  get TCData
+
+    const cmpStatus = this._cmpStatusRepository.getCmpStatus().code
+    const displayStatus = this._displayStatusRepository.getDisplayStatus().code
+
+    const eventStatus = this.getEventStatus()
+
+    const TCData = {
+      listenerId: reference,
+      // TODO Add here eventStatus
+      cmpStatus,
+      eventStatus: eventStatus,
+      displayStatus
+    }
+
+    // END TODO  get TCData
+
+    callback(TCData, true)
+  }
 }
