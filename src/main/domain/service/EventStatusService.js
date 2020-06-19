@@ -82,4 +82,12 @@ export class EventStatusService {
 
     callback(TCData, true)
   }
+
+  removeEventListener({callback, listenerId}) {
+    const success = this._domainEventBus.unregister({
+      eventName: EVENT_STATUS,
+      reference: listenerId
+    })
+    callback(success)
+  }
 }
