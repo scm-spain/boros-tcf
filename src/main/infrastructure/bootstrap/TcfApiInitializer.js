@@ -24,6 +24,12 @@ import {CmpStatusRepository} from '../../domain/status/CmpStatusRepository'
 import {InMemoryCmpStatusRepository} from '../../application/services/status/InMemoryCmpStatusRepository'
 import {DisplayStatusRepository} from '../../domain/status/DisplayStatusRepository'
 import {InMemoryDisplayStatusRepository} from '../../application/services/status/InMemoryDisplayStatusRepository'
+import {AddEventListenerUseCase} from '../../application/services/event/AddEventListenerUseCase'
+import {DomainEventBus} from '../../domain/service/DomainEventBus'
+import {ChangeUiVisibleUseCase} from '../../application/services/ui/ChangeUiVisibleUseCase'
+import {RemoveEventListenerUseCase} from '../../application/services/event/RemoveEventListenerUseCase'
+import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
+import {EventStatusService} from '../../domain/service/EventStatusService'
 
 class TcfApiInitializer {
   static init() {
@@ -39,11 +45,15 @@ class TcfApiInitializer {
           DisplayStatusRepository,
           () => new InMemoryDisplayStatusRepository()
         )
-
         singleton(PingUseCase, () => new PingUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
+
+        singleton(
+          RemoveEventListenerUseCase,
+          () => new RemoveEventListenerUseCase()
+        )
 
         singleton(VendorListRepository, () => new IABVendorListRepository())
         singleton(GVLFactory, () => new GVLFactory())
@@ -52,6 +62,17 @@ class TcfApiInitializer {
         singleton(CookieStorage, () => new BrowserCookieStorage())
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
+        singleton(
+          DomainEventBus,
+          () =>
+            new DomainEventBus({
+              observableFactory: observer =>
+                new ObservableEventStatus({observer})
+            })
+        )
+        singleton(EventStatusService, () => new EventStatusService())
+        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
         singleton(LoadConsentService, () => new LoadConsentService())
         singleton(ConsentFactory, () => new ConsentFactory())
       }

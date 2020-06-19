@@ -38,6 +38,7 @@ export class CmpStatus {
   } = {}) {
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
+    this._cmpStatus = CmpStatus.LOADING
   }
 
   /**
@@ -55,7 +56,11 @@ export class CmpStatus {
    * @returns {String}
    */
   get code() {
-    return CmpStatus.LOADED
+    return this._cmpStatus
+  }
+
+  setStatus({newCmpStatus}) {
+    this._cmpStatus = newCmpStatus
   }
 
   /**

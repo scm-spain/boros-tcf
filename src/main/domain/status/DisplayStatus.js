@@ -15,10 +15,14 @@ export class DisplayStatus {
    */
   static DISABLED = 'disabled'
 
+  constructor({status = DisplayStatus.DISABLED} = {}) {
+    this._status = status
+  }
+
   /**
    * @returns {String}
    */
   get code() {
-    return DisplayStatus.HIDDEN
+    return this._status
   }
 }
