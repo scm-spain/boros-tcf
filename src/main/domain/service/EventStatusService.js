@@ -74,7 +74,7 @@ export class EventStatusService {
       listenerId: reference,
       // TODO Add here eventStatus
       cmpStatus,
-      eventStatus: eventStatus,
+      eventStatus,
       displayStatus
     }
 
