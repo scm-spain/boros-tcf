@@ -33,7 +33,7 @@ export class EventStatusService {
   updateUiStatus() {
     const displayStatus = this._displayStatusRepository.getDisplayStatus()
     const eventStatus =
-      displayStatus === DisplayStatus.VISIBLE
+      displayStatus.code === DisplayStatus.VISIBLE
         ? EventStatus.CMPUISHOWN
         : EventStatus.USERACTIONCOMPLETE
 
