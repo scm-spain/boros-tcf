@@ -25,4 +25,8 @@ export class DisplayStatus {
   get code() {
     return this._status
   }
+
+  set code(statusCode) {
+    this._status = statusCode
+  }
 }

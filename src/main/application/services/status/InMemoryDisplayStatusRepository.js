@@ -18,6 +18,6 @@ export class InMemoryDisplayStatusRepository extends DisplayStatusRepository {
   }
 
   setDisplayStatus({newStatus}) {
-    this._displayStatus = newStatus
+    this._displayStatus.code = newStatus
   }
 }

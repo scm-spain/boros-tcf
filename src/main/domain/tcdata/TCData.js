@@ -4,21 +4,40 @@ import {
   TCF_API_SUPPORTED_VERSION,
   TCF_API_VERSION,
   PUBLISHER_CC
-} from '../core/constants'
+} from '../../core/constants'
 
 export class TCData {
-  constructor({tcString, cmpStatus, eventStatus, purpose, vendor, specialFeatureOptins}) {
+  /**
+   *
+   * @param {Object} param
+   */
+  constructor({
+    tcString,
+    cmpStatus,
+    eventStatus,
+    listenerId,
+    publisher,
+    purpose,
+    vendor,
+    specialFeatureOptins
+  }) {
     this._tcString = tcString
     this._cmpStatus = cmpStatus
     this._eventStatus = eventStatus
+    this._listenerId = listenerId
+    this._publisher = publisher
     this._purpose = purpose
     this._vendor = vendor
     this._specialFeatureOptins = specialFeatureOptins
   }
 
+  set listenerId (listenerId) {
+    this._listenerId = listenerId
+  }
+
   value() {
     return {
-      tcString: this._cmpStatus,
+      tcString: this._tcString,
       tcfPolicyVersion: TCF_API_VERSION,
       cmpId: BOROS_TCF_ID,
       cmpVersion: BOROS_TCF_VERSION,
@@ -34,7 +53,7 @@ export class TCData {
       /*
        * see addEventListener command
        */
-      eventStatus: this._eventStatus,
+      eventStatus: this._eventStatus.code,
 
       /**
        * see Ping Status Codes in following table
@@ -47,19 +66,19 @@ export class TCData {
        * via addEventListener.
        * Others: undefined.
        */
-      listenerId: Number | undefined,
+      listenerId: this._listenerId,
 
       /*
        * true - if using a service-specific or publisher-specific TC String
        * false - if using a global TC String.
        */
-      isServiceSpecific: Boolean,
+      isServiceSpecific: false, // TODO: verify
 
       /**
        * true - CMP is using publisher-customized stack descriptions
        * false - CMP is NOT using publisher-customized stack descriptions
        */
-      useNonStandardStacks: Boolean,
+      useNonStandardStacks: false, // TODO: verify
 
       /**
        * Country code of the country that determines the legislation of
@@ -78,72 +97,29 @@ export class TCData {
        * false - There is no special Purpose 1 treatment status. Purpose 1 was
        * disclosed normally (consent) as expected by TCF Policy
        */
-      purposeOneTreatment: Boolean,
+      // purposeOneTreatment: false, // TODO: verify
 
       /**
        * Only exists on global-scope TC
        */
       outOfBand: {
-        allowedVendors: {
-          /**
-           * true - Vendor is allowed to use an Out-of-Band Legal Basis
-           * false | undefined - Vendor is NOT allowed to use an Out-of-Band Legal Basis
-           */
-          '[vendor id]': Boolean
-        },
-        disclosedVendors: {
-          /**
-           * true - Vendor has been disclosed to the user
-           * false | undefined - Vendor has been disclosed to the user
-           */
-          '[vendor id]': Boolean
-        }
+        /**
+         * true - Vendor is allowed to use an Out-of-Band Legal Basis
+         * false | undefined - Vendor is NOT allowed to use an Out-of-Band Legal Basis
+         */
+        // '[vendor id]': Boolean
+        allowedVendors: {},
+        /**
+         * true - Vendor has been disclosed to the user
+         * false | undefined - Vendor has been disclosed to the user
+         */
+        // '[vendor id]': Boolean
+        disclosedVendors: {}
       },
       purpose: this._purpose,
       vendor: this._vendor,
       specialFeatureOptins: this._specialFeatureOptins,
-      publisher: {
-        consents: {
-          /**
-           * true - Consent
-           * false | undefined - No Consent
-           */
-          '[purpose id]': Boolean
-        },
-        legitimateInterests: {
-          /**
-           * true - Legitimate Interest Established
-           * false | undefined - No Legitimate Interest Established
-           */
-          '[purpose id]': Boolean
-        },
-        customPurpose: {
-          consents: {
-            /**
-             * true - Consent
-             * false | undefined - No Consent
-             */
-            '[purpose id]': Boolean
-          },
-          legitimateInterests: {
-            /**
-             * true - Legitimate Interest Established
-             * false | undefined - No Legitimate Interest Established
-             */
-            '[purpose id]': Boolean
-          }
-        },
-        restrictions: {
-          '[purpose id]': {
-            /**
-             * 0 - Not Allowed
-             * 1 - Require Consent
-             * 2 - Require Legitimate Interest
-             */
-            '[vendor id]': 1
-          }
-        }
-      }
+      publisher: this._publisher
     }
   }
 }

@@ -40,3 +40,10 @@ export const VENDOR_LIST_LATEST_VERSION = 'LATEST'
  * Base endpoint to get access to remote Vendor List resources
  */
 export const VENDOR_LIST_ENDPOINT = 'https://a.dcdn.es/borostcf/v2/vendorlist'
+
+/**
+ * Country code of the country that determines the legislation of
+ * reference.  Normally corresponds to the country code of the country
+ * in which the publisher's business entity is established.
+ */
+export const PUBLISHER_CC = 'es'

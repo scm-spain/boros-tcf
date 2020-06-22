@@ -31,7 +31,7 @@ class TcfApiV2 {
     this._removeEventListenerUseCase = removeEventListenerUseCase
   }
 
-  getTCData(callback, vendorIds = []) {
+  getTCData(callback, vendorIds) {
     callback(this._getTCDataUseCase.execute({vendorIds}), true)
   }
 

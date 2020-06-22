@@ -2,53 +2,45 @@ import {ConsentDecoderService} from '../../domain/consent/ConsentDecoderService'
 import {TCString} from '@iabtcf/core'
 
 class IABConsentDecoderService extends ConsentDecoderService {
+  /**
+   * 
+   * @param {Object} param
+   * @param {String} param.encodedConsent
+   */
   decode({encodedConsent}) {
+    const mapToModel = vector => {
+      const {maxId = 0} = vector
+      const model = {}
+      for (let i = 1; i <= maxId; i++) {
+        model[i] = vector.has(i)
+      }
+      return model
+    }
+
     const tcModel = TCString.decode(encodedConsent)
 
     const model = {
       vendor: {
-        consents: {},
-        legitimateInterests: {}
+        consents: mapToModel(tcModel.vendorConsents),
+        legitimateInterests: mapToModel(tcModel.vendorLegitimateInterests)
       },
       purpose: {
-        consents: {},
-        legitimateInterests: {}
+        consents: mapToModel(tcModel.purposeConsents),
+        legitimateInterests: mapToModel(tcModel.purposeLegitimateInterests)
       },
-      specialFeatures: {}
+      specialFeatures: mapToModel(tcModel.specialFeatureOptins),
+      publisher: {
+        consents: mapToModel(tcModel.publisherConsents),
+        customPurpose: {
+          consents: tcModel.publisherCustomConsents,
+          legitimateInterest: tcModel.publisherCustomLegitimateInterests
+        },
+        legitimateInterest: mapToModel(tcModel.publisherLegitimateInterests),
+        restrictions: tcModel.publisherRestrictions
+      }
     }
 
-    const mapToModel = ({vector, model}) =>
-      vector.forEach((value, id) => {
-        model[`${id}`] = value
-      })
-
-    mapToModel({
-      vector: tcModel.vendorConsents,
-      model: model.vendor.consents
-    })
-    mapToModel({
-      vector: tcModel.vendorLegitimateInterests,
-      model: model.vendor.legitimateInterests
-    })
-    mapToModel({
-      vector: tcModel.purposeConsents,
-      model: model.purpose.consents
-    })
-    mapToModel({
-      vector: tcModel.purposeLegitimateInterests,
-      model: model.purpose.legitimateInterests
-    })
-    mapToModel({
-      vector: tcModel.specialFeatureOptins,
-      model: model.specialFeatures
-    })
-
-    return {
-      vendorListVersion: tcModel.vendorListVersion,
-      vendor: model.vendor,
-      purpose: model.purpose,
-      specialFeatures: model.specialFeatures
-    }
+    return model
   }
 }
 
