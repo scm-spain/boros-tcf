@@ -40,7 +40,10 @@ class IABConsentDecoderService extends ConsentDecoderService {
       }
     }
 
-    return model
+    return {
+      vendorListVersion: tcModel.vendorListVersion,
+      ...model
+    }
   }
 }
 
