@@ -16,4 +16,8 @@ export class InMemoryCmpStatusRepository extends CmpStatusRepository {
   getCmpStatus() {
     return this._cmpStatus
   }
+
+  setCmpStatus({newCmpStatus}) {
+    this._cmpStatus = newCmpStatus
+  }
 }

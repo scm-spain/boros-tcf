@@ -16,4 +16,8 @@ export class InMemoryDisplayStatusRepository extends DisplayStatusRepository {
   getDisplayStatus() {
     return this._displayStatus
   }
+
+  setDisplayStatus({newStatus}) {
+    this._displayStatus = newStatus
+  }
 }

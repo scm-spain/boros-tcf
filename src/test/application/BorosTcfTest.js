@@ -8,6 +8,9 @@ import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieS
 import {BOROS_TCF_ID} from '../../main/core/constants'
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/TestableGVLFactory'
+import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
+import sinon from 'sinon'
+import {EventStatus} from '../../main/domain/status/EventStatus'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -72,8 +75,8 @@ describe('BorosTcf', () => {
         })
     })
     it('should generate and save correctly the new user consent when an old one exists', () => {
-      /* This test is not representing a real case. When the getVendorListUseCase is refactored 
-      this test should have a saved user consent with an old VendorList and then save a modified 
+      /* This test is not representing a real case. When the getVendorListUseCase is refactored
+      this test should have a saved user consent with an old VendorList and then save a modified
       user consent with the latest vendorList version.
        */
       const givenPurpose2 = {
@@ -121,7 +124,6 @@ describe('BorosTcf', () => {
         })
     })
   })
-
   describe('loadUserConsent', () => {
     let borosTcf
     let cookieStorageMock
@@ -162,6 +164,33 @@ describe('BorosTcf', () => {
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel).to.not.be.undefined
       expect(consentModel.valid).to.be.false
+    })
+  })
+  describe('uiVisible', () => {
+    let borosTcf
+    let domainEventBus
+    beforeEach(() => {
+      domainEventBus = new DomainEventBus()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(DomainEventBus, domainEventBus)
+        .init()
+    })
+    it('should raise useractioncomplete eventStatus when visible is false', () => {
+      const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
+      borosTcf.uiVisible({visible: false})
+
+      expect(spyDomainEventBus.calledOnce).to.be.true
+      expect(
+        spyDomainEventBus.getCall(0).args[0].payload.TCData.eventStatus
+      ).to.deep.equal(EventStatus.USERACTIONCOMPLETE)
+    })
+    it('should raise cmpuishown Event when visible is true', () => {
+      const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
+      borosTcf.uiVisible({visible: true})
+      expect(spyDomainEventBus.calledOnce).to.be.true
+      expect(
+        spyDomainEventBus.getCall(0).args[0].payload.TCData.eventStatus
+      ).equal(EventStatus.CMPUISHOWN)
     })
   })
 })
