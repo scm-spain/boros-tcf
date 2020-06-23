@@ -3,7 +3,7 @@ import {TCString} from '@iabtcf/core'
 
 class IABConsentDecoderService extends ConsentDecoderService {
   /**
-   * 
+   *
    * @param {Object} param
    * @param {String} param.encodedConsent
    */
@@ -32,11 +32,13 @@ class IABConsentDecoderService extends ConsentDecoderService {
       publisher: {
         consents: mapToModel(tcModel.publisherConsents),
         customPurpose: {
-          consents: tcModel.publisherCustomConsents,
-          legitimateInterest: tcModel.publisherCustomLegitimateInterests
+          consents: mapToModel(tcModel.publisherCustomConsents),
+          legitimateInterests: mapToModel(
+            tcModel.publisherCustomLegitimateInterests
+          )
         },
-        legitimateInterest: mapToModel(tcModel.publisherLegitimateInterests),
-        restrictions: tcModel.publisherRestrictions
+        legitimateInterests: mapToModel(tcModel.publisherLegitimateInterests),
+        restrictions: mapToModel(tcModel.publisherRestrictions)
       }
     }
 

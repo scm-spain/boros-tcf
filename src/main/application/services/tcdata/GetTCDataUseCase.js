@@ -37,7 +37,7 @@ export class GetTCDataUseCase {
     const encodedConsent = this._consentRepository.loadUserConsent()
     const tcModel = this._consentDecoderService.decode({encodedConsent})
 
-    const {publisher, purpose, specialFeature} = tcModel
+    const {publisher, purpose, specialFeatures} = tcModel
     let vendor
     if (!vendorIds) {
       vendor = tcModel.vendor
@@ -55,7 +55,7 @@ export class GetTCDataUseCase {
       publisher,
       purpose,
       vendor,
-      specialFeatureOptins: specialFeature
+      specialFeatureOptins: specialFeatures
     })
   }
 }
