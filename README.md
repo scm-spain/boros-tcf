@@ -21,6 +21,8 @@
 
 ## Features
 
+* Initialization with Stub, [see details here](https://github.com/scm-spain/boros-tcf-stub)
+ 
 ## Technical features
 
 ## Usage

@@ -1,32 +1,31 @@
 import {TcfApiV2} from '../../application/TcfApiV2'
+import {inject} from '../../core/ioc/ioc'
 
 class TcfApiController {
-  constructor() {
-    this._tcfApi = undefined
+  constructor({tcfApi = inject(TcfApiV2)} = {}) {
+    this._tcfApi = tcfApi
   }
 
-  process(command, version, callback, parameter) {
-    // TODO just a prototype
-    if (version !== 2) {
-      console.log('TcfApiController: unaccepted version')
-      return
+  process(command, version, callback = () => null, parameter) {
+    if (version !== 2 || !this._tcfApi[command]) {
+      this._reject(callback)
+    } else {
+      try {
+        return this._tcfApi[command](callback, parameter)
+      } catch (error) {
+        this._reject(callback)
+      }
     }
-    if (typeof callback !== 'function') {
-      console.log('TcfApiController: callback must be a function')
-      return
-    }
-    // initialize the TcfApiV2 if not initialized yet,
-    // this initializes all the dependencies only when called at the first time
-    this._tcfApi = this._tcfApi || new TcfApiV2()
-    if (!this._tcfApi[command]) {
-      callback(null, false)
-    }
+  }
+
+  get api() {
+    return this._tcfApi
+  }
+
+  _reject(callback) {
     try {
-      this._tcfApi[command](callback, parameter)
-    } catch (error) {
-      console.log(`TcfApiController: error processing [${command}]`, error)
       callback(null, false)
-    }
+    } catch (ignored) {}
   }
 }
 
