@@ -49,6 +49,17 @@ class BorosTcf {
     this._changeUiVisibleUseCase.execute({visible})
   }
 
+  /**
+   *
+   * @param {Object} param
+   * @param {Object} param.purpose
+   * @param {Object<Number, boolean>} param.purpose.consents
+   * @param {Object<Number, boolean>} param.purpose.legitimateInterests
+   * @param {Object} param.vendor
+   * @param {Object<Number, boolean>} param.vendor.consents
+   * @param {Object<Number, boolean>} param.vendor.legitimateInterests
+   * @param {Object<Number, boolean>} param.specialFeatures
+   */
   async saveUserConsent({purpose, vendor, specialFeatures}) {
     return this._saveUserConsentUseCase.execute({
       purpose,
