@@ -21,27 +21,21 @@ describe('getTCData', () => {
     consents: {1: true, 2: false, 3: false},
     legitimateInterests: {1: false, 2: false, 3: true}
   }
-  const expectedVendor = {
-    consents: {'1': true},
-    legitimateInterests: {'1': false, '2': false, '3': true}
-  }
-  const expectedPurpose = {
-    consents: {1: true, 2: false, 3: true},
-    legitimateInterests: {1: false, 2: false, 3: true}
-  }
-  it('should sucess', () => {
+  const givenSpecialFeatures = {1: true, 2: false, 3: true}
+
+  it('should return all props correctly setted', done => {
     const cookieStorageMock = new TestableCookieStorageMock()
-    const eventStatusService = {
+    const eventStatusServiceMock = {
       getEventStatus: () => ({code: EventStatus.TCLOADED})
     }
-    const cmpStatusRepository = {
+    const cmpStatusRepositoryMock = {
       getCmpStatus: () => {
         return {
           code: CmpStatus.LOADED
         }
       }
     }
-    const displayStatusRepository = {
+    const displayStatusRepositoryMock = {
       getDisplayStatus: () => {
         return {
           code: DisplayStatus.VISIBLE
@@ -50,20 +44,67 @@ describe('getTCData', () => {
     }
     const borosTcf = TestableTcfApiInitializer.create()
       .mock(CookieStorage, cookieStorageMock)
-      .mock(CmpStatusRepository, cmpStatusRepository)
-      .mock(DisplayStatusRepository, displayStatusRepository)
-      .mock(EventStatusService, eventStatusService)
+      .mock(CmpStatusRepository, cmpStatusRepositoryMock)
+      .mock(DisplayStatusRepository, displayStatusRepositoryMock)
+      .mock(EventStatusService, eventStatusServiceMock)
       .init()
-    return borosTcf
-      .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
-      .then(() =>
+
+    const expectedVendor = {
+      consents: {'1': true},
+      legitimateInterests: {'1': false, '2': false, '3': true}
+    }
+    const expectedPurpose = {
+      consents: {1: true, 2: false, 3: true},
+      legitimateInterests: {1: false, 2: false, 3: true}
+    }
+    const expectedSpecialFeatures = givenSpecialFeatures
+    const expectedEmptyOutOfBand = {
+      allowedVendors: {},
+      disclosedVendors: {}
+    }
+    const expectedPublisher = {
+      consents: {},
+      legitimateInterests: {},
+      customPurpose: {
+        consents: {},
+        legitimateInterests: {}
+      },
+      restrictions: {}
+    }
+
+    borosTcf
+      .saveUserConsent({
+        purpose: givenPurpose,
+        vendor: givenVendor,
+        specialFeatures: givenSpecialFeatures
+      })
+      .then(() => cookieStorageMock.load())
+      .then(cookie =>
         window.__tcfapi(command, version, (tcData, success) => {
-          // TODO: implement
           expect(success).to.be.true
           const tcDataValue = tcData.value()
-          expect(tcDataValue.vendor).to.deep.equal(expectedVendor)
-          expect(tcDataValue.purpose).to.deep.equal(expectedPurpose)
-          expect(tcDataValue.cmpStatus).to.be.equal(CmpStatus.LOADED)
+          const {
+            tcString,
+            gdprApplies,
+            eventStatus,
+            cmpStatus,
+            outOfBand,
+            purpose,
+            vendor,
+            specialFeatureOptins,
+            publisher
+          } = tcDataValue
+          debugger
+          expect(tcString).to.be.equal(cookie)
+          expect(gdprApplies).to.be.true
+          expect(eventStatus).to.be.equal(EventStatus.TCLOADED)
+          expect(cmpStatus).to.be.equal(CmpStatus.LOADED)
+          expect(outOfBand).to.be.deep.equal(expectedEmptyOutOfBand)
+          expect(purpose).to.deep.equal(expectedPurpose)
+          expect(vendor).to.deep.equal(expectedVendor)
+          expect(specialFeatureOptins).to.deep.equal(expectedSpecialFeatures)
+          expect(publisher).to.deep.equal(expectedPublisher)
+          done()
         })
       )
   })
