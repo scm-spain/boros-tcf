@@ -28,7 +28,7 @@ import {RemoveEventListenerUseCase} from '../../application/services/event/Remov
 import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
 import {EventStatusService} from '../../domain/service/EventStatusService'
 import {StatusRepository} from '../../domain/status/StatusRepository'
-import {InMemoryStatusRepository} from '../../domain/status/InMemoryStatusRepository'
+import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStatusRepository'
 import {TcfApiV2} from '../../application/TcfApiV2'
 
 class TcfApiInitializer {

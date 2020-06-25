@@ -1,5 +1,5 @@
-import {Status} from './Status'
-import {StatusRepository} from './StatusRepository'
+import {Status} from '../../domain/status/Status'
+import {StatusRepository} from '../../domain/status/StatusRepository'
 
 /**
  * @implements {StatusRepository}
