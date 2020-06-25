@@ -5,7 +5,6 @@ import {StatusRepository} from '../../../domain/status/StatusRepository'
 import {Status} from '../../../domain/status/Status'
 
 class LoadUserConsentUseCase {
-  _statusRepository
   constructor({
     loadConsentService = inject(LoadConsentService),
     eventStatusService = inject(EventStatusService),
