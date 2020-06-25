@@ -132,7 +132,6 @@ describe('BorosTcf', () => {
     })
   })
   describe('loadUserConsent', () => {
-    const iabConsentDecoderService = new IABConsentDecoderService()
     let borosTcf
     let cookieStorageMock
     const givenPurpose = {
