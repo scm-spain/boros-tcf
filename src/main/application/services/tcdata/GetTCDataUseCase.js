@@ -16,13 +16,11 @@ export class GetTCDataUseCase {
     cmpStatusRepository = inject(CmpStatusRepository),
     displayStatusRepository = inject(DisplayStatusRepository),
     consentRepository = inject(ConsentRepository),
-    eventStatusService = inject(EventStatusService),
     consentDecoderService = inject(ConsentDecoderService)
   } = {}) {
     this._cmpStatusRepository = cmpStatusRepository
     this._displayStatusRepository = displayStatusRepository
     this._consentRepository = consentRepository
-    this._eventStatusService = eventStatusService
     this._consentDecoderService = consentDecoderService
   }
 
@@ -31,11 +29,34 @@ export class GetTCDataUseCase {
    * @param {Object} param
    * @param {Array<Number>} param.vendorIds
    */
-  execute({vendorIds}) {
+  execute({vendorIds} = {}) {
+    // TODO: Check if vendorsId is valid
     const cmpStatus = this._cmpStatusRepository.getCmpStatus()
-    const eventStatus = this._eventStatusService.getEventStatus()
+    const eventStatus = EventStatusService.getEventStatus({
+      cmpStatusRepository: this._cmpStatusRepository,
+      displayStatusRepository: this._displayStatusRepository
+    })
     const encodedConsent = this._consentRepository.loadUserConsent()
-    const tcModel = this._consentDecoderService.decode({encodedConsent})
+    let tcModel
+    if (encodedConsent) {
+      tcModel = this._consentDecoderService.decode({encodedConsent})
+    } else {
+      const emptyTCModel = {
+        publisher: {
+          consents: {},
+          legitimateInterests: {},
+          customPurpose: {},
+          restrictions: {}
+        },
+        purpose: {consents: {}, legitimateInterests: {}},
+        specialFeatures: {},
+        vendor: {
+          consents: {},
+          legitimateInterests: {}
+        }
+      }
+      tcModel = emptyTCModel
+    }
 
     const {publisher, purpose, specialFeatures} = tcModel
     let vendor

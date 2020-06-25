@@ -31,7 +31,11 @@ export class TCData {
     this._specialFeatureOptins = specialFeatureOptins
   }
 
-  set listenerId (listenerId) {
+  get listenerId() {
+    return this._listenerId
+  }
+
+  set listenerId(listenerId) {
     this._listenerId = listenerId
   }
 
@@ -53,7 +57,7 @@ export class TCData {
       /*
        * see addEventListener command
        */
-      eventStatus: this._eventStatus.code,
+      eventStatus: this._eventStatus,
 
       /**
        * see Ping Status Codes in following table

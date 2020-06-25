@@ -1,25 +1,22 @@
 import {inject} from '../../core/ioc/ioc'
-import {CmpStatusRepository} from '../status/CmpStatusRepository'
-import {DisplayStatusRepository} from '../status/DisplayStatusRepository'
 import {CmpStatus} from '../status/CmpStatus'
 import {EVENT_STATUS, EventStatus} from '../status/EventStatus'
 import {DisplayStatus} from '../status/DisplayStatus'
 import {DomainEventBus} from './DomainEventBus'
+import {GetTCDataUseCase} from '../../application/services/tcdata/GetTCDataUseCase'
 
 export class EventStatusService {
   constructor({
-    cmpStatusRepository = inject(CmpStatusRepository),
-    displayStatusRepository = inject(DisplayStatusRepository),
-    domainEventBus = inject(DomainEventBus)
+    domainEventBus = inject(DomainEventBus),
+    getTCDataUseCase = inject(GetTCDataUseCase)
   } = {}) {
-    this._cmpStatusRepository = cmpStatusRepository
-    this._displayStatusRepository = displayStatusRepository
     this._domainEventBus = domainEventBus
+    this._getTCDataUseCase = getTCDataUseCase
   }
 
-  getEventStatus() {
-    const cmpStatus = this._cmpStatusRepository.getCmpStatus().code
-    const displayStatus = this._displayStatusRepository.getDisplayStatus().code
+  static getEventStatus({cmpStatusRepository, displayStatusRepository}) {
+    const cmpStatus = cmpStatusRepository.getCmpStatus().code
+    const displayStatus = displayStatusRepository.getDisplayStatus().code
     let eventStatus
     if (cmpStatus === CmpStatus.LOADED) {
       eventStatus = EventStatus.TCLOADED
@@ -31,21 +28,11 @@ export class EventStatusService {
   }
 
   updateUiStatus() {
-    const displayStatus = this._displayStatusRepository.getDisplayStatus()
-    const eventStatus =
-      displayStatus.code === DisplayStatus.VISIBLE
-        ? EventStatus.CMPUISHOWN
-        : EventStatus.USERACTIONCOMPLETE
-
-    // TODO  get TCData
-    const TCData = {
-      description: 'This TCData should be get from repository',
-      eventStatus
-    }
+    const tcData = this._getTCDataUseCase.execute()
     this._domainEventBus.raise({
       eventName: EVENT_STATUS,
       payload: {
-        TCData
+        TCData: tcData
       }
     })
   }
@@ -63,24 +50,10 @@ export class EventStatusService {
       return
     }
 
-    // TODO  get TCData
+    const tcData = this._getTCDataUseCase.execute()
+    tcData.listenerId = reference
 
-    const cmpStatus = this._cmpStatusRepository.getCmpStatus().code
-    const displayStatus = this._displayStatusRepository.getDisplayStatus().code
-
-    const eventStatus = this.getEventStatus()
-
-    const TCData = {
-      listenerId: reference,
-      // TODO Add here eventStatus
-      cmpStatus,
-      eventStatus,
-      displayStatus
-    }
-
-    // END TODO  get TCData
-
-    callback(TCData, true)
+    callback(tcData.value(), true)
   }
 
   removeEventListener({callback, listenerId}) {
