@@ -11,6 +11,8 @@ import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/Test
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import sinon from 'sinon'
 import {EventStatus} from '../../main/domain/status/EventStatus'
+import {CmpStatusRepository} from '../../main/domain/status/CmpStatusRepository'
+import {CmpStatus} from '../../main/domain/status/CmpStatus'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -171,14 +173,19 @@ describe('BorosTcf', () => {
     let domainEventBus
     beforeEach(() => {
       domainEventBus = new DomainEventBus()
+      const cmpStatusRepositoryMock = {
+        getCmpStatus: () => ({
+          code: CmpStatus.LOADED
+        })
+      }
       borosTcf = TestableTcfApiInitializer.create()
         .mock(DomainEventBus, domainEventBus)
+        .mock(CmpStatusRepository, cmpStatusRepositoryMock)
         .init()
     })
     it('should raise useractioncomplete eventStatus when visible is false', () => {
       const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
       borosTcf.uiVisible({visible: false})
-
       expect(spyDomainEventBus.calledOnce).to.be.true
       expect(
         spyDomainEventBus.getCall(0).args[0].payload.TCData.eventStatus

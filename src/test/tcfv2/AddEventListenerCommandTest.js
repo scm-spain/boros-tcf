@@ -8,6 +8,8 @@ import {CmpStatus} from '../../main/domain/status/CmpStatus'
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import {DisplayStatusRepository} from '../../main/domain/status/DisplayStatusRepository'
 import {DisplayStatus} from '../../main/domain/status/DisplayStatus'
+import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
+import {CookieConsentRepository} from '../../main/infrastructure/repository/CookieConsentRepository'
 describe('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
   const version = 2
@@ -20,6 +22,7 @@ describe('AddEventListenerCommand Should', () => {
       })
     })
     it('when we create an event listener, and the cmpStatus is loading, then listener callback should be immediately called and listenerId exists', done => {
+      const cookieStorageMock = new TestableCookieStorageMock()
       const cmpStatusRepository = {
         getCmpStatus: () => {
           return {
@@ -28,10 +31,17 @@ describe('AddEventListenerCommand Should', () => {
         }
       }
       TestableTcfApiInitializer.create()
+        .mock(CookieConsentRepository, cookieStorageMock)
         .mock(CmpStatusRepository, cmpStatusRepository)
         .init()
+        .saveUserConsent({
+          vendor: {consents: {}, legitimateInterests: {}},
+          purpose: {consents: {}, legitimateInterests: {}},
+          specialFeatures: {}
+        })
 
-      window.__tcfapi(command, version, (TCData, status) => {
+      window.__tcfapi(command, version, (TCData, success) => {
+        expect(success).to.be.true
         expect(TCData.cmpStatus).equal(CmpStatus.LOADING)
         expect(TCData.listenerId).exist
         done()
@@ -119,7 +129,8 @@ describe('AddEventListenerCommand Should', () => {
     })
   })
   describe('useractioncomplete Scenarios', () => {
-    it('EventStatus should be tcloaded when user has confirmed o re confirmed their choices before registering', done => {
+    let borosTcf
+    beforeEach(() => {
       const cmpStatusRepository = {
         getCmpStatus: () => {
           return {
@@ -127,11 +138,19 @@ describe('AddEventListenerCommand Should', () => {
           }
         }
       }
+      const cookieStorageMock = new TestableCookieStorageMock()
 
-      const borosTcf = TestableTcfApiInitializer.create()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieConsentRepository, cookieStorageMock)
         .mock(CmpStatusRepository, cmpStatusRepository)
         .init()
-
+      borosTcf.saveUserConsent({
+        vendor: {consents: {}, legitimateInterests: {}},
+        purpose: {consents: {}, legitimateInterests: {}},
+        specialFeatures: {}
+      })
+    })
+    it('EventStatus should be tcloaded when user has confirmed o re confirmed their choices before registering', done => {
       borosTcf.uiVisible({visible: false})
       window.__tcfapi(command, version, (TCData, status) => {
         expect(TCData.eventStatus).to.equal(EventStatus.TCLOADED)
@@ -140,13 +159,6 @@ describe('AddEventListenerCommand Should', () => {
       })
     })
     it('EventStatus should be useractioncomplete when user has confirmed o re confirmed their choices after registering', done => {
-      const cmpStatusRepository = {
-        getCmpStatus: () => {
-          return {
-            code: CmpStatus.LOADED
-          }
-        }
-      }
       let firstTime = true
       const callback = TCData => {
         if (firstTime) {
@@ -159,10 +171,6 @@ describe('AddEventListenerCommand Should', () => {
           done()
         }
       }
-
-      const borosTcf = TestableTcfApiInitializer.create()
-        .mock(CmpStatusRepository, cmpStatusRepository)
-        .init()
 
       window.__tcfapi(command, version, callback)
       borosTcf.uiVisible({visible: false})
@@ -191,12 +199,28 @@ describe('AddEventListenerCommand Should', () => {
     )
   })
   it('when we create an event listener and an event is raised, then The TCData object will contain CMP-assigned listenerId for the registered listener', done => {
-    const borosTcf = TestableTcfApiInitializer.create().init()
+    // const cookieStorageMock = new TestableCookieStorageMock()
+    const cmpStatusRepositoryMock = {
+      getCmpStatus: () => {
+        return {
+          code: CmpStatus.LOADED
+        }
+      }
+    }
+    const borosTcf = TestableTcfApiInitializer.create()
+      // .mock(CookieStorage, cookieStorageMock)
+      .mock(CmpStatusRepository, cmpStatusRepositoryMock)
+      .init()
+    borosTcf.saveUserConsent({
+      vendor: {consents: {}, legitimateInterests: {}},
+      purpose: {consents: {}, legitimateInterests: {}},
+      specialFeatures: {}
+    })
 
     let listenerId
     const callback = TCData => {
-      expect(TCData.listenerId !== undefined).to.be.true
-      if (listenerId === undefined) {
+      expect(TCData.listenerId).not.to.be.undefined
+      if (!listenerId) {
         listenerId = TCData.listenerId
       } else {
         expect(TCData.listenerId).to.be.equal(listenerId)

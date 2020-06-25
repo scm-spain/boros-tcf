@@ -26,7 +26,7 @@ describe('getTCData', () => {
   it('should return all props correctly setted', done => {
     const cookieStorageMock = new TestableCookieStorageMock()
     const eventStatusServiceMock = {
-      getEventStatus: () => ({code: EventStatus.TCLOADED})
+      getEventStatus: () => EventStatus.TCLOADED
     }
     const cmpStatusRepositoryMock = {
       getCmpStatus: () => {
@@ -94,10 +94,9 @@ describe('getTCData', () => {
             specialFeatureOptins,
             publisher
           } = tcDataValue
-          debugger
           expect(tcString).to.be.equal(cookie)
           expect(gdprApplies).to.be.true
-          expect(eventStatus).to.be.equal(EventStatus.TCLOADED)
+          expect(eventStatus).to.be.equal(EventStatus.CMPUISHOWN)
           expect(cmpStatus).to.be.equal(CmpStatus.LOADED)
           expect(outOfBand).to.be.deep.equal(expectedEmptyOutOfBand)
           expect(purpose).to.deep.equal(expectedPurpose)
