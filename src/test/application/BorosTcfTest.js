@@ -12,6 +12,7 @@ import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import sinon from 'sinon'
 import {EventStatus} from '../../main/domain/status/EventStatus'
 import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
+import {IABConsentDecoderService} from '../../main/infrastructure/service/IABConsentDecoderService'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -36,6 +37,7 @@ describe('BorosTcf', () => {
     })
   })
   describe('saveUserConsent', () => {
+    const iabConsentDecoderService = new IABConsentDecoderService()
     let borosTcf
     let cookieStorageMock
     const givenPurpose = {
@@ -100,6 +102,7 @@ describe('BorosTcf', () => {
           '2': true
         }
       }
+
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() =>
@@ -112,21 +115,24 @@ describe('BorosTcf', () => {
               const savedConsent = cookieStorageMock.storage.get('euconsent-v2')
               expect(savedConsent).to.be.a('string')
 
-              const userConsent = TCString.decode(savedConsent)
-              expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
-              expect(userConsent.vendorConsents.has(1)).to.be.true
-              expect(userConsent.vendorConsents.has(2)).to.be.true
-              expect(userConsent.vendorLegitimateInterests.has(1)).to.be.true
-              expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
-              expect(userConsent.purposeConsents.has(1)).to.be.false
-              expect(userConsent.purposeConsents.has(2)).to.be.true
-              expect(userConsent.purposeLegitimateInterests.has(1)).to.be.false
-              expect(userConsent.purposeLegitimateInterests.has(2)).to.be.true
+              const userConsent = iabConsentDecoderService.decode({
+                encodedConsent: savedConsent
+              })
+
+              expect(userConsent.vendor.consents['1']).to.be.true
+              expect(userConsent.vendor.consents['2']).to.be.true
+              expect(userConsent.vendor.legitimateInterests['1']).to.be.true
+              expect(userConsent.vendor.legitimateInterests['2']).to.be.true
+              expect(userConsent.purpose.consents['1']).to.be.false
+              expect(userConsent.purpose.consents['2']).to.be.true
+              expect(userConsent.purpose.legitimateInterests['1']).to.be.false
+              expect(userConsent.purpose.legitimateInterests['2']).to.be.true
             })
         )
     })
   })
   describe('loadUserConsent', () => {
+    const iabConsentDecoderService = new IABConsentDecoderService()
     let borosTcf
     let cookieStorageMock
     const givenPurpose = {
@@ -208,7 +214,7 @@ describe('BorosTcf', () => {
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
         .init()
-      // save consent wit consent for all vendors
+
       await borosTcfMocked.saveUserConsent({
         purpose: givenAcceptedAllPurpose,
         vendor: givenVendorAllAccepted
