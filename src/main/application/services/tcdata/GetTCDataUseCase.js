@@ -1,25 +1,21 @@
 import {inject} from '../../../core/ioc/ioc'
-import {CmpStatusRepository} from '../../../domain/status/CmpStatusRepository'
-import {DisplayStatusRepository} from '../../../domain/status/DisplayStatusRepository'
 import {TCData} from '../../../domain/tcdata/TCData'
 import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
 import {EventStatusService} from '../../../domain/service/EventStatusService'
 import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
+import {StatusRepository} from '../../../domain/status/StatusRepository'
 export class GetTCDataUseCase {
   /**
    *
    * @param {Object} param
-   * @param {CmpStatusRepository} param.cmpStatusRepository
-   * @param {DisplayStatusRepository} param.displayStatusRepository
+   * @param {StatusRepository} param.statusRepository
    */
   constructor({
-    cmpStatusRepository = inject(CmpStatusRepository),
-    displayStatusRepository = inject(DisplayStatusRepository),
+    statusRepository = inject(StatusRepository),
     consentRepository = inject(ConsentRepository),
     consentDecoderService = inject(ConsentDecoderService)
   } = {}) {
-    this._cmpStatusRepository = cmpStatusRepository
-    this._displayStatusRepository = displayStatusRepository
+    this._statusRepository = statusRepository
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
   }
@@ -31,11 +27,7 @@ export class GetTCDataUseCase {
    */
   execute({vendorIds} = {}) {
     // TODO: Check if vendorsId is valid
-    const cmpStatus = this._cmpStatusRepository.getCmpStatus()
-    const eventStatus = EventStatusService.getEventStatus({
-      cmpStatusRepository: this._cmpStatusRepository,
-      displayStatusRepository: this._displayStatusRepository
-    })
+    const {cmpStatus, eventStatus} = this._statusRepository.getStatus()
     const encodedConsent = this._consentRepository.loadUserConsent()
     let tcModel
     if (encodedConsent) {
@@ -77,6 +69,6 @@ export class GetTCDataUseCase {
       purpose,
       vendor,
       specialFeatureOptins: specialFeatures
-    })
+    }).value()
   }
 }

@@ -1,27 +1,20 @@
 import {inject} from '../../../core/ioc/ioc'
 import {PingReturn} from '../../../domain/ping/PingReturn.js'
-import {CmpStatusRepository} from '../../../domain/status/CmpStatusRepository'
-import {DisplayStatusRepository} from '../../../domain/status/DisplayStatusRepository'
+import {StatusRepository} from '../../../domain/status/StatusRepository'
 
 export class PingUseCase {
   /**
    *
    * @param {Object} param
-   * @param {CmpStatusRepository} param.cmpStatusRepository
-   * @param {DisplayStatusRepository} param.displayStatusRepository
+   * @param {StatusRepository} param.statusRepository
    */
-  constructor({
-    cmpStatusRepository = inject(CmpStatusRepository),
-    displayStatusRepository = inject(DisplayStatusRepository)
-  } = {}) {
-    this._cmpStatusRepository = cmpStatusRepository
-    this._displayStatusRepository = displayStatusRepository
+  constructor({statusRepository = inject(StatusRepository)} = {}) {
+    this._status = statusRepository.getStatus()
   }
 
   execute() {
     const pingReturn = new PingReturn({
-      cmpStatus: this._cmpStatusRepository.getCmpStatus(),
-      displayStatus: this._displayStatusRepository.getDisplayStatus()
+      status: this._status
     })
     return pingReturn.value()
   }

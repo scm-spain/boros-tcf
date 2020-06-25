@@ -31,14 +31,6 @@ export class TCData {
     this._specialFeatureOptins = specialFeatureOptins
   }
 
-  get listenerId() {
-    return this._listenerId
-  }
-
-  set listenerId(listenerId) {
-    this._listenerId = listenerId
-  }
-
   value() {
     return {
       tcString: this._tcString,
@@ -62,7 +54,7 @@ export class TCData {
       /**
        * see Ping Status Codes in following table
        */
-      cmpStatus: this._cmpStatus.code,
+      cmpStatus: this._cmpStatus,
 
       /**
        * If this TCData is sent to the callback of addEventListener: number,
@@ -70,7 +62,7 @@ export class TCData {
        * via addEventListener.
        * Others: undefined.
        */
-      listenerId: this._listenerId,
+      listenerId: null,
 
       /*
        * true - if using a service-specific or publisher-specific TC String

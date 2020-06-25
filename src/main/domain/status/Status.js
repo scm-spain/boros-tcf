@@ -2,21 +2,21 @@ import {inject} from '../../core/ioc/ioc'
 import {ConsentRepository} from '../consent/ConsentRepository'
 import {ConsentDecoderService} from '../consent/ConsentDecoderService'
 
-export class CmpStatus {
+export class Status {
   /**
    * cmpStatus: CMP not yet loaded – stub still in place
    */
-  static STUB = 'stub'
+  static CMPSTATUS_STUB = 'stub'
 
   /**
    * cmpStatus: CMP is loading
    */
-  static LOADING = 'loading'
+  static CMPSTATUS_LOADING = 'loading'
 
   /**
    * cmpStatus: CMP is finished loading
    */
-  static LOADED = 'loaded'
+  static CMPSTATUS_LOADED = 'loaded'
 
   /**
    * cmpStatus: CMP is in an error state.
@@ -24,7 +24,27 @@ export class CmpStatus {
    * A CMP may set this status if, for any reason, it is unable to perform the operations
    * in compliance with the TCF.
    */
-  static ERROR = 'error'
+  static CMPSTATUS_ERROR = 'error'
+
+  /**
+   * displayStatus: User interface is currently displayed
+   */
+  static DISPLAYSTATUS_VISIBLE = 'visible'
+
+  /**
+   * displayStatus: User interface is not yet or no longer displayed
+   */
+  static DISPLAYSTATUS_HIDDEN = 'hidden'
+
+  /**
+   * displayStatus: User interface will not show
+   * (e.g. GDPR does not apply or TC data is current and does not need renewal)
+   */
+  static DISPLAYSTATUS_DISABLED = 'disabled'
+
+  static USERACTIONCOMPLETE = 'useractioncomplete'
+  static CMPUISHOWN = 'cmpuishown'
+  static TCLOADED = 'tcloaded'
 
   /**
    *
@@ -38,12 +58,12 @@ export class CmpStatus {
   } = {}) {
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
-    this._cmpStatus = CmpStatus.LOADING
+    this._cmpStatus = Status.CMPSTATUS_LOADING
+    this._displayStatus = Status.DISPLAYSTATUS_DISABLED
+    this._eventStatus = null
   }
 
   /**
-   * @readonly
-   * @memberof CmpStatus
    * @returns {Boolean}
    */
   get loaded() {
@@ -51,23 +71,36 @@ export class CmpStatus {
   }
 
   /**
-   * @readonly
-   * @memberof CmpStatus
    * @returns {String}
    */
-  get code() {
+  get cmpStatus() {
     return this._cmpStatus
   }
 
-  setStatus({newCmpStatus}) {
-    this._cmpStatus = newCmpStatus
+  set cmpStatus(cmpStatus) {
+    this._cmpStatus = cmpStatus
+  }
+
+  get displayStatus() {
+    return this._displayStatus
+  }
+
+  set displayStatus(displayStatus) {
+    this._displayStatus = displayStatus
+  }
+
+  get eventStatus() {
+    return this._eventStatus
+  }
+
+  set eventStatus(eventStatus) {
+    this._eventStatus = eventStatus
   }
 
   /**
    * Returns gvlVersion. undefined if no consent
    *
    * @readonly
-   * @memberof CmpStatus
    * @returns {Number | undefined}
    */
   get gvlVersion() {

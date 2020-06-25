@@ -8,12 +8,10 @@ class PingReturn {
   /**
    *
    * @param {Object} param
-   * @param {import('../status/CmpStatus').CmpStatus} param.cmpStatus
-   * @param {import('../status/DisplayStatus').DisplayStatus} param.displayStatus
+   * @param {import('./../status/Status').Status} param.status
    */
-  constructor({cmpStatus, displayStatus} = {}) {
-    this._cmpStatus = cmpStatus
-    this._displayStatus = displayStatus
+  constructor({status} = {}) {
+    this._status = status
   }
 
   /**
@@ -32,21 +30,21 @@ class PingReturn {
    * @returns {Boolean}
    */
   get cmpLoaded() {
-    return this._cmpStatus.loaded
+    return this._status.loaded
   }
 
   /**
    * see Ping Status Codes in following table
    */
   get cmpStatus() {
-    return this._cmpStatus.code
+    return this._status.cmpStatus
   }
 
   /**
    * see Ping Status Codes in following table
    */
   get displayStatus() {
-    return this._displayStatus.code
+    return this._status.cmpStatus
   }
 
   /**
@@ -78,7 +76,7 @@ class PingReturn {
    * undefined if still the stub
    */
   get gvlVersion() {
-    return this._cmpStatus.gvlVersion
+    return this._status.gvlVersion
   }
 
   /**

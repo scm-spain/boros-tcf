@@ -1,33 +1,39 @@
 import {inject} from '../../core/ioc/ioc'
-import {CmpStatus} from '../status/CmpStatus'
-import {EVENT_STATUS, EventStatus} from '../status/EventStatus'
-import {DisplayStatus} from '../status/DisplayStatus'
 import {DomainEventBus} from './DomainEventBus'
 import {GetTCDataUseCase} from '../../application/services/tcdata/GetTCDataUseCase'
+import {StatusRepository} from '../status/StatusRepository'
+import {Status} from '../status/Status'
 
 export class EventStatusService {
   constructor({
     domainEventBus = inject(DomainEventBus),
-    getTCDataUseCase = inject(GetTCDataUseCase)
+    getTCDataUseCase = inject(GetTCDataUseCase),
+    statusRepository = inject(StatusRepository)
   } = {}) {
     this._domainEventBus = domainEventBus
     this._getTCDataUseCase = getTCDataUseCase
+    this._status = statusRepository.getStatus()
   }
 
-  static getEventStatus({cmpStatusRepository, displayStatusRepository}) {
-    const cmpStatus = cmpStatusRepository.getCmpStatus().code
-    const displayStatus = displayStatusRepository.getDisplayStatus().code
-    let eventStatus
-    if (cmpStatus === CmpStatus.LOADED) {
-      eventStatus = EventStatus.TCLOADED
+  _getEventStatus() {
+    const {cmpStatus, displayStatus} = this._status
+    let eventStatus = null
+    if (cmpStatus === Status.CMPSTATUS_LOADED) {
+      eventStatus = Status.TCLOADED
     }
-    if (displayStatus === DisplayStatus.VISIBLE) {
-      eventStatus = EventStatus.CMPUISHOWN
+    switch (displayStatus) {
+      case Status.DISPLAYSTATUS_VISIBLE:
+        eventStatus = Status.CMPUISHOWN
+        break
+      case Status.DISPLAYSTATUS_HIDDEN:
+        eventStatus = Status.USERACTIONCOMPLETE
+        break
     }
     return eventStatus
   }
 
   updateUiStatus() {
+    this._status.eventStatus = this._getEventStatus()
     const tcData = this._getTCDataUseCase.execute()
     this._domainEventBus.raise({
       eventName: EVENT_STATUS,
@@ -53,7 +59,7 @@ export class EventStatusService {
     const tcData = this._getTCDataUseCase.execute()
     tcData.listenerId = reference
 
-    callback(tcData.value(), true)
+    callback(tcData, true)
   }
 
   removeEventListener({callback, listenerId}) {
@@ -64,3 +70,5 @@ export class EventStatusService {
     callback(success)
   }
 }
+
+const EVENT_STATUS = 'event_status'
