@@ -3,7 +3,7 @@ export class VendorListHelper {
     if (Object.entries(object).length === 0) {
       return valueToVerify === false
     }
-
+    // eslint-disable-next-line no-unused-vars
     for (const [_, value] of Object.entries(object)) {
       if (valueToVerify !== value) {
         return false

@@ -150,15 +150,8 @@ describe('BorosTcf', () => {
     })
 
     it('should load the saved user consent', () => {
-      const givenVendorList = {
-        hola: 'adios'
-      }
-      const vendorListRepository = {
-        getVendorList: () => givenVendorList
-      }
       const borosTcf = TestableTcfApiInitializer.create()
         .mock(CookieStorage, cookieStorageMock)
-        //     .mock(VendorListRepository, vendorListRepository)
         .init()
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})

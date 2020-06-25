@@ -169,7 +169,6 @@ describe('AddEventListenerCommand Should', () => {
           })
         )
         .then(() => {
-          console.log('Done!!!')
           done()
         })
     })
@@ -198,7 +197,6 @@ describe('AddEventListenerCommand Should', () => {
             timeout: 1000
           })
             .then(() => {
-              console.log('Done!!!')
               done(new Error('Not expected resolution'))
             })
             .catch(error => {
