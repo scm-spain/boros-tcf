@@ -19,12 +19,12 @@ export class ConsentFactory {
     )
   }
 
-  createConsent({vendor, purpose, specialFeatures}) {
+  createConsent({vendor, purpose, specialFeatures, valid}) {
     return new Consent({
       vendor,
       purpose,
       specialFeatures,
-      valid: true
+      valid
     })
   }
 }

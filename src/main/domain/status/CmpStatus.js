@@ -34,11 +34,12 @@ export class CmpStatus {
    */
   constructor({
     consentRepository = inject(ConsentRepository),
-    consentDecoderService = inject(ConsentDecoderService)
+    consentDecoderService = inject(ConsentDecoderService),
+    cmpStatus = CmpStatus.LOADING
   } = {}) {
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
-    this._cmpStatus = CmpStatus.LOADING
+    this._cmpStatus = cmpStatus
   }
 
   /**
@@ -61,6 +62,10 @@ export class CmpStatus {
 
   setStatus({newCmpStatus}) {
     this._cmpStatus = newCmpStatus
+  }
+
+  static cmpStatusLoaded() {
+    return new CmpStatus({cmpStatus: CmpStatus.LOADED})
   }
 
   /**

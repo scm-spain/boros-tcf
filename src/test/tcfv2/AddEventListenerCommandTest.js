@@ -8,6 +8,9 @@ import {CmpStatus} from '../../main/domain/status/CmpStatus'
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import {DisplayStatusRepository} from '../../main/domain/status/DisplayStatusRepository'
 import {DisplayStatus} from '../../main/domain/status/DisplayStatus'
+import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
+import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
+import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 describe('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
   const version = 2
@@ -96,6 +99,113 @@ describe('AddEventListenerCommand Should', () => {
         expect(TCData.listenerId).exist
         done()
       })
+    })
+  })
+  describe('tcloaded Scenarios', () => {
+    it('EventStatus should be tcloaded when loadUserContent return  a valid consent', done => {
+      const givenAcceptedAllPurpose = {
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+        6: true,
+        7: true,
+        8: true,
+        9: true,
+        10: true
+      }
+      const givenVendorAllDenied = {
+        consents: {
+          1: false,
+          2: false
+        },
+        legitimateInterests: {
+          1: false,
+          2: false
+        }
+      }
+      let firstTime = true
+      let tcloaded = false
+      const callback = TCData => {
+        if (firstTime) {
+          expect(TCData.eventStatus).to.equal(undefined)
+          expect(TCData.listenerId).exist
+          firstTime = false
+        } else {
+          expect(TCData.eventStatus).to.equal(EventStatus.TCLOADED)
+          expect(TCData.listenerId).exist
+          expect(TCData.cmpStatus).to.equal(CmpStatus.LOADED)
+          tcloaded = true
+        }
+      }
+      const givenVendorList = {
+        vendors: {
+          1: {},
+          2: {},
+          3: {}
+        }
+      }
+      const vendorListRepository = {
+        getVendorList: () => givenVendorList
+      }
+      const cookieStorageMock = new TestableCookieStorageMock()
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(VendorListRepository, vendorListRepository)
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
+      window.__tcfapi(command, version, callback)
+      borosTcf
+        .saveUserConsent({
+          purpose: givenAcceptedAllPurpose,
+          vendor: givenVendorAllDenied
+        })
+        .then(() => borosTcf.loadUserConsent())
+        .then(consent => expect(consent.valid).to.be.true)
+        .then(() =>
+          waitCondition({
+            condition: () => tcloaded,
+            timeoutMessage: 'callback Should not be called'
+          })
+        )
+        .then(() => {
+          console.log('Done!!!')
+          done()
+        })
+    })
+    it('EventStatus should Not be called when loadUserContent return  a NO valid consent', done => {
+      let firstTime = true
+      let tcloaded = false
+      const callback = TCData => {
+        if (firstTime) {
+          expect(TCData.eventStatus).to.equal(undefined)
+          expect(TCData.listenerId).exist
+          firstTime = false
+        } else {
+          tcloaded = true
+        }
+      }
+
+      const borosTcf = TestableTcfApiInitializer.create().init()
+      window.__tcfapi(command, version, callback)
+      borosTcf
+        .loadUserConsent()
+        .then(consent => expect(consent.valid).to.be.false)
+        .then(() =>
+          waitCondition({
+            condition: () => tcloaded,
+            timeoutMessage: 'Should not be called',
+            timeout: 1000
+          })
+            .then(() => {
+              console.log('Done!!!')
+              done(new Error('Not expected resolution'))
+            })
+            .catch(error => {
+              expect(error.message).to.be.equal('Should not be called')
+              done()
+            })
+        )
     })
   })
   describe('cmpuishown Scenarios', () => {

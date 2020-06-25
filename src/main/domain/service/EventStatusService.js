@@ -50,6 +50,22 @@ export class EventStatusService {
     })
   }
 
+  updateTCLoaded() {
+    const cmpStatus = this._cmpStatusRepository.getCmpStatus().code
+    // TODO  get TCData
+    const TCData = {
+      description: 'This TCData should be get from repository',
+      eventStatus: EventStatus.TCLOADED,
+      cmpStatus
+    }
+    this._domainEventBus.raise({
+      eventName: EVENT_STATUS,
+      payload: {
+        TCData
+      }
+    })
+  }
+
   addEventListener({callback}) {
     let reference
 
