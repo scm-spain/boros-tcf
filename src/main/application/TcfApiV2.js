@@ -1,3 +1,4 @@
+/* eslint-disable standard/no-callback-literal */
 /**
  * TCF Api Facade for the Version 2
  */

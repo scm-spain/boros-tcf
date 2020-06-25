@@ -1,48 +1,41 @@
-import {waitCondition} from '../../core/service/waitCondition'
 import {inject} from '../../core/ioc/ioc'
 import {TcfApiController} from '../controller/TcfApiController'
 
 class TcfApiRegistryService {
-  constructor({
-    window = inject('window'),
-    tcfApiController = inject(TcfApiController)
-  } = {}) {
-    this._window = window
+  constructor({tcfApiController = inject(TcfApiController)} = {}) {
     this._tcfApiController = tcfApiController
   }
 
-  static start() {
-    const service = new TcfApiRegistryService()
-    return service.register()
-  }
-
   register() {
-    this._registerTcfApiController()
-    if (!this._window.frames[TCF_LOCATOR_NAME]) {
-      this._registerTcfLocatorIframe()
-    }
-    return this._window.__tcfapi
-  }
+    if (typeof window === 'undefined') return
+    const onReady = this._getStubbed(ON_READY_COMMAND)
+    const pending = this._getStubbed(PENDING_COMMAND)
 
-  _registerTcfApiController() {
-    this._window.__tcfapi = (command, version, callback, parameter) =>
+    window.__tcfapi = (command, version, callback, parameter) =>
       this._tcfApiController.process(command, version, callback, parameter)
+
+    this._run(() => onReady && onReady(this._tcfApiController.api))
+    this._run(
+      () => pending && pending.forEach(pendingFunction => pendingFunction())
+    )
   }
 
-  _registerTcfLocatorIframe() {
-    waitCondition({
-      condition: () => !!this._window.document.body,
-      timeout: CHECK_BODY_TIMEOUT
-    }).then(() => {
-      const iframe = this._window.document.createElement('iframe')
-      iframe.style.display = 'none'
-      iframe.name = TCF_LOCATOR_NAME
-      this._window.document.body.appendChild(iframe)
-    })
+  _getStubbed(command) {
+    try {
+      return window.__tcfapi(command) || null
+    } catch (error) {
+      return null
+    }
+  }
+
+  _run(initialization) {
+    try {
+      initialization()
+    } catch (ignored) {}
   }
 }
 
-const TCF_LOCATOR_NAME = '__tcfapiLocator'
-const CHECK_BODY_TIMEOUT = 100
+const PENDING_COMMAND = 'pending'
+const ON_READY_COMMAND = 'onReady'
 
 export {TcfApiRegistryService}

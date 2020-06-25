@@ -29,15 +29,15 @@ import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
 import {EventStatusService} from '../../domain/service/EventStatusService'
 import {StatusRepository} from '../../domain/status/StatusRepository'
 import {InMemoryStatusRepository} from '../../domain/status/InMemoryStatusRepository'
+import {TcfApiV2} from '../../application/TcfApiV2'
 
 class TcfApiInitializer {
   static init() {
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
-        singleton('window', () => window)
-
         singleton(TcfApiController, () => new TcfApiController())
+        singleton(TcfApiV2, () => new TcfApiV2())
 
         singleton(StatusRepository, () => new InMemoryStatusRepository())
         singleton(PingUseCase, () => new PingUseCase())
@@ -74,7 +74,9 @@ class TcfApiInitializer {
       }
     })
 
-    TcfApiRegistryService.start()
+    const registryService = new TcfApiRegistryService()
+    registryService.register()
+
     return new BorosTcf()
   }
 }
