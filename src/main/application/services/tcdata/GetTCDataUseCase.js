@@ -25,7 +25,23 @@ export class GetTCDataUseCase {
    * @param {Array<Number>} param.vendorIds
    */
   execute({vendorIds} = {}) {
-    // TODO: Check if vendorsId is valid
+    if (
+      Array.isArray(vendorIds) &&
+      vendorIds.some(
+        vendorId =>
+          typeof vendorId !== 'number' ||
+          Number.isInteger(vendorId) ||
+          vendorId < 1
+      )
+    ) {
+      throw Error(
+        'vendorIds parameter of getTCData has invalid data. It must be an array of positive integers, or undefined'
+      )
+    } else if (vendorIds !== undefined && !Array.isArray(vendorIds)) {
+      throw Error(
+        'vendorIds, if defined, needs to be an array of positive integers'
+      )
+    }
     const {cmpStatus, eventStatus} = this._statusRepository.getStatus()
     const encodedConsent = this._consentRepository.loadUserConsent()
     let tcModel
