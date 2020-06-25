@@ -204,16 +204,16 @@ describe('BorosTcf', () => {
         getVendorList: () => givenVendorList
       }
 
-      const borosTcf = TestableTcfApiInitializer.create()
+      const borosTcfMocked = TestableTcfApiInitializer.create()
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
         .init()
       // save consent wit consent for all vendors
-      await borosTcf.saveUserConsent({
+      await borosTcfMocked.saveUserConsent({
         purpose: givenAcceptedAllPurpose,
         vendor: givenVendorAllAccepted
       })
-      const consentModel = await borosTcf.loadUserConsent()
+      const consentModel = await borosTcfMocked.loadUserConsent()
       expect(consentModel.valid).to.be.true
       expect(consentModel.vendor.consents[1]).to.be.true
       expect(consentModel.vendor.legitimateInterests[1]).to.be.true
