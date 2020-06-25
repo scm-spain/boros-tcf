@@ -10,9 +10,11 @@ import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/TestableGVLFactory'
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
 import sinon from 'sinon'
-import {EventStatus} from '../../main/domain/status/EventStatus'
 import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
 import {IABConsentDecoderService} from '../../main/infrastructure/service/IABConsentDecoderService'
+
+import {Status} from '../../main/domain/status/Status'
+import {StatusRepository} from '../../main/domain/status/StatusRepository'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
@@ -331,26 +333,31 @@ describe('BorosTcf', () => {
     let domainEventBus
     beforeEach(() => {
       domainEventBus = new DomainEventBus()
+      const statusMock = {
+        eventStatus: Status.TCLOADED,
+        cmpStatus: Status.CMPSTATUS_LOADED
+      }
+      const statusRepositoryMock = {
+        getStatus: () => statusMock
+      }
       borosTcf = TestableTcfApiInitializer.create()
         .mock(DomainEventBus, domainEventBus)
+        .mock(StatusRepository, statusRepositoryMock)
         .init()
     })
     it('should raise useractioncomplete eventStatus when visible is false', () => {
       const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
       borosTcf.uiVisible({visible: false})
-
       expect(spyDomainEventBus.calledOnce).to.be.true
-      expect(
-        spyDomainEventBus.getCall(0).args[0].payload.TCData.eventStatus
-      ).to.deep.equal(EventStatus.USERACTIONCOMPLETE)
+      const {payload} = spyDomainEventBus.firstCall.args[0]
+      expect(payload.TCData.eventStatus).to.be.equal(Status.USERACTIONCOMPLETE)
     })
     it('should raise cmpuishown Event when visible is true', () => {
       const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
       borosTcf.uiVisible({visible: true})
       expect(spyDomainEventBus.calledOnce).to.be.true
-      expect(
-        spyDomainEventBus.getCall(0).args[0].payload.TCData.eventStatus
-      ).equal(EventStatus.CMPUISHOWN)
+      const {payload} = spyDomainEventBus.firstCall.args[0]
+      expect(payload.TCData.eventStatus).equal(Status.CMPUISHOWN)
     })
   })
 })

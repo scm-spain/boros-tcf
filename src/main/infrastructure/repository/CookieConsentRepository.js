@@ -9,7 +9,7 @@ class CookieConsentRepository extends ConsentRepository {
   }
 
   loadUserConsent() {
-    return this._cookieStorage.load()
+    return this._cookieStorage.load() || ''
   }
 
   saveUserConsent({consent}) {

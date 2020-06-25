@@ -1,21 +1,22 @@
 import {inject} from '../../../core/ioc/ioc'
-import {DisplayStatusRepository} from '../../../domain/status/DisplayStatusRepository'
-import {DisplayStatus} from '../../../domain/status/DisplayStatus'
+
 import {EventStatusService} from '../../../domain/service/EventStatusService'
+import {StatusRepository} from '../../../domain/status/StatusRepository'
+import {Status} from '../../../domain/status/Status'
 
 export class ChangeUiVisibleUseCase {
   constructor({
-    displayStatusRepository = inject(DisplayStatusRepository),
+    statusRepository = inject(StatusRepository),
     eventStatusService = inject(EventStatusService)
   } = {}) {
-    this._displayStatusRepository = displayStatusRepository
+    this._status = statusRepository.getStatus()
     this._eventStatusService = eventStatusService
   }
 
   execute({visible}) {
-    this._displayStatusRepository.setDisplayStatus({
-      newStatus: visible ? DisplayStatus.VISIBLE : DisplayStatus.HIDDEN
-    })
+    this._status.displayStatus = visible
+      ? Status.DISPLAYSTATUS_VISIBLE
+      : Status.DISPLAYSTATUS_HIDDEN
     this._eventStatusService.updateUiStatus()
   }
 }
