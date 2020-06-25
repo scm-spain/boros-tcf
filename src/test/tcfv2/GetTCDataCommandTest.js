@@ -3,12 +3,8 @@ import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
-import {CmpStatus} from '../../main/domain/status/CmpStatus'
-import {CmpStatusRepository} from '../../main/domain/status/CmpStatusRepository'
-import {DisplayStatusRepository} from '../../main/domain/status/DisplayStatusRepository'
-import {DisplayStatus} from '../../main/domain/status/DisplayStatus'
-import {EventStatus} from '../../main/domain/status/EventStatus'
-import {EventStatusService} from '../../main/domain/service/EventStatusService'
+import {Status} from '../../main/domain/status/Status'
+import {StatusRepository} from '../../main/domain/status/StatusRepository'
 
 describe('getTCData', () => {
   const command = 'getTCData'
@@ -25,28 +21,17 @@ describe('getTCData', () => {
 
   it('should return all props correctly setted', done => {
     const cookieStorageMock = new TestableCookieStorageMock()
-    const eventStatusServiceMock = {
-      getEventStatus: () => EventStatus.TCLOADED
+    const statusMock = {
+      eventStatus: Status.TCLOADED,
+      cmpStatus: Status.CMPSTATUS_LOADED,
+      displayStatus: Status.DISPLAYSTATUS_VISIBLE
     }
-    const cmpStatusRepositoryMock = {
-      getCmpStatus: () => {
-        return {
-          code: CmpStatus.LOADED
-        }
-      }
-    }
-    const displayStatusRepositoryMock = {
-      getDisplayStatus: () => {
-        return {
-          code: DisplayStatus.VISIBLE
-        }
-      }
+    const statusRepositoryMock = {
+      getStatus: () => statusMock
     }
     const borosTcf = TestableTcfApiInitializer.create()
       .mock(CookieStorage, cookieStorageMock)
-      .mock(CmpStatusRepository, cmpStatusRepositoryMock)
-      .mock(DisplayStatusRepository, displayStatusRepositoryMock)
-      .mock(EventStatusService, eventStatusServiceMock)
+      .mock(StatusRepository, statusRepositoryMock)
       .init()
 
     const expectedVendor = {
@@ -82,7 +67,6 @@ describe('getTCData', () => {
       .then(cookie =>
         window.__tcfapi(command, version, (tcData, success) => {
           expect(success).to.be.true
-          const tcDataValue = tcData.value()
           const {
             tcString,
             gdprApplies,
@@ -93,11 +77,11 @@ describe('getTCData', () => {
             vendor,
             specialFeatureOptins,
             publisher
-          } = tcDataValue
+          } = tcData
           expect(tcString).to.be.equal(cookie)
           expect(gdprApplies).to.be.true
-          expect(eventStatus).to.be.equal(EventStatus.CMPUISHOWN)
-          expect(cmpStatus).to.be.equal(CmpStatus.LOADED)
+          expect(eventStatus).to.be.equal(Status.TCLOADED)
+          expect(cmpStatus).to.be.equal(Status.CMPSTATUS_LOADED)
           expect(outOfBand).to.be.deep.equal(expectedEmptyOutOfBand)
           expect(purpose).to.deep.equal(expectedPurpose)
           expect(vendor).to.deep.equal(expectedVendor)
