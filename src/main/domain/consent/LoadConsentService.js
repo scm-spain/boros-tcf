@@ -78,11 +78,11 @@ export class LoadConsentService {
         newVendorList,
         value: true
       })) ||
-      (await this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
+      this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
         consent,
         newVendorList,
         value: false
-      }))
+      })
     )
   }
 
