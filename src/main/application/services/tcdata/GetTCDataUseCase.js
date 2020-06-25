@@ -1,7 +1,6 @@
 import {inject} from '../../../core/ioc/ioc'
 import {TCData} from '../../../domain/tcdata/TCData'
 import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
-import {EventStatusService} from '../../../domain/service/EventStatusService'
 import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
 import {StatusRepository} from '../../../domain/status/StatusRepository'
 export class GetTCDataUseCase {

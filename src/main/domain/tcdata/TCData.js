@@ -1,7 +1,6 @@
 import {
   BOROS_TCF_ID,
   BOROS_TCF_VERSION,
-  TCF_API_SUPPORTED_VERSION,
   TCF_API_VERSION,
   PUBLISHER_CC
 } from '../../core/constants'

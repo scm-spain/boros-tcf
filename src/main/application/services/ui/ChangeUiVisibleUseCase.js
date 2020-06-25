@@ -9,13 +9,12 @@ export class ChangeUiVisibleUseCase {
     statusRepository = inject(StatusRepository),
     eventStatusService = inject(EventStatusService)
   } = {}) {
-    this._statusRepository = statusRepository
+    this._status = statusRepository.getStatus()
     this._eventStatusService = eventStatusService
   }
 
   execute({visible}) {
-    const status = this._statusRepository.getStatus()
-    status.displayStatus = visible
+    this._status.displayStatus = visible
       ? Status.DISPLAYSTATUS_VISIBLE
       : Status.DISPLAYSTATUS_HIDDEN
     this._eventStatusService.updateUiStatus()
