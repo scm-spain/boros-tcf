@@ -32,9 +32,7 @@ describe('IABConsentEncoderService Should', () => {
       specialFeatures: {}
     }
     const encodedConsent = await iabConsentEncoderService.encode({consent})
-    console.log('encodedConsent' + JSON.stringify(encodedConsent))
     const decoded = iabConsentDecoderService.decode({encodedConsent})
-    console.log('DECODED: ' + JSON.stringify(decoded))
     expect(consent.vendor.consents).to.be.deep.equal(decoded.vendor.consents)
     expect(consent.vendor.legitimateInterests).to.be.deep.equal(
       decoded.vendor.legitimateInterests

@@ -341,7 +341,6 @@ describe('BorosTcf', () => {
       })
 
       const consent = await borosTcf.loadUserConsent()
-      console.log('Consent:' + JSON.stringify(consent))
       expect(consent.valid).to.be.true
     })
   })
