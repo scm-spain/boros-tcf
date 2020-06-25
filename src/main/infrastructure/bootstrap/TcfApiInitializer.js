@@ -20,16 +20,15 @@ import {LoadConsentService} from '../../domain/consent/LoadConsentService'
 import {ConsentFactory} from '../../domain/consent/ConsentFactory'
 import {IABVendorListRepository} from '../repository/iab/IABVendorListRepository'
 import {GVLFactory} from '../repository/iab/GVLFactory'
-import {CmpStatusRepository} from '../../domain/status/CmpStatusRepository'
-import {InMemoryCmpStatusRepository} from '../../application/services/status/InMemoryCmpStatusRepository'
-import {DisplayStatusRepository} from '../../domain/status/DisplayStatusRepository'
-import {InMemoryDisplayStatusRepository} from '../../application/services/status/InMemoryDisplayStatusRepository'
+import {GetTCDataUseCase} from '../../application/services/tcdata/GetTCDataUseCase'
 import {AddEventListenerUseCase} from '../../application/services/event/AddEventListenerUseCase'
 import {DomainEventBus} from '../../domain/service/DomainEventBus'
 import {ChangeUiVisibleUseCase} from '../../application/services/ui/ChangeUiVisibleUseCase'
 import {RemoveEventListenerUseCase} from '../../application/services/event/RemoveEventListenerUseCase'
 import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
 import {EventStatusService} from '../../domain/service/EventStatusService'
+import {StatusRepository} from '../../domain/status/StatusRepository'
+import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStatusRepository'
 import {TcfApiV2} from '../../application/TcfApiV2'
 
 class TcfApiInitializer {
@@ -40,15 +39,12 @@ class TcfApiInitializer {
         singleton(TcfApiController, () => new TcfApiController())
         singleton(TcfApiV2, () => new TcfApiV2())
 
-        singleton(CmpStatusRepository, () => new InMemoryCmpStatusRepository())
-        singleton(
-          DisplayStatusRepository,
-          () => new InMemoryDisplayStatusRepository()
-        )
+        singleton(StatusRepository, () => new InMemoryStatusRepository())
         singleton(PingUseCase, () => new PingUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
         singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
+        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
 
         singleton(
           RemoveEventListenerUseCase,

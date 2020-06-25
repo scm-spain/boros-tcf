@@ -1,12 +1,24 @@
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
+import {StatusRepository} from '../../main/domain/status/StatusRepository'
+import {Status} from '../../main/domain/status/Status'
 describe('removeEventListenerCommand Should', () => {
   const removeEventListener = 'removeEventListener'
   const addEventListener = 'addEventListener'
   const version = 2
   it('given a eventListener that has been added, when removeEventListenerCommand is called then should return success', done => {
-    TestableTcfApiInitializer.create().init()
-    window.__tcfapi(addEventListener, version, (tcData, success) => {
+    const statusMock = {
+      eventStatus: Status.TCLOADED,
+      cmpStatus: Status.CMPSTATUS_LOADING,
+      displayStatus: Status.DISPLAYSTATUS_VISIBLE
+    }
+    const statusRepositoryMock = {
+      getStatus: () => statusMock
+    }
+    TestableTcfApiInitializer.create()
+      .mock(StatusRepository, statusRepositoryMock)
+      .init()
+    window.__tcfapi(addEventListener, version, tcData => {
       window.__tcfapi(
         removeEventListener,
         version,

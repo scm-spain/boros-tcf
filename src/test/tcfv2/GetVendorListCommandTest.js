@@ -35,9 +35,13 @@ describe('getVendorList', () => {
       .catch(error => done(error))
   })
 
-  it('should not succeed if vendor list value cannot be returned due to an error', done => {
+  it('should not succeed if vendor list value cannot be returned due to an error', () => {
+    const consoleLog = console.log
+    const consoleError = console.error
     const givenVendorListVersion = UNAVAILABLE_VERSION
-    new Promise(resolve =>
+    console.log = () => null
+    console.error = () => null
+    return new Promise(resolve => {
       window.__tcfapi(
         givenCommand,
         givenVersion,
@@ -46,12 +50,17 @@ describe('getVendorList', () => {
         },
         givenVendorListVersion
       )
-    )
+    })
       .then(({vendorList, success}) => {
+        console.log = consoleLog
+        console.error = consoleError
         expect(success).to.be.false
         expect(vendorList).to.be.null
       })
-      .then(() => done())
-      .catch(error => done(error))
+      .catch(e => {
+        console.log = consoleLog
+        console.error = consoleError
+        throw e
+      })
   })
 })

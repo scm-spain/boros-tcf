@@ -2,7 +2,7 @@ export const waitCondition = ({
   condition,
   timeout = 50,
   interval = 5,
-  timeoutMessage
+  timeoutMessage = 'Time out reached'
 }) =>
   new Promise((resolve, reject) => {
     const iid = setInterval(() => {
