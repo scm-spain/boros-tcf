@@ -128,13 +128,13 @@ describe('AddEventListenerCommand Should', () => {
       let tcloaded = false
       const callback = TCData => {
         if (firstTime) {
-          expect(TCData.eventStatus).to.equal(undefined)
+          expect(TCData.eventStatus).to.equal(null)
           expect(TCData.listenerId).exist
           firstTime = false
         } else {
-          expect(TCData.eventStatus).to.equal(EventStatus.TCLOADED)
+          expect(TCData.eventStatus).to.equal(Status.TCLOADED)
           expect(TCData.listenerId).exist
-          expect(TCData.cmpStatus).to.equal(CmpStatus.LOADED)
+          expect(TCData.cmpStatus).to.equal(Status.CMPSTATUS_LOADED)
           tcloaded = true
         }
       }
@@ -164,7 +164,8 @@ describe('AddEventListenerCommand Should', () => {
         .then(() =>
           waitCondition({
             condition: () => tcloaded,
-            timeoutMessage: 'callback Should not be called'
+            timeoutMessage: 'callback Should not be called',
+            timeout: 1000
           })
         )
         .then(() => {

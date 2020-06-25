@@ -35,10 +35,12 @@ export class LoadConsentService {
 
     const newVendorList = await this._vendorListRepository.getVendorList()
 
-    return this._isValidAndSaveNewConsent({
+    const result = await this._isValidAndSaveNewConsent({
       newVendorList,
       consent: existingConsent
     })
+
+    return result
       ? this._createValidConsentWithTheSavedOne()
       : this._createAnInValidConsentAndMergeListVendors({
           existingConsent,
@@ -57,33 +59,34 @@ export class LoadConsentService {
 
   async _createValidConsentWithTheSavedOne() {
     const validEncodedConsent = await this._consentRepository.loadUserConsent()
-    const validConsent = await this._consentDecoderService.decode({
+    const validConsent = this._consentDecoderService.decode({
       encodedConsent: validEncodedConsent
     })
+
     validConsent.valid = true
     return this._consentFactory.createConsent(validConsent)
   }
 
-  _isValidAndSaveNewConsent({newVendorList, consent}) {
+  async _isValidAndSaveNewConsent({newVendorList, consent}) {
     if (newVendorList.version === consent.vendorListVersion) {
       return true
     }
 
     return (
-      this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
+      (await this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
         consent,
         newVendorList,
         value: true
-      }) ||
-      this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
+      })) ||
+      (await this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
         consent,
         newVendorList,
         value: false
-      })
+      }))
     )
   }
 
-  _consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
+  async _consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
     consent,
     newVendorList,
     value
@@ -103,9 +106,12 @@ export class LoadConsentService {
         vendorList: newVendorList.vendors,
         valueToSet: value
       })
+
+      const encodedConsent = await this._consentEncoderService.encode({consent})
       this._consentRepository.saveUserConsent({
-        consent: this._consentEncoderService.encode({consent})
+        consent: encodedConsent
       })
+
       isValid = true
     }
     return isValid
