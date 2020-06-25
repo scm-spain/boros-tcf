@@ -74,7 +74,7 @@ describe('AddEventListenerCommand Should', () => {
         done()
       })
     })
-    it('EventStatus should not be tcloaded', done => {
+    it('When Display Status is VILESIB should not be tcloaded', done => {
       const cmpStatusRepository = {
         getCmpStatus: () => {
           return {
