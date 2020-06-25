@@ -40,13 +40,13 @@ export class LoadConsentService {
       consent: existingConsent
     })
       ? this._createValidConsentWithTheSavedOne()
-      : this.createAnInValidConsentAndMergeListVendors({
+      : this._createAnInValidConsentAndMergeListVendors({
           existingConsent,
           newVendorList
         })
   }
 
-  createAnInValidConsentAndMergeListVendors({existingConsent, newVendorList}) {
+  _createAnInValidConsentAndMergeListVendors({existingConsent, newVendorList}) {
     existingConsent.valid = false
     existingConsent.vendor = this._vendorListHelper.mergeVendors({
       newVendorList: newVendorList.vendors,

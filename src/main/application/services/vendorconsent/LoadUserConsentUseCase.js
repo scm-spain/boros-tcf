@@ -17,15 +17,15 @@ class LoadUserConsentUseCase {
 
   async execute() {
     const consent = await this._loadConsentService.loadConsent()
-    const consentValidated = consent.toJSON()
-    if (consentValidated.valid) {
+    const consentDto = consent.toJSON()
+    if (consentDto.valid) {
       const newCmpStatus = CmpStatus.cmpStatusLoaded()
       this._cmpStatusRepository.setCmpStatus({
         newCmpStatus
       })
       this._eventStatusService.updateTCLoaded()
     }
-    return consentValidated
+    return consentDto
   }
 }
 

@@ -142,6 +142,18 @@ describe('BorosTcf', () => {
         '2': true
       }
     }
+    const givenAcceptedAllPurpose = {
+      1: true,
+      2: true,
+      3: true,
+      4: true,
+      5: true,
+      6: true,
+      7: true,
+      8: true,
+      9: true,
+      10: true
+    }
     beforeEach(() => {
       cookieStorageMock = new TestableCookieStorageMock()
       borosTcf = TestableTcfApiInitializer.create()
@@ -170,18 +182,6 @@ describe('BorosTcf', () => {
       expect(consentModel.valid).to.be.false
     })
     it('should return valid  and save new consent, when user had consent for all partners (new partners are automatically accepted)', async () => {
-      const givenAcceptedAllPurpose = {
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true,
-        6: true,
-        7: true,
-        8: true,
-        9: true,
-        10: true
-      }
       const givenVendorAllAccepted = {
         consents: {
           1: true,
@@ -222,18 +222,6 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.legitimateInterests[3]).to.be.true
     })
     it('should return valid and save new consent, when user had denied for all partners (new partners are automatically denied)', async () => {
-      const givenAcceptedAllPurpose = {
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true,
-        6: true,
-        7: true,
-        8: true,
-        9: true,
-        10: true
-      }
       const givenVendorAllDenied = {
         consents: {
           1: false,
@@ -270,18 +258,6 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.legitimateInterests).to.be.deep.equal({})
     })
     it('should return no valid and NOT  new consent is merged and new venders are set to true,  when  user had fine-granularity (the UI should be shown)', async () => {
-      const givenAcceptedAllPurpose = {
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true,
-        6: true,
-        7: true,
-        8: true,
-        9: true,
-        10: true
-      }
       const givenVendorAllDenied = {
         consents: {
           1: false,
