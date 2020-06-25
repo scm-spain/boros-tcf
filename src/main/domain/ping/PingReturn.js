@@ -44,7 +44,7 @@ class PingReturn {
    * see Ping Status Codes in following table
    */
   get displayStatus() {
-    return this._status.cmpStatus
+    return this._status.displayStatus
   }
 
   /**
