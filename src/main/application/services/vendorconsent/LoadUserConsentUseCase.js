@@ -15,12 +15,12 @@ class LoadUserConsentUseCase {
     this._status = statusRepository.getStatus()
   }
 
-  async execute() {
+  async execute({notify = false} = {}) {
     const consent = await this._loadConsentService.loadConsent()
     const consentDto = consent.toJSON()
     if (consentDto.valid) {
       this._status.cmpStatus = Status.CMPSTATUS_LOADED
-      this._eventStatusService.updateTCLoaded()
+      this._eventStatusService.updateTCLoaded({notify})
     }
     return consentDto
   }

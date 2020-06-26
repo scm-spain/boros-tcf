@@ -159,7 +159,7 @@ describe('AddEventListenerCommand Should', () => {
           purpose: givenAcceptedAllPurpose,
           vendor: givenVendorAllDenied
         })
-        .then(() => borosTcf.loadUserConsent())
+        .then(() => borosTcf.loadUserConsent({notify: true}))
         .then(consent => expect(consent.valid).to.be.true)
         .then(() =>
           waitCondition({
