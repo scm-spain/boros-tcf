@@ -3,8 +3,7 @@ export class VendorListHelper {
     if (Object.entries(object).length === 0) {
       return valueToVerify === false
     }
-    // eslint-disable-next-line no-unused-vars
-    for (const [_, value] of Object.entries(object)) {
+    for (const value of Object.values(object)) {
       if (valueToVerify !== value) {
         return false
       }
@@ -17,7 +16,7 @@ export class VendorListHelper {
       consents: {},
       legitimateInterests: {}
     }
-    Object.entries(vendorList).forEach(([key, value]) => {
+    Object.keys(vendorList).forEach(key => {
       newVendor.consents[key] = valueToSet
       newVendor.legitimateInterests[key] = valueToSet
     })
@@ -30,16 +29,14 @@ export class VendorListHelper {
       legitimateInterests: {}
     }
 
-    Object.entries(newVendorList).forEach(([key, value]) => {
-      const intKey = parseInt(key)
-
-      mergedVendorList.consents[intKey] =
-        oldVendors.consents[intKey] !== undefined
-          ? oldVendors.consents[intKey]
+    Object.keys(newVendorList).forEach(key => {
+      mergedVendorList.consents[key] =
+        oldVendors.consents[key] !== undefined
+          ? oldVendors.consents[key]
           : false
-      mergedVendorList.legitimateInterests[intKey] =
-        oldVendors.legitimateInterests[intKey] !== undefined
-          ? oldVendors.legitimateInterests[intKey]
+      mergedVendorList.legitimateInterests[key] =
+        oldVendors.legitimateInterests[key] !== undefined
+          ? oldVendors.legitimateInterests[key]
           : false
     })
 
