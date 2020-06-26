@@ -16,6 +16,7 @@ export class TestableGVLFactory extends GVLFactory {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true'
       })
+      .persist()
 
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get(`/${UNAVAILABLE_VERSION}?language=es`)

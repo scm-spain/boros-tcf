@@ -100,6 +100,51 @@ describe('AddEventListenerCommand Should', () => {
       })
     })
   })
+
+  it('EventStatus should be tcloaded and will be raised at Init time when consent is valid', done => {
+    let firstTime = true
+    let tcloaded = false
+    const callback = TCData => {
+      if (firstTime) {
+        expect(TCData.eventStatus).to.equal(null)
+        expect(TCData.listenerId).exist
+        firstTime = false
+      } else {
+        expect(TCData.eventStatus).to.equal(Status.TCLOADED)
+        expect(TCData.listenerId).exist
+        expect(TCData.cmpStatus).to.equal(Status.CMPSTATUS_LOADED)
+        tcloaded = true
+      }
+    }
+    const givenVendorList = {
+      version: 44
+    }
+    const vendorListRepository = {
+      getVendorList: () => givenVendorList
+    }
+    const cookieStorageMock = new TestableCookieStorageMock()
+    cookieStorageMock.save({
+      data:
+        'CO1mrN2O1mrN2CBADAENAsCAAAAAAAAAAAAAABEAAiAA.IGENV_T5eb2vj-3Zdt_tkaYwf55y3o-wzhheIs-8NyYeH7BoGP2MwvBX4JiQCGRgksiKBAQdtHGhcSQABgIhViTKMYk2MjzNKJLJAilsbO0NYCD9mnsHT3ZCY70--u__7P3fcAAA'
+    })
+    TestableTcfApiInitializer.create()
+      .mock(VendorListRepository, vendorListRepository)
+      .mock(CookieStorage, cookieStorageMock)
+      .init()
+    window.__tcfapi(command, version, callback)
+
+    waitCondition({
+      condition: () => tcloaded,
+      timeoutMessage: 'callback Should be called',
+      timeout: 2000
+    })
+      .then(() => {
+        done()
+      })
+      .catch(error => {
+        console.log('Error' + error)
+      })
+  })
   describe('tcloaded Scenarios', () => {
     it('EventStatus should be tcloaded when loadUserContent return  a valid consent', done => {
       const givenAcceptedAllPurpose = {
@@ -299,14 +344,13 @@ describe('AddEventListenerCommand Should', () => {
     )
   })
   it('when we create an event listener and an event is raised, then The TCData object will contain CMP-assigned listenerId for the registered listener', done => {
-    // const cookieStorageMock = new TestableCookieStorageMock()
     const statusRepository = {
       getStatus: () => ({
         cmpStatus: Status.CMPSTATUS_LOADED
       })
     }
     const borosTcf = TestableTcfApiInitializer.create()
-      // .mock(CookieStorage, cookieStorageMock)
+
       .mock(StatusRepository, statusRepository)
       .init()
     borosTcf.saveUserConsent({
