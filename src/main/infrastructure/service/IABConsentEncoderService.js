@@ -10,7 +10,7 @@ class IABConsentEncoderService extends ConsentEncoderService {
     this._gvlFactory = gvlFactory
   }
 
-  encode({consent = {}, previousEncodedConsent} = {}) {
+  async encode({consent = {}, previousEncodedConsent} = {}) {
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
     let tcModel
     if (previousEncodedConsent) {

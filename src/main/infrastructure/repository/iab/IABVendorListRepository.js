@@ -9,8 +9,8 @@ export class IABVendorListRepository extends VendorListRepository {
     this._gvlFactory = gvlFactory
   }
 
-  async getVendorList({version}) {
-    const gvl = this._gvlFactory.create({version: version.value})
+  async getVendorList({version} = {}) {
+    const gvl = this._gvlFactory.create({version: version?.value})
     await gvl.readyPromise
     const vendorListJson = gvl.getJson()
     return new VendorList({

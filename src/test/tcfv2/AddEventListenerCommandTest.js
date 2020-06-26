@@ -7,6 +7,9 @@ import {TestableCookieStorageMock} from '../testable/infrastructure/repository/T
 import {CookieConsentRepository} from '../../main/infrastructure/repository/CookieConsentRepository'
 import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
+import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
+import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
+
 describe('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
   const version = 2
@@ -77,7 +80,8 @@ describe('AddEventListenerCommand Should', () => {
         done()
       })
     })
-    it('EventStatus should not be tcloaded', done => {
+
+    it('When Display Status is VISIBLE should not be tcloaded', done => {
       const statusMock = {
         cmpStatus: Status.CMPSTATUS_LOADING,
         displayStatus: Status.DISPLAYSTATUS_VISIBLE
@@ -94,6 +98,112 @@ describe('AddEventListenerCommand Should', () => {
         expect(TCData.listenerId).exist
         done()
       })
+    })
+  })
+  describe('tcloaded Scenarios', () => {
+    it('EventStatus should be tcloaded when loadUserContent return  a valid consent', done => {
+      const givenAcceptedAllPurpose = {
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+        6: true,
+        7: true,
+        8: true,
+        9: true,
+        10: true
+      }
+      const givenVendorAllDenied = {
+        consents: {
+          1: false,
+          2: false
+        },
+        legitimateInterests: {
+          1: false,
+          2: false
+        }
+      }
+      let firstTime = true
+      let tcloaded = false
+      const callback = TCData => {
+        if (firstTime) {
+          expect(TCData.eventStatus).to.equal(null)
+          expect(TCData.listenerId).exist
+          firstTime = false
+        } else {
+          expect(TCData.eventStatus).to.equal(Status.TCLOADED)
+          expect(TCData.listenerId).exist
+          expect(TCData.cmpStatus).to.equal(Status.CMPSTATUS_LOADED)
+          tcloaded = true
+        }
+      }
+      const givenVendorList = {
+        vendors: {
+          1: {},
+          2: {},
+          3: {}
+        }
+      }
+      const vendorListRepository = {
+        getVendorList: () => givenVendorList
+      }
+      const cookieStorageMock = new TestableCookieStorageMock()
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(VendorListRepository, vendorListRepository)
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
+      window.__tcfapi(command, version, callback)
+      borosTcf
+        .saveUserConsent({
+          purpose: givenAcceptedAllPurpose,
+          vendor: givenVendorAllDenied
+        })
+        .then(() => borosTcf.loadUserConsent())
+        .then(consent => expect(consent.valid).to.be.true)
+        .then(() =>
+          waitCondition({
+            condition: () => tcloaded,
+            timeoutMessage: 'callback Should not be called',
+            timeout: 1000
+          })
+        )
+        .then(() => {
+          done()
+        })
+    })
+    it('EventStatus should Not be called when loadUserContent return  a NO valid consent', done => {
+      let firstTime = true
+      let tcloaded = false
+      const callback = TCData => {
+        if (firstTime) {
+          expect(TCData.eventStatus).to.equal(undefined)
+          expect(TCData.listenerId).exist
+          firstTime = false
+        } else {
+          tcloaded = true
+        }
+      }
+
+      const borosTcf = TestableTcfApiInitializer.create().init()
+      window.__tcfapi(command, version, callback)
+      borosTcf
+        .loadUserConsent()
+        .then(consent => expect(consent.valid).to.be.false)
+        .then(() =>
+          waitCondition({
+            condition: () => tcloaded,
+            timeoutMessage: 'Should not be called',
+            timeout: 1000
+          })
+            .then(() => {
+              done(new Error('Not expected resolution'))
+            })
+            .catch(error => {
+              expect(error.message).to.be.equal('Should not be called')
+              done()
+            })
+        )
     })
   })
   describe('cmpuishown Scenarios', () => {

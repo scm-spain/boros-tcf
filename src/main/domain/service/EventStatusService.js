@@ -43,6 +43,17 @@ export class EventStatusService {
     })
   }
 
+  updateTCLoaded() {
+    this._status.eventStatus = this._getEventStatus()
+    const tcData = this._getTCDataUseCase.execute()
+    this._domainEventBus.raise({
+      eventName: EVENT_STATUS,
+      payload: {
+        TCData: tcData
+      }
+    })
+  }
+
   addEventListener({callback}) {
     let reference
 

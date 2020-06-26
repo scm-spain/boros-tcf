@@ -27,8 +27,10 @@ import {ChangeUiVisibleUseCase} from '../../application/services/ui/ChangeUiVisi
 import {RemoveEventListenerUseCase} from '../../application/services/event/RemoveEventListenerUseCase'
 import {ObservableEventStatus} from '../../domain/service/ObservableEventStatus'
 import {EventStatusService} from '../../domain/service/EventStatusService'
+import {VendorListHelper} from '../../domain/vendorlist/VendorListHelper'
 import {StatusRepository} from '../../domain/status/StatusRepository'
 import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStatusRepository'
+
 import {TcfApiV2} from '../../application/TcfApiV2'
 
 class TcfApiInitializer {
@@ -39,7 +41,10 @@ class TcfApiInitializer {
         singleton(TcfApiController, () => new TcfApiController())
         singleton(TcfApiV2, () => new TcfApiV2())
 
+        singleton(VendorListHelper, () => new VendorListHelper())
+
         singleton(StatusRepository, () => new InMemoryStatusRepository())
+
         singleton(PingUseCase, () => new PingUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
