@@ -9,6 +9,7 @@ describe('IABConsentEncoderService Should', () => {
       gvlFactory: new GVLFactory()
     })
     const consent = {
+      policyVersion: 2,
       vendor: {
         consents: {
           1: true,
@@ -41,5 +42,6 @@ describe('IABConsentEncoderService Should', () => {
     expect(consent.purpose.legitimateInterests).to.be.deep.equal(
       decoded.purpose.legitimateInterests
     )
+    expect(consent.policyVersion).equal(decoded.policyVersion)
   })
 })

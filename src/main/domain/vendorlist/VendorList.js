@@ -1,6 +1,7 @@
 class VendorList {
-  constructor({version, language, value}) {
+  constructor({version, policyVersion, language, value}) {
     this._version = version
+    this._policyVersion = policyVersion
     this._language = language
     this._value = value
   }
@@ -11,6 +12,10 @@ class VendorList {
 
   get language() {
     return this._language
+  }
+
+  get policyVersion() {
+    return this._policyVersion
   }
 
   get value() {

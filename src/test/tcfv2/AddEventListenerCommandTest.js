@@ -117,7 +117,8 @@ describe('AddEventListenerCommand Should', () => {
       }
     }
     const givenVendorList = {
-      version: 44
+      version: 44,
+      policyVersion: 2
     }
     const vendorListRepository = {
       getVendorList: () => givenVendorList
@@ -184,6 +185,7 @@ describe('AddEventListenerCommand Should', () => {
         }
       }
       const givenVendorList = {
+        policyVersion: 2,
         vendors: {
           1: {},
           2: {},
