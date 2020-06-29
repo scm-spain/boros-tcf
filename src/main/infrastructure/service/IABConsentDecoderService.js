@@ -18,7 +18,6 @@ class IABConsentDecoderService extends ConsentDecoderService {
     }
 
     const tcModel = TCString.decode(encodedConsent)
-    //   console.log('tcModel ' + JSON.stringify(tcModel))
 
     const model = {
       vendorListVersion: tcModel.vendorListVersion,

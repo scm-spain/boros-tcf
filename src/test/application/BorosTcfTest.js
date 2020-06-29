@@ -335,7 +335,7 @@ describe('BorosTcf', () => {
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.true
     })
-    it('should return no valid consent if tcfPolicyVersion version are the different and create a new empty consent', async () => {
+    it('should return no valid consent if tcfPolicyVersion version are different and return a new empty consent', async () => {
       const givenVendorList = {
         policyVersion: 3,
         version: 36,

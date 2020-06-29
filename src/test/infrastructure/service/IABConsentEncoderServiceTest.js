@@ -42,6 +42,6 @@ describe('IABConsentEncoderService Should', () => {
     expect(consent.purpose.legitimateInterests).to.be.deep.equal(
       decoded.purpose.legitimateInterests
     )
-    expect(consent.policyVersion).to.be.deep.equal(decoded.policyVersion)
+    expect(consent.policyVersion).equal(decoded.policyVersion)
   })
 })
