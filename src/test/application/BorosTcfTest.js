@@ -335,9 +335,9 @@ describe('BorosTcf', () => {
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.true
     })
-    it('should return no valid if tcfPolicyVersion version are the different and create a new empty consent', async () => {
+    it('should return no valid consent if tcfPolicyVersion version are the different and create a new empty consent', async () => {
       const givenVendorList = {
-        tcfPolicyVersion: 3,
+        policyVersion: 3,
         version: 36,
         noMattersIfThereIsNoVendorObject: {}
       }
@@ -361,6 +361,10 @@ describe('BorosTcf', () => {
 
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.false
+      expect(consent.vendor.consents).to.be.deep.equal({})
+      expect(consent.vendor.legitimateInterests).to.be.deep.equal({})
+      expect(consent.purpose.consents).to.be.deep.equal({})
+      expect(consent.purpose.legitimateInterests).to.be.deep.equal({})
     })
   })
   describe('uiVisible', () => {
