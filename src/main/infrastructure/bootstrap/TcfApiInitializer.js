@@ -82,7 +82,9 @@ class TcfApiInitializer {
     const registryService = new TcfApiRegistryService()
     registryService.register()
 
-    return new BorosTcf()
+    const borosTcf = new BorosTcf()
+    borosTcf.loadUserConsent({notify: true})
+    return borosTcf
   }
 }
 

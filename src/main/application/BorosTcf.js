@@ -41,8 +41,8 @@ class BorosTcf {
     })
   }
 
-  loadUserConsent() {
-    return this._loadUserConsentUseCase.execute()
+  loadUserConsent({notify} = {}) {
+    return this._loadUserConsentUseCase.execute({notify})
   }
 
   uiVisible({visible}) {
