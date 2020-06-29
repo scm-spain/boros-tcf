@@ -61,32 +61,32 @@ describe('IABConsentEncoderService Should', () => {
       it('Scenario 1: vendor consent IS ACCEPTED AND vendor legitimateInterest IS ACCEPTED', async () => {
         consent.vendor = {
           consents: {
-            3: true
+            73: true
           },
           legitimateInterests: {
-            3: true
+            73: true
           }
         }
         const encodedConsent = await iabConsentEncoderService.encode({consent})
         const decoded = iabConsentDecoderService.decode({encodedConsent})
         expect(decoded.purpose.consents[1]).equal(true)
-        expect(decoded.vendor.consents[3]).equal(true)
-        expect(decoded.vendor.legitimateInterests[3]).equal(true)
+        expect(decoded.vendor.consents[73]).equal(true)
+        expect(decoded.vendor.legitimateInterests[73]).equal(true)
       })
       it('Scenario 2: vendor consent IS REFUSED BUT vendor legitimateInterest IS ACCEPTED', async () => {
         consent.vendor = {
           consents: {
-            3: false
+            73: false
           },
           legitimateInterests: {
-            3: true
+            73: true
           }
         }
         const encodedConsent = await iabConsentEncoderService.encode({consent})
         const decoded = iabConsentDecoderService.decode({encodedConsent})
         expect(decoded.purpose.consents[1]).equal(true)
         expect(decoded.vendor.consents).deep.equal({})
-        expect(decoded.vendor.legitimateInterests[3]).equal(true)
+        expect(decoded.vendor.legitimateInterests[73]).equal(true)
       })
       it('Scenario 3: vendor consent is ACCEPTED  BUT  vendor legitimateInterest IS REFUSED', async () => {
         consent.vendor = {
