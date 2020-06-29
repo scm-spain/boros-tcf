@@ -35,6 +35,10 @@ export class LoadConsentService {
 
     const newVendorList = await this._vendorListRepository.getVendorList()
 
+    if (newVendorList.policyVersion !== existingConsent.policyVersion) {
+      return this._consentFactory.createEmptyConsent()
+    }
+
     const result = await this._isValidAndSaveNewConsent({
       newVendorList,
       consent: existingConsent

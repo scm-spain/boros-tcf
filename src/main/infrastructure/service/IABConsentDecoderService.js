@@ -18,8 +18,11 @@ class IABConsentDecoderService extends ConsentDecoderService {
     }
 
     const tcModel = TCString.decode(encodedConsent)
+    //   console.log('tcModel ' + JSON.stringify(tcModel))
 
     const model = {
+      vendorListVersion: tcModel.vendorListVersion,
+      policyVersion: tcModel.policyVersion,
       vendor: {
         consents: mapToModel(tcModel.vendorConsents),
         legitimateInterests: mapToModel(tcModel.vendorLegitimateInterests)
@@ -43,7 +46,6 @@ class IABConsentDecoderService extends ConsentDecoderService {
     }
 
     return {
-      vendorListVersion: tcModel.vendorListVersion,
       ...model
     }
   }

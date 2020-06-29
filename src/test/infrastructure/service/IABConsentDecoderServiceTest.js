@@ -9,7 +9,9 @@ describe('IABConsentDecoderService Should', () => {
     const encodedConsent =
       'CLcVDxRMWfGmWAVAHCENAXCkAKDAADnAABRgA5mdfCKZuYJez-NQm0TBMYA4oCAAGQYIAAAAAAEAIAEgAA.argAC0gAAAAAAAAAAAA'
     const consent = iabConsentDecoderService.decode({encodedConsent})
+
     expect(consent.vendorListVersion).equal(23)
+    expect(consent.policyVersion).equal(2)
     expect(consent.vendor.consents).exist
     expect(consent.vendor.legitimateInterests).exist
     expect(consent.purpose.consents).exist

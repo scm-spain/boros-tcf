@@ -14,6 +14,7 @@ export class IABVendorListRepository extends VendorListRepository {
     await gvl.readyPromise
     const vendorListJson = gvl.getJson()
     return new VendorList({
+      policyVersion: vendorListJson.tcfPolicyVersion,
       version: vendorListJson.vendorListVersion,
       value: vendorListJson
     })

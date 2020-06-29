@@ -201,6 +201,7 @@ describe('BorosTcf', () => {
         }
       }
       const givenVendorList = {
+        policyVersion: 2,
         vendors: {
           1: {},
           2: {},
@@ -241,6 +242,7 @@ describe('BorosTcf', () => {
         }
       }
       const givenVendorList = {
+        policyVersion: 2,
         vendors: {
           1: {},
           2: {},
@@ -265,7 +267,7 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.consents).to.be.deep.equal({})
       expect(consentModel.vendor.legitimateInterests).to.be.deep.equal({})
     })
-    it('should return no valid and NOT  new consent is merged and new venders are set to true,  when  user had fine-granularity (the UI should be shown)', async () => {
+    it('should return no valid and a new consent is merged and new vendors are set to false,  when  user had fine-granularity (the UI should be shown)', async () => {
       const givenVendorAllDenied = {
         consents: {
           1: false,
@@ -277,6 +279,7 @@ describe('BorosTcf', () => {
         }
       }
       const givenVendorList = {
+        policyVersion: 2,
         vendors: {
           1: {},
           2: {},
@@ -291,7 +294,7 @@ describe('BorosTcf', () => {
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
         .init()
-      // save consent wit consent for all vendors
+      // save consent with consent for all vendors
       await borosTcf.saveUserConsent({
         purpose: givenAcceptedAllPurpose,
         vendor: givenVendorAllDenied
@@ -307,6 +310,7 @@ describe('BorosTcf', () => {
     })
     it('should return valid if vendor list version are the same', async () => {
       const givenVendorList = {
+        policyVersion: 2,
         version: 36,
         noMattersIfThereIsNoVendorObject: {}
       }
@@ -314,6 +318,10 @@ describe('BorosTcf', () => {
         getVendorList: () => givenVendorList
       }
 
+      cookieStorageMock.save({
+        data:
+          'CO1wTaiO1wTaiCBADAENAkCAAAAAAAAAAAAAABEAAiAA.IF7NX2T5OI2vjq2ZdF7BEaYwfZxyigMgShhQIsS8NwIeFbBoGP2AgHBG4JCQAGBAkkACBAQIsHGBcCQABgIgRiRCMQEmMjzNKBJJAggkbM0FACDVmnsHS3ZCY70--u__bMAA'
+      })
       const borosTcf = TestableTcfApiInitializer.create()
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
@@ -326,6 +334,33 @@ describe('BorosTcf', () => {
 
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.true
+    })
+    it('should return no valid if tcfPolicyVersion version are the different and create a new empty consent', async () => {
+      const givenVendorList = {
+        tcfPolicyVersion: 3,
+        version: 36,
+        noMattersIfThereIsNoVendorObject: {}
+      }
+      const vendorListRepository = {
+        getVendorList: () => givenVendorList
+      }
+
+      cookieStorageMock.save({
+        data:
+          'CO1wTaiO1wTaiCBADAENAkCAAAAAAAAAAAAAABEAAiAA.IF7NX2T5OI2vjq2ZdF7BEaYwfZxyigMgShhQIsS8NwIeFbBoGP2AgHBG4JCQAGBAkkACBAQIsHGBcCQABgIgRiRCMQEmMjzNKBJJAggkbM0FACDVmnsHS3ZCY70--u__bMAA'
+      })
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .mock(VendorListRepository, vendorListRepository)
+        .init()
+
+      await borosTcf.saveUserConsent({
+        purpose: givenPurpose,
+        vendor: givenVendor
+      })
+
+      const consent = await borosTcf.loadUserConsent()
+      expect(consent.valid).to.be.false
     })
   })
   describe('uiVisible', () => {

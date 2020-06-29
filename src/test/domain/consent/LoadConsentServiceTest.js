@@ -57,7 +57,11 @@ describe('LoadConsentService Should', () => {
     })
 
     it('when retrieved vendor list have the same version we return valid consent and a copy of existing consent', async () => {
-      const vendorList = new VendorList({version: 43, value: {}})
+      const vendorList = new VendorList({
+        version: 43,
+        policyVersion: 2,
+        value: {}
+      })
       const vendorListRepositoryWithTheSameVersion = {
         getVendorList: () => vendorList
       }
