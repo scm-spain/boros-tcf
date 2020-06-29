@@ -43,7 +43,7 @@ export class EventStatusService {
     })
   }
 
-  updateTCLoaded({notify = false} = {}) {
+  updateTCLoaded({notify}) {
     this._status.eventStatus = this._getEventStatus()
     if (notify) {
       const tcData = this._getTCDataUseCase.execute()
