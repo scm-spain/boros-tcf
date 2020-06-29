@@ -2,7 +2,7 @@ import {IABConsentEncoderService} from '../../../main/infrastructure/service/IAB
 import {expect} from 'chai'
 import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
 import {GVLFactory} from '../../../main/infrastructure/repository/iab/GVLFactory'
-describe.only('IABConsentEncoderService Should', () => {
+describe('IABConsentEncoderService Should', () => {
   const iabConsentDecoderService = new IABConsentDecoderService()
   const iabConsentEncoderService = new IABConsentEncoderService({
     gvlFactory: new GVLFactory()
