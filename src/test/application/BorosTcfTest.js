@@ -230,7 +230,7 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.consents[3]).to.be.true
       expect(consentModel.vendor.legitimateInterests[3]).to.be.true
     })
-    it('should return valid and save new consent, when user had denied for all partners (new partners are automatically denied)', async () => {
+    it('should return valid and save a new consent, when user had denied for all partners (new partners are automatically denied)', async () => {
       const givenVendorAllDenied = {
         consents: {
           1: false,
@@ -257,7 +257,7 @@ describe('BorosTcf', () => {
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
         .init()
-      // save consent wit consent for all vendors
+
       await borosTcf.saveUserConsent({
         purpose: givenAcceptedAllPurpose,
         vendor: givenVendorAllDenied
@@ -268,7 +268,7 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.legitimateInterests).to.be.deep.equal({})
     })
     it('should return no valid and a new consent is merged and new vendors are set to false,  when  user had fine-granularity (the UI should be shown)', async () => {
-      const givenVendorAllDenied = {
+      const givenVendorWithFineGranularity = {
         consents: {
           1: false,
           2: true
@@ -294,10 +294,10 @@ describe('BorosTcf', () => {
         .mock(CookieStorage, cookieStorageMock)
         .mock(VendorListRepository, vendorListRepository)
         .init()
-      // save consent with consent for all vendors
+
       await borosTcf.saveUserConsent({
         purpose: givenAcceptedAllPurpose,
-        vendor: givenVendorAllDenied
+        vendor: givenVendorWithFineGranularity
       })
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel.valid).to.be.false
