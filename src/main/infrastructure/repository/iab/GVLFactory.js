@@ -14,7 +14,13 @@ export class GVLFactory {
     return new GVL(version)
   }
 
-  async changeLanguage({language, gvl}) {
+  async createWith({version, language} = {}) {
+    const gvl = this.create({version})
+    await this._changeLanguage({language, gvl})
+    return gvl
+  }
+
+  async _changeLanguage({language, gvl}) {
     if (language && language !== gvl.language) {
       this._setStaticGVLParameters({language})
       const changeLanguage = gvl.changeLanguage(language)

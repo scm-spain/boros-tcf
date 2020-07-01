@@ -11,10 +11,10 @@ export class IABVendorListRepository extends VendorListRepository {
   }
 
   async getVendorList({version, language = new Language('en')} = {}) {
-    const gvl = this._gvlFactory.create({
-      version: version?.value
+    const gvl = await this._gvlFactory.createWith({
+      version: version?.value,
+      language: language?.value
     })
-    await this._gvlFactory.changeLanguage({language: language?.value, gvl})
     await gvl.readyPromise
     const vendorListJson = gvl.getJson()
     return new VendorList({
