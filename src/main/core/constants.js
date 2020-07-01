@@ -29,7 +29,7 @@ export const TCF_API_SUPPORTED_VERSION = '2.0'
 /**
  * Vendor List language if no translation is requested for the remote resource
  */
-export const VENDOR_LIST_DEFAULT_LANGUAGE = 'en'
+export const VENDOR_LIST_DEFAULT_LANGUAGE = 'es'
 
 /**
  * Vendor List version to be requested to get the latest remote resource

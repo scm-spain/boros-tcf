@@ -2,7 +2,10 @@ import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {VendorListValueEnglish} from '../fixtures/vendorlist/VendorListValue'
+import {
+  VendorListValueEnglish,
+  VendorListValueSpanish
+} from '../fixtures/vendorlist/VendorListValue'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {BOROS_TCF_ID} from '../../main/core/constants'
@@ -25,13 +28,13 @@ describe('BorosTcf', () => {
         .init()
     })
 
-    it('should return the untranslated latest vendor list if nothing is specified', async () => {
+    it('should return the spanish latest vendor list if nothing (language, version) is specified', async () => {
       const vendorList = await borosTcf.getVendorList()
       expect(vendorList.vendorListVersion).to.deep.equal(
-        VendorListValueEnglish.data.vendorListVersion
+        VendorListValueSpanish.data.vendorListVersion
       )
       expect(vendorList.purposes[1]).to.deep.equal(
-        VendorListValueEnglish.data.purposes[1]
+        VendorListValueSpanish.data.purposes[1]
       )
     })
 
