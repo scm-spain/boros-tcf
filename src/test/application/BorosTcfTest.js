@@ -182,14 +182,16 @@ describe('BorosTcf', () => {
           expect(consentModel.vendor).to.deep.equal(givenVendor)
           expect(consentModel.purpose).to.deep.equal(givenPurpose)
           expect(consentModel.valid).to.be.true
+          expect(consentModel.isNew).to.be.false
         })
     })
     it('should load an empty consent if there was not saved user consent and is consent should be not valid', async () => {
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel).to.not.be.undefined
       expect(consentModel.valid).to.be.false
+      expect(consentModel.isNew).to.be.true
     })
-    it('should return valid  and save new consent, when user had consent for all partners (new partners are automatically accepted)', async () => {
+    it('should return valid  and save new consent(all accepted), when user had consent for all partners (new partners are automatically accepted)', async () => {
       const givenVendorAllAccepted = {
         consents: {
           1: true,
@@ -223,6 +225,7 @@ describe('BorosTcf', () => {
       })
       const consentModel = await borosTcfMocked.loadUserConsent()
       expect(consentModel.valid).to.be.true
+      expect(consentModel.isNew).to.be.false
       expect(consentModel.vendor.consents[1]).to.be.true
       expect(consentModel.vendor.legitimateInterests[1]).to.be.true
       expect(consentModel.vendor.consents[2]).to.be.true
@@ -230,7 +233,7 @@ describe('BorosTcf', () => {
       expect(consentModel.vendor.consents[3]).to.be.true
       expect(consentModel.vendor.legitimateInterests[3]).to.be.true
     })
-    it('should return valid and save a new consent, when user had denied for all partners (new partners are automatically denied)', async () => {
+    it('should return valid and save a new consent(all denied), when user had denied for all partners (new partners are automatically denied)', async () => {
       const givenVendorAllDenied = {
         consents: {
           1: false,
@@ -264,6 +267,7 @@ describe('BorosTcf', () => {
       })
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel.valid).to.be.true
+      expect(consentModel.isNew).to.be.false
       expect(consentModel.vendor.consents).to.be.deep.equal({})
       expect(consentModel.vendor.legitimateInterests).to.be.deep.equal({})
     })
@@ -301,6 +305,7 @@ describe('BorosTcf', () => {
       })
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel.valid).to.be.false
+      expect(consentModel.isNew).to.be.false
       expect(consentModel.vendor.consents[1]).to.be.false
       expect(consentModel.vendor.legitimateInterests[1]).to.be.false
       expect(consentModel.vendor.consents[2]).to.be.true
@@ -361,6 +366,7 @@ describe('BorosTcf', () => {
 
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.false
+      expect(consent.isNew).to.be.true
       expect(consent.vendor.consents).to.be.deep.equal({})
       expect(consent.vendor.legitimateInterests).to.be.deep.equal({})
       expect(consent.purpose.consents).to.be.deep.equal({})

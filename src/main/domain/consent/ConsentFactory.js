@@ -14,9 +14,10 @@ export class ConsentFactory {
 
   async createEmptyConsent() {
     const encodedValue = await this._consentEncoderService.encode()
-    return new Consent(
-      this._consentDecoderService.decode({encodedConsent: encodedValue})
-    )
+    const decodedValue = this._consentDecoderService.decode({
+      encodedConsent: encodedValue
+    })
+    return new Consent({...decodedValue, isNew: true})
   }
 
   createConsent({vendor, purpose, specialFeatures, valid}) {
