@@ -1,12 +1,9 @@
 import {GVL} from '@iabtcf/core'
 
 export class GVLFactory {
-  constructor({
-    baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist',
-    language = 'en'
-  } = {}) {
+  constructor({baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist'} = {}) {
     GVL.baseUrl = baseUrl
-    this._setStaticGVLParameters({language})
+    this._setStaticGVLParameters({language: 'en'})
     GVL.languageFilename = 'LATEST?language=[LANG]'
   }
 
