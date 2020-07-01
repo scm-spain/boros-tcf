@@ -6,11 +6,7 @@ import {
   TestableGVLFactory,
   UNAVAILABLE_VERSION
 } from '../testable/infrastructure/repository/iab/TestableGVLFactory'
-import {
-  VendorListValue,
-  VendorListValueEnglish,
-  VendorListValueSpanish
-} from '../fixtures/vendorlist/VendorListValue'
+import {VendorListValueSpanish} from '../fixtures/vendorlist/VendorListValue'
 
 /**
  * @see https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#getvendorlist

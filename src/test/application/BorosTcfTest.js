@@ -3,7 +3,6 @@ import {expect} from 'chai'
 import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {
-  VendorListValue,
   VendorListValueEnglish,
   VendorListValueSpanish
 } from '../fixtures/vendorlist/VendorListValue'
