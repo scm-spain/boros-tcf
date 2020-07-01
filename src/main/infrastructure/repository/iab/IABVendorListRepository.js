@@ -2,6 +2,7 @@ import {VendorListRepository} from '../../../domain/vendorlist/VendorListReposit
 import {VendorList} from '../../../domain/vendorlist/VendorList'
 import {inject} from '../../../core/ioc/ioc'
 import {GVLFactory} from './GVLFactory'
+import {Language} from '../../../domain/vendorlist/Language'
 
 export class IABVendorListRepository extends VendorListRepository {
   constructor({gvlFactory = inject(GVLFactory)} = {}) {
@@ -9,8 +10,11 @@ export class IABVendorListRepository extends VendorListRepository {
     this._gvlFactory = gvlFactory
   }
 
-  async getVendorList({version} = {}) {
-    const gvl = this._gvlFactory.create({version: version?.value})
+  async getVendorList({version, language = new Language('en')} = {}) {
+    const gvl = this._gvlFactory.create({
+      version: version?.value
+    })
+    await this._gvlFactory.changeLanguage({language: language?.value, gvl})
     await gvl.readyPromise
     const vendorListJson = gvl.getJson()
     return new VendorList({

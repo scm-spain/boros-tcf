@@ -1,6 +1,9 @@
 import nock from 'nock'
 import {GVLFactory} from '../../../../../main/infrastructure/repository/iab/GVLFactory'
-import {VendorListValue} from '../../../../fixtures/vendorlist/VendorListValue'
+import {
+  VendorListValueEnglish,
+  VendorListValueSpanish
+} from '../../../../fixtures/vendorlist/VendorListValue'
 
 const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
 export const UNAVAILABLE_VERSION = 9999999
@@ -12,7 +15,23 @@ export class TestableGVLFactory extends GVLFactory {
 
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get('/LATEST?language=es')
-      .reply(200, VendorListValue.data, {
+      .reply(200, VendorListValueSpanish.data, {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true'
+      })
+      .persist()
+
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get('/LATEST?language=en')
+      .reply(200, VendorListValueEnglish.data, {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true'
+      })
+      .persist()
+
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get('/36?language=en')
+      .reply(200, VendorListValueEnglish.data, {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true'
       })

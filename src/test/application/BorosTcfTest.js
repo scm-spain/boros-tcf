@@ -2,7 +2,11 @@ import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
+import {
+  VendorListValue,
+  VendorListValueEnglish,
+  VendorListValueSpanish
+} from '../fixtures/vendorlist/VendorListValue'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {BOROS_TCF_ID} from '../../main/core/constants'
@@ -26,16 +30,24 @@ describe('BorosTcf', () => {
     })
 
     it('should return the untranslated latest vendor list if nothing is specified', async () => {
-      const vendorList = await borosTcf.getVendorList()
-      expect(vendorList).to.deep.equal(VendorListValue.data)
+      const vendorList = await borosTcf.getVendorList({language: 'es'})
+      expect(vendorList.vendorListVersion).to.deep.equal(
+        VendorListValueSpanish.data.vendorListVersion
+      )
+      expect(vendorList.purposes[1]).to.deep.equal(
+        VendorListValueSpanish.data.purposes[1]
+      )
     })
 
     it('should return the translation of a specific version if parameters are specified', async () => {
-      const givenVersion = VendorListValue.data.vendorListVersion
+      const givenVersion = VendorListValueEnglish.data.vendorListVersion
       const vendorList = await borosTcf.getVendorList({
-        version: givenVersion
+        version: givenVersion,
+        language: 'en'
       })
-      expect(vendorList).to.deep.equal(VendorListValue.data)
+      expect(vendorList.purposes[1]).to.deep.equal(
+        VendorListValueEnglish.data.purposes[1]
+      )
     })
   })
   describe('saveUserConsent', () => {

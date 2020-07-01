@@ -6,7 +6,11 @@ import {
   TestableGVLFactory,
   UNAVAILABLE_VERSION
 } from '../testable/infrastructure/repository/iab/TestableGVLFactory'
-import {VendorListValue} from '../fixtures/vendorlist/VendorListValue'
+import {
+  VendorListValue,
+  VendorListValueEnglish,
+  VendorListValueSpanish
+} from '../fixtures/vendorlist/VendorListValue'
 
 /**
  * @see https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#getvendorlist
@@ -16,8 +20,10 @@ describe('getVendorList', () => {
   const givenVersion = 2
 
   beforeEach(() => {
+    const testableGVLFactory = new TestableGVLFactory()
+    testableGVLFactory.resetCaches()
     TestableTcfApiInitializer.create()
-      .mock(GVLFactory, new TestableGVLFactory())
+      .mock(GVLFactory, testableGVLFactory)
       .init()
   })
 
@@ -29,7 +35,9 @@ describe('getVendorList', () => {
     )
       .then(({vendorList, success}) => {
         expect(success).to.be.true
-        expect(vendorList).to.deep.equal(VendorListValue.data)
+        expect(vendorList.purposes[1]).to.be.deep.equal(
+          VendorListValueSpanish.data.purposes[1]
+        )
       })
       .then(() => done())
       .catch(error => done(error))
