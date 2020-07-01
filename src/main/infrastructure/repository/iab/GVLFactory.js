@@ -20,6 +20,11 @@ export class GVLFactory {
     return gvl
   }
 
+  resetCaches() {
+    GVL.emptyCache()
+    GVL.emptyLanguageCache()
+  }
+
   async _changeLanguage({language, gvl}) {
     if (language && language !== gvl.language) {
       this._setStaticGVLParameters({language})
@@ -31,10 +36,5 @@ export class GVLFactory {
   _setStaticGVLParameters({language}) {
     GVL.latestFilename = `LATEST?language=${language}`
     GVL.versionedFilename = `[VERSION]?language=${language}`
-  }
-
-  resetCaches() {
-    GVL.emptyCache()
-    GVL.emptyLanguageCache()
   }
 }
