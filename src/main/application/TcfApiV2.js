@@ -49,9 +49,8 @@ class TcfApiV2 {
   }
 
   getVendorList(callback, vendorListVersion) {
-    const translationLanguage = 'es' // TODO: extract
     return this._getVendorListUseCase
-      .execute({vendorListVersion, translationLanguage})
+      .execute({vendorListVersion})
       .then(vendorList => callback(vendorList, true))
       .catch(error => {
         console.log('Error obtaining the vendor list', error)
