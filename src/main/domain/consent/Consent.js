@@ -38,8 +38,6 @@ export class Consent {
     this._isNew = isNew
   }
 
-  
-
   get vendor() {
     return this._vendor
   }
