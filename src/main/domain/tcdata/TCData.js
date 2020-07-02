@@ -67,13 +67,13 @@ export class TCData {
        * true - if using a service-specific or publisher-specific TC String
        * false - if using a global TC String.
        */
-      isServiceSpecific: false, // TODO: verify
+      isServiceSpecific: false,
 
       /**
        * true - CMP is using publisher-customized stack descriptions
        * false - CMP is NOT using publisher-customized stack descriptions
        */
-      useNonStandardStacks: false, // TODO: verify
+      useNonStandardStacks: false,
 
       /**
        * Country code of the country that determines the legislation of
@@ -92,7 +92,7 @@ export class TCData {
        * false - There is no special Purpose 1 treatment status. Purpose 1 was
        * disclosed normally (consent) as expected by TCF Policy
        */
-      // purposeOneTreatment: false, // TODO: verify
+      // purposeOneTreatment: false,
 
       /**
        * Only exists on global-scope TC
