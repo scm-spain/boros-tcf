@@ -3,6 +3,7 @@ import {TCData} from '../../../domain/tcdata/TCData'
 import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
 import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
 import {StatusRepository} from '../../../domain/status/StatusRepository'
+import {ConsentFactory} from '../../../domain/consent/ConsentFactory'
 export class GetTCDataUseCase {
   /**
    *
@@ -12,11 +13,13 @@ export class GetTCDataUseCase {
   constructor({
     statusRepository = inject(StatusRepository),
     consentRepository = inject(ConsentRepository),
-    consentDecoderService = inject(ConsentDecoderService)
+    consentDecoderService = inject(ConsentDecoderService),
+    consentFactory = inject(ConsentFactory)
   } = {}) {
     this._statusRepository = statusRepository
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
+    this._consentFactory = consentFactory
   }
 
   /**
@@ -48,21 +51,7 @@ export class GetTCDataUseCase {
     if (encodedConsent) {
       tcModel = this._consentDecoderService.decode({encodedConsent})
     } else {
-      const emptyTCModel = {
-        publisher: {
-          consents: {},
-          legitimateInterests: {},
-          customPurpose: {},
-          restrictions: {}
-        },
-        purpose: {consents: {}, legitimateInterests: {}},
-        specialFeatures: {},
-        vendor: {
-          consents: {},
-          legitimateInterests: {}
-        }
-      }
-      tcModel = emptyTCModel
+      tcModel = this._consentFactory.createEmpty().toJSON()
     }
 
     const {publisher, purpose, specialFeatures} = tcModel
