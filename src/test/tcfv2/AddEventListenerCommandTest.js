@@ -10,7 +10,7 @@ import {StatusRepository} from '../../main/domain/status/StatusRepository'
 import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 
-describe('AddEventListenerCommand Should', () => {
+describe.only('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
   const version = 2
   describe('General AddEventListenerCommand Scenarios', () => {
