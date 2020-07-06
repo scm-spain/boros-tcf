@@ -1,13 +1,14 @@
 import {CookieStorage} from './CookieStorage'
 
 class BrowserCookieStorage extends CookieStorage {
-  constructor({domain = VENDOR_CONSENT_COOKIE_DEFAULT_DOMAIN} = {}) {
+  constructor({domain = VENDOR_CONSENT_COOKIE_DEFAULT_DOMAIN, window} = {}) {
     super()
     this._domain = domain
+    this._window = window
   }
 
   load() {
-    const cookieParts = `; ${window.document.cookie}`.split(
+    const cookieParts = `; ${this._window.document.cookie}`.split(
       `; ${VENDOR_CONSENT_COOKIE_NAME}=`
     )
     return (
@@ -21,9 +22,14 @@ class BrowserCookieStorage extends CookieStorage {
   }
 
   save({data}) {
-    console.log('test 2 domain: ' + this._domain)
-    const cookieValue = `${VENDOR_CONSENT_COOKIE_NAME}=${data};domain=${this._domain};path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH};max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE};SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
-    window.document.cookie = cookieValue
+    const cookieValue = [
+      `${VENDOR_CONSENT_COOKIE_NAME}=${data}`,
+      this._domain && `domain=${this._domain}`,
+      `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH};max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE};SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
+    ]
+      .filter(Boolean)
+      .join(';')
+    this._window.document.cookie = cookieValue
   }
 }
 

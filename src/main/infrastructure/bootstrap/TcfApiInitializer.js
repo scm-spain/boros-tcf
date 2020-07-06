@@ -62,7 +62,8 @@ class TcfApiInitializer {
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(
           CookieStorage,
-          () => new BrowserCookieStorage({domain: window.location.hostname})
+          () =>
+            new BrowserCookieStorage({domain: window.location.hostname, window})
         )
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
