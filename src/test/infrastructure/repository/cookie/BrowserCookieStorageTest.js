@@ -28,7 +28,7 @@ describe.only('BrowserCookieStorage Should', () => {
     const cookie = browserCookieStorage.load()
     expect(cookie).equal('foo')
   })
-  it('Write And read a cookie with different domain', () => {
+  it('Write And read a cookie with different domain should be undefined', () => {
     const window = new JSDOM('<!DOCTYPE html><body></body>', {
       url: 'http://example.com/'
     }).window
