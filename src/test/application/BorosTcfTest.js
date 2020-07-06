@@ -36,6 +36,12 @@ describe('BorosTcf', () => {
       expect(vendorList.purposes[1]).to.deep.equal(
         VendorListValueSpanish.data.purposes[1]
       )
+      expect(vendorList.features[1]).to.deep.equal(
+        VendorListValueSpanish.data.features[1]
+      )
+      expect(vendorList.specialPurposes[1]).to.deep.equal(
+        VendorListValueSpanish.data.specialPurposes[1]
+      )
     })
 
     it('should return the translation of a specific version if parameters are specified', async () => {
@@ -46,6 +52,12 @@ describe('BorosTcf', () => {
       })
       expect(vendorList.purposes[1]).to.deep.equal(
         VendorListValueEnglish.data.purposes[1]
+      )
+      expect(vendorList.features[1]).to.deep.equal(
+        VendorListValueEnglish.data.features[1]
+      )
+      expect(vendorList.specialPurposes[1]).to.deep.equal(
+        VendorListValueEnglish.data.specialPurposes[1]
       )
     })
   })
