@@ -2,12 +2,17 @@ import {DomainEventBus} from '../../../main/domain/service/DomainEventBus'
 import {expect} from 'chai'
 import sinon from 'sinon'
 import {waitCondition} from '../../../main/core/service/waitCondition'
+import {Observable} from '../../../main/domain/service/Observable'
 describe('DomainEventBus Should', () => {
+  const observableFactory = {
+    create: ({observer}) => new Observable({id: Math.random(), observer})
+  }
+
   const firstEventName = 'firstEventName'
   const secondEventName = 'secondEventName'
   const firstObserver = () => null
-
   const secondObserver = () => null
+
   describe('getNumberOfRegisteredEvents', () => {
     it('return zero for getNumberOfRegisteredEvents when is created', () => {
       const domainEventBus = new DomainEventBus()
@@ -296,7 +301,9 @@ describe('DomainEventBus Should', () => {
         payload: 'domainEvent payload'
       }
       const observerSpy = sinon.spy()
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({
+        observableFactory
+      })
       const res = domainEventBus.register({
         eventName: givenEventName,
         observer: observerSpy
