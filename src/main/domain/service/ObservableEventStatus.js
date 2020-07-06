@@ -1,8 +1,8 @@
 import {Observable} from './Observable'
 
 export class ObservableEventStatus extends Observable {
-  constructor({observer} = {}) {
-    super({observer})
+  constructor({id, observer} = {}) {
+    super({id, observer})
   }
 
   observe({domainEvent} = {}) {
