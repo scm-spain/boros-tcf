@@ -10,9 +10,23 @@ import {StatusRepository} from '../../main/domain/status/StatusRepository'
 import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 
-describe.only('AddEventListenerCommand Should', () => {
+describe('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
   const version = 2
+
+  function deleteAllCookies() {
+    var cookies = document.cookie.split(';')
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i]
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    }
+  }
+  beforeEach(function() {
+    deleteAllCookies()
+  })
   describe('General AddEventListenerCommand Scenarios', () => {
     it('when we create an event listener, then listener callback should be immediately called', done => {
       TestableTcfApiInitializer.create().init()
