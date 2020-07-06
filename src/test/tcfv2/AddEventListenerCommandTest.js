@@ -352,7 +352,6 @@ describe('AddEventListenerCommand Should', () => {
       })
     }
     const borosTcf = TestableTcfApiInitializer.create()
-
       .mock(StatusRepository, statusRepository)
       .init()
     borosTcf.saveUserConsent({
@@ -364,11 +363,11 @@ describe('AddEventListenerCommand Should', () => {
     let listenerId
     const callback = TCData => {
       expect(TCData.listenerId).not.to.be.undefined
-      if (!listenerId) {
-        listenerId = TCData.listenerId
-      } else {
-        expect(TCData.listenerId).to.be.equal(listenerId)
+      if (listenerId) {
+        expect(TCData.listenerId).to.equal(listenerId)
         done()
+      } else {
+        listenerId = TCData.listenerId
       }
     }
     const spyCallback = sinon.spy(callback)

@@ -6,7 +6,7 @@ export class ObservableEventStatus extends Observable {
   }
 
   observe({domainEvent} = {}) {
-    const newTCData = {...domainEvent.payload.TCData, listenerId: this}
+    const newTCData = {...domainEvent.payload.TCData, listenerId: this.id}
     this._observer(newTCData, true)
   }
 }
