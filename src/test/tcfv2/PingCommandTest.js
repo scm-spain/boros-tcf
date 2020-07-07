@@ -22,7 +22,7 @@ describe('ping', () => {
         'gvlVersion',
         'tcfPolicyVersion'
       ]
-      expect(pingReturn).to.have.all.keys(expectedPingReturnProperties)
+      expect(null).to.have.all.keys(expectedPingReturnProperties)
     })
   })
 
@@ -32,7 +32,7 @@ describe('ping', () => {
     const expectedTcfPolicyVersion = 2
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, pingReturn => {
-      expect(pingReturn.gdprApplies).to.be.true
+      expect(pingReturn.gdprApplies).to.be.false
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
@@ -67,7 +67,7 @@ describe('ping', () => {
     )
     expect(success).to.be.true
     window.__tcfapi(command, version, pingReturn => {
-      expect(pingReturn.gvlVersion).to.be.equal(vendorList.vendorListVersion)
+      expect(null).to.be.equal(vendorList)
     })
   })
 })
