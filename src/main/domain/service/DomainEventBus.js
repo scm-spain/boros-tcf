@@ -1,9 +1,8 @@
-import {Observable} from './Observable'
+import {ObservableFactory} from './ObservableFactory'
+import {inject} from '../../core/ioc/ioc'
 
 export class DomainEventBus {
-  constructor({
-    observableFactory = observer => new Observable({observer})
-  } = {}) {
+  constructor({observableFactory = inject(ObservableFactory)} = {}) {
     this._observableFactory = observableFactory
     this._events = new Map()
   }
@@ -26,9 +25,9 @@ export class DomainEventBus {
     if (!this._events.has(eventName)) {
       this._events.set(eventName, [])
     }
-    const observable = this._observableFactory(observer)
+    const observable = this._observableFactory.create({observer})
     this._events.get(eventName).push(observable)
-    return observable
+    return observable.id
   }
 
   unregister({eventName, reference}) {
@@ -36,7 +35,7 @@ export class DomainEventBus {
       return false
     }
     const observers = this._events.get(eventName)
-    const index = observers.indexOf(reference)
+    const index = observers.findIndex(observer => observer.id === reference)
     if (index === -1) {
       return false
     }
