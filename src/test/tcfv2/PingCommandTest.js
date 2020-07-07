@@ -7,7 +7,7 @@ import {TestableCookieStorageMock} from '../testable/infrastructure/repository/T
 describe('ping', () => {
   const command = 'ping'
   const version = 2
-  it('should return a PingReturn object according to specs', () => {
+  it('should return a PingReturn object according to specs', done => {
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, (pingReturn, success) => {
       expect(success).to.be.true
@@ -23,10 +23,11 @@ describe('ping', () => {
         'tcfPolicyVersion'
       ]
       expect(pingReturn).to.have.all.keys(expectedPingReturnProperties)
+      done()
     })
   })
 
-  it('should return the fixed settings', () => {
+  it('should return the fixed settings', done => {
     const expectedCmpId = 129
     const expectedApiVersion = '2.0'
     const expectedTcfPolicyVersion = 2
@@ -36,6 +37,7 @@ describe('ping', () => {
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
+      done()
     })
   })
 
@@ -66,8 +68,27 @@ describe('ping', () => {
       )
     )
     expect(success).to.be.true
-    window.__tcfapi(command, version, pingReturn => {
-      expect(pingReturn.gvlVersion).to.be.equal(vendorList.vendorListVersion)
-    })
+
+    const {pingReturn} = await new Promise(resolve =>
+      window.__tcfapi(command, version, pingReturn => {
+        resolve({pingReturn})
+      })
+    )
+
+    expect(pingReturn.gvlVersion).to.be.equal(vendorList.vendorListVersion)
+  })
+  it('should return undefined gvlVersion if there is no consent', async () => {
+    const cookieStorageMock = new TestableCookieStorageMock()
+    TestableTcfApiInitializer.create()
+      .mock(CookieStorage, cookieStorageMock)
+      .init()
+
+    const {pingReturn} = await new Promise(resolve =>
+      window.__tcfapi(command, version, pingReturn => {
+        resolve({pingReturn})
+      })
+    )
+
+    expect(pingReturn.gvlVersion).to.be.equal(undefined)
   })
 })
