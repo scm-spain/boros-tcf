@@ -22,7 +22,7 @@ describe('ping', () => {
         'gvlVersion',
         'tcfPolicyVersion'
       ]
-      expect(null).to.have.all.keys(expectedPingReturnProperties)
+      expect(pingReturn).to.have.all.keys(expectedPingReturnProperties)
       done()
     })
   })
@@ -33,7 +33,7 @@ describe('ping', () => {
     const expectedTcfPolicyVersion = 2
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, pingReturn => {
-      expect(pingReturn.gdprApplies).to.be.false
+      expect(pingReturn.gdprApplies).to.be.true
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
@@ -41,7 +41,7 @@ describe('ping', () => {
     })
   })
 
-  it('should return gvlVersion', async done => {
+  it('should return gvlVersion', async () => {
     const givenPurpose = {
       consents: {},
       legitimateInterests: {}
@@ -68,9 +68,13 @@ describe('ping', () => {
       )
     )
     expect(success).to.be.true
-    window.__tcfapi(command, version, pingReturn => {
-      expect(null).to.be.equal(vendorList)
-      done()
-    })
+
+    const {pingReturn} = await new Promise(resolve =>
+      window.__tcfapi(command, version, pingReturn => {
+        resolve({pingReturn})
+      })
+    )
+
+    expect(pingReturn.gvlVersion).to.be.equal(vendorList.vendorListVersion)
   })
 })
