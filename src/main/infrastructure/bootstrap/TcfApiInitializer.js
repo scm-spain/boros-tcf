@@ -60,7 +60,11 @@ class TcfApiInitializer {
         singleton(GVLFactory, () => new GVLFactory())
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
-        singleton(CookieStorage, () => new BrowserCookieStorage())
+        singleton(
+          CookieStorage,
+          () =>
+            new BrowserCookieStorage({domain: window.location.hostname, window})
+        )
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
         singleton(DomainEventBus, () => new DomainEventBus())

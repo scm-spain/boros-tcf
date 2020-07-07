@@ -16,10 +16,12 @@ export class VendorListHelper {
       consents: {},
       legitimateInterests: {}
     }
-    Object.keys(vendorList).forEach(key => {
-      newVendor.consents[key] = valueToSet
-      newVendor.legitimateInterests[key] = valueToSet
-    })
+    if (vendorList) {
+      Object.keys(vendorList).forEach(key => {
+        newVendor.consents[key] = valueToSet
+        newVendor.legitimateInterests[key] = valueToSet
+      })
+    }
     return newVendor
   }
 
