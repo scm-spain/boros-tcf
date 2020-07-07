@@ -77,4 +77,18 @@ describe('ping', () => {
 
     expect(pingReturn.gvlVersion).to.be.equal(vendorList.vendorListVersion)
   })
+  it('should return undefined gvlVersion if there is no consent', async () => {
+    const cookieStorageMock = new TestableCookieStorageMock()
+    TestableTcfApiInitializer.create()
+      .mock(CookieStorage, cookieStorageMock)
+      .init()
+
+    const {pingReturn} = await new Promise(resolve =>
+      window.__tcfapi(command, version, pingReturn => {
+        resolve({pingReturn})
+      })
+    )
+
+    expect(pingReturn.gvlVersion).to.be.equal(undefined)
+  })
 })
