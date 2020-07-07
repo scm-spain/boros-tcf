@@ -2,7 +2,7 @@ import {BrowserCookieStorage} from '../../../../main/infrastructure/repository/c
 import {expect} from 'chai'
 import {JSDOM} from 'jsdom'
 
-describe.only('BrowserCookieStorage Should', () => {
+describe('BrowserCookieStorage Should', () => {
   it('Write And read a cookie', () => {
     const window = new JSDOM('<!DOCTYPE html><body></body>', {
       url: 'http://example.com/'
