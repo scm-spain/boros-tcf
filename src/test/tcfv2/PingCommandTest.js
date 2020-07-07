@@ -7,7 +7,7 @@ import {TestableCookieStorageMock} from '../testable/infrastructure/repository/T
 describe('ping', () => {
   const command = 'ping'
   const version = 2
-  it('should return a PingReturn object according to specs', () => {
+  it('should return a PingReturn object according to specs', done => {
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, (pingReturn, success) => {
       expect(success).to.be.true
@@ -23,10 +23,11 @@ describe('ping', () => {
         'tcfPolicyVersion'
       ]
       expect(null).to.have.all.keys(expectedPingReturnProperties)
+      done()
     })
   })
 
-  it('should return the fixed settings', () => {
+  it('should return the fixed settings', done => {
     const expectedCmpId = 129
     const expectedApiVersion = '2.0'
     const expectedTcfPolicyVersion = 2
@@ -36,10 +37,11 @@ describe('ping', () => {
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
+      done()
     })
   })
 
-  it('should return gvlVersion', async () => {
+  it('should return gvlVersion', async done => {
     const givenPurpose = {
       consents: {},
       legitimateInterests: {}
@@ -68,6 +70,7 @@ describe('ping', () => {
     expect(success).to.be.true
     window.__tcfapi(command, version, pingReturn => {
       expect(null).to.be.equal(vendorList)
+      done()
     })
   })
 })
