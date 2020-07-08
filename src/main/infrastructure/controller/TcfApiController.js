@@ -7,7 +7,7 @@ class TcfApiController {
   }
 
   process(command, version, callback = () => null, parameter) {
-    if (version !== 2 || !this._tcfApi[command]) {
+    if (!this._isCorrectVersion(version) || !this._tcfApi[command]) {
       this._reject(callback)
     } else {
       try {
@@ -26,6 +26,10 @@ class TcfApiController {
     try {
       callback(null, false)
     } catch (ignored) {}
+  }
+
+  _isCorrectVersion(version) {
+    return !(version && version !== 2)
   }
 }
 
