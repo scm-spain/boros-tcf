@@ -16,7 +16,7 @@ describe('TcfApiController should', () => {
     )
 
     itParam(
-      'for command ${name} If the version is 2, callback shall be invoked with  true for the success parameter and TC data parameter should be returned',
+      'for command ${value} If the version is 2, callback shall be invoked with  true for the success parameter and TC data parameter should be returned',
       commandListOk,
       async value => {
         TestableTcfApiInitializer.create().init()
