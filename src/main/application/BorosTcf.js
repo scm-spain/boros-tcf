@@ -5,8 +5,8 @@ import {LoadUserConsentUseCase} from './services/vendorconsent/LoadUserConsentUs
 import {SaveUserConsentUseCase} from './services/vendorconsent/SaveUserConsentUseCase'
 import {ChangeUiVisibleUseCase} from './services/ui/ChangeUiVisibleUseCase'
 import {GetTCDataUseCase} from './services/tcdata/GetTCDataUseCase'
-import { StatusRepository } from '../domain/status/StatusRepository'
-import { Status } from '../domain/status/Status'
+import {StatusRepository} from '../domain/status/StatusRepository'
+import {Status} from '../domain/status/Status'
 
 class BorosTcf {
   /**
