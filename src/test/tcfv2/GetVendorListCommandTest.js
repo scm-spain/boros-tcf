@@ -14,13 +14,16 @@ import {VendorListValueSpanish} from '../fixtures/vendorlist/VendorListValue'
 describe('getVendorList', () => {
   const givenCommand = 'getVendorList'
   const givenVersion = 2
-
-  beforeEach(() => {
-    const testableGVLFactory = new TestableGVLFactory()
-    testableGVLFactory.resetCaches()
+  const initializeContainer = ({language} = {}) => {
+    const testableGVLFactory = new TestableGVLFactory({language})
+    testableGVLFactory.reset()
     TestableTcfApiInitializer.create()
       .mock(GVLFactory, testableGVLFactory)
-      .init()
+      .init({language})
+  }
+
+  beforeEach(() => {
+    initializeContainer()
   })
 
   it('should succeed if vendor list value is returned', done => {
