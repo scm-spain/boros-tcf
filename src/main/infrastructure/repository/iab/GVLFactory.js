@@ -12,9 +12,13 @@ export class GVLFactory {
     GVL.baseUrl = baseUrl
     GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}?language=${language}`
     GVL.versionedFilename = `[VERSION]?language=${language}`
+    this._cached = new Map()
   }
 
   create({version = VENDOR_LIST_LATEST_VERSION} = {}) {
-    return new GVL(version)
+    if (!this._cached.has(version)) {
+      this._cached.set(version, new GVL(version))
+    }
+    return this._cached.get(version)
   }
 }
