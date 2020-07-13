@@ -31,12 +31,14 @@ describe('ping', () => {
     const expectedCmpId = 129
     const expectedApiVersion = '2.0'
     const expectedTcfPolicyVersion = 2
+    const expectedCmpStatus = 'loaded'
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, pingReturn => {
       expect(pingReturn.gdprApplies).to.be.true
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
+      expect(pingReturn.cmpStatus).to.be.equal(expectedCmpStatus)
       done()
     })
   })
