@@ -5,6 +5,8 @@ import {LoadUserConsentUseCase} from './services/vendorconsent/LoadUserConsentUs
 import {SaveUserConsentUseCase} from './services/vendorconsent/SaveUserConsentUseCase'
 import {ChangeUiVisibleUseCase} from './services/ui/ChangeUiVisibleUseCase'
 import {GetTCDataUseCase} from './services/tcdata/GetTCDataUseCase'
+import { StatusRepository } from '../domain/status/StatusRepository'
+import { Status } from '../domain/status/Status'
 
 class BorosTcf {
   /**
@@ -20,13 +22,15 @@ class BorosTcf {
     loadUserConsentUseCase = inject(LoadUserConsentUseCase),
     saveUserConsentUseCase = inject(SaveUserConsentUseCase),
     getTCDataUseCase = inject(GetTCDataUseCase),
-    changeUiVisibleUseCase = inject(ChangeUiVisibleUseCase)
+    changeUiVisibleUseCase = inject(ChangeUiVisibleUseCase),
+    statusRepository = inject(StatusRepository)
   } = {}) {
     this._getVendorListUseCase = getVendorListUseCase
     this._loadUserConsentUseCase = loadUserConsentUseCase
     this._saveUserConsentUseCase = saveUserConsentUseCase
     this._getTCDataUseCase = getTCDataUseCase
     this._changeUiVisibleUseCase = changeUiVisibleUseCase
+    statusRepository.getStatus().cmpStatus = Status.CMPSTATUS_LOADED
   }
 
   /**
