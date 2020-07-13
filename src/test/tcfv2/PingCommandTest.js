@@ -37,6 +37,7 @@ describe('ping', () => {
       expect(pingReturn.cmpId).to.be.equal(expectedCmpId)
       expect(pingReturn.apiVersion).to.be.equal(expectedApiVersion)
       expect(pingReturn.tcfPolicyVersion).to.be.equal(expectedTcfPolicyVersion)
+      expect(pingReturn.cmpStatus).to.be.equal('loaded')
       done()
     })
   })

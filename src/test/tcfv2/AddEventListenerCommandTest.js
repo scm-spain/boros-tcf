@@ -35,10 +35,10 @@ describe('AddEventListenerCommand Should', () => {
         done()
       })
     })
-    it('when we create an event listener, and the cmpStatus is loading, then listener callback should be immediately called and listenerId exists', done => {
+    it('when we create an event listener, and the cmpStatus is loaded, then listener callback should be immediately called and listenerId exists', done => {
       const cookieStorageMock = new TestableCookieStorageMock()
       const statusMock = {
-        cmpStatus: Status.CMPSTATUS_LOADING
+        cmpStatus: Status.CMPSTATUS_LOADED
       }
       const statusRepositoryMock = {
         getStatus: () => statusMock
@@ -55,7 +55,7 @@ describe('AddEventListenerCommand Should', () => {
 
       window.__tcfapi(command, version, (TCData, success) => {
         expect(success).to.be.true
-        expect(TCData.cmpStatus).equal(Status.CMPSTATUS_LOADING)
+        expect(TCData.cmpStatus).equal(Status.CMPSTATUS_LOADED)
         expect(TCData.listenerId).exist
         done()
       })
