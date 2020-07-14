@@ -38,9 +38,10 @@ class BorosTcf {
    * @param {Number} param.version
    * @param {String} param.language
    */
-  getVendorList({version} = {}) {
+  getVendorList({version, language} = {}) {
     return this._getVendorListUseCase.execute({
-      vendorListVersion: version
+      vendorListVersion: version,
+      translationLanguage: language
     })
   }
 
