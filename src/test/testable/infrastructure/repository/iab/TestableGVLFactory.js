@@ -38,6 +38,14 @@ export class TestableGVLFactory extends GVLFactory {
       .persist()
 
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get('/36?language=es')
+      .reply(200, VendorListValueSpanish.data, {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true'
+      })
+      .persist()
+
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get(`/${UNAVAILABLE_VERSION}?language=es`)
       .replyWithError({
         message: 'Unavailable',

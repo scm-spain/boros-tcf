@@ -46,4 +46,4 @@ export const VENDOR_LIST_ENDPOINT = 'https://a.dcdn.es/borostcf/v2/vendorlist'
  * reference.  Normally corresponds to the country code of the country
  * in which the publisher's business entity is established.
  */
-export const PUBLISHER_CC = 'es'
+export const PUBLISHER_CC = 'ES'
