@@ -15,7 +15,7 @@ export class IABVendorListRepository extends VendorListRepository {
     version,
     language = new Language(VENDOR_LIST_DEFAULT_LANGUAGE)
   } = {}) {
-    const gvl = await this._gvlFactory.create({
+    const gvl = this._gvlFactory.create({
       version: version?.value,
       language: language?.value
     })
