@@ -1,8 +1,5 @@
 import {GVL} from '@iabtcf/core'
-import {
-  VENDOR_LIST_DEFAULT_LANGUAGE,
-  VENDOR_LIST_LATEST_VERSION
-} from '../../../core/constants'
+import {VENDOR_LIST_DEFAULT_LANGUAGE} from '../../../core/constants'
 
 export class GVLFactory {
   constructor({
@@ -10,11 +7,11 @@ export class GVLFactory {
     language = VENDOR_LIST_DEFAULT_LANGUAGE
   } = {}) {
     GVL.baseUrl = baseUrl
-    GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}?language=${language}`
+    GVL.latestFilename = `LATEST?language=${language}`
     GVL.versionedFilename = `[VERSION]?language=${language}`
   }
 
-  create({version = VENDOR_LIST_LATEST_VERSION} = {}) {
+  create({version = 'LATEST'} = {}) {
     return new GVL(version)
   }
 }
