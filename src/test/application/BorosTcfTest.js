@@ -8,7 +8,11 @@ import {
 } from '../fixtures/vendorlist/VendorListValue'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
-import {BOROS_TCF_ID} from '../../main/core/constants'
+import {
+  BOROS_TCF_ID,
+  BOROS_TCF_VERSION,
+  PUBLISHER_CC
+} from '../../main/core/constants'
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {TestableGVLFactory} from '../testable/infrastructure/repository/iab/TestableGVLFactory'
 import {DomainEventBus} from '../../main/domain/service/DomainEventBus'
@@ -94,8 +98,9 @@ describe('BorosTcf', () => {
           expect(savedConsent).to.be.a('string')
 
           const userConsent = TCString.decode(savedConsent)
-
           expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
+          expect(userConsent.cmpVersion).to.equal(BOROS_TCF_VERSION)
+          expect(userConsent.publisherCountryCode).to.equal(PUBLISHER_CC)
           expect(userConsent.vendorConsents.has(2)).to.be.true
           expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
           expect(userConsent.vendorConsents.has(1)).to.be.false

@@ -53,8 +53,6 @@ export class GetTCDataUseCase {
     } else {
       tcModel = this._consentFactory.createEmpty().toJSON()
     }
-
-    const {publisher, purpose, specialFeatures} = tcModel
     let vendor
     if (!vendorIds) {
       vendor = tcModel.vendor
@@ -64,15 +62,12 @@ export class GetTCDataUseCase {
         ([key, value]) => vendorIds.includes(key) && (vendor[key] = value)
       )
     }
-
-    return new TCData({
+    const tcData = new TCData({
       tcString: encodedConsent,
+      tcModel: tcModel,
       cmpStatus: cmpStatus,
-      eventStatus: eventStatus,
-      publisher,
-      purpose,
-      vendor,
-      specialFeatureOptins: specialFeatures
+      eventStatus: eventStatus
     }).value()
+    return tcData
   }
 }

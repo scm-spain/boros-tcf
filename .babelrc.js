@@ -10,7 +10,7 @@ module.exports = {
       "transform-define",
       {
         "__PACKAGE_NAME__": name,
-        "__PACKAGE_MINOR_VERSION__": version.split('.')[1]
+        "__PACKAGE_MINOR_VERSION__": parseInt(version.split('.')[1])
       }
     ]
   ]

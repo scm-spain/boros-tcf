@@ -7,8 +7,6 @@ import {ConsentEncoderService} from './ConsentEncoderService'
 import {VendorListHelper} from '../vendorlist/VendorListHelper'
 
 export class LoadConsentService {
-  _consentEncoderService
-  _vendorListHelper
   constructor({
     consentRepository = inject(ConsentRepository),
     consentFactory = inject(ConsentFactory),

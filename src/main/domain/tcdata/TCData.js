@@ -1,41 +1,22 @@
-import {
-  BOROS_TCF_ID,
-  BOROS_TCF_VERSION,
-  TCF_API_VERSION,
-  PUBLISHER_CC
-} from '../../core/constants'
-
 export class TCData {
   /**
    *
    * @param {Object} param
    */
-  constructor({
-    tcString,
-    cmpStatus,
-    eventStatus,
-    listenerId,
-    publisher,
-    purpose,
-    vendor,
-    specialFeatureOptins
-  }) {
+  constructor({tcString, tcModel, cmpStatus, eventStatus, listenerId}) {
     this._tcString = tcString
+    this._tcModel = tcModel
     this._cmpStatus = cmpStatus
     this._eventStatus = eventStatus
     this._listenerId = listenerId
-    this._publisher = publisher
-    this._purpose = purpose
-    this._vendor = vendor
-    this._specialFeatureOptins = specialFeatureOptins
   }
 
   value() {
     return {
       tcString: this._tcString,
-      tcfPolicyVersion: TCF_API_VERSION,
-      cmpId: BOROS_TCF_ID,
-      cmpVersion: BOROS_TCF_VERSION,
+      tcfPolicyVersion: this._tcModel.policyVersion,
+      cmpId: this._tcModel.cmpId,
+      cmpVersion: this._tcModel.cmpVersion,
 
       /**
        * true - GDPR Applies
@@ -67,20 +48,20 @@ export class TCData {
        * true - if using a service-specific or publisher-specific TC String
        * false - if using a global TC String.
        */
-      isServiceSpecific: false,
+      isServiceSpecific: this._tcModel.isServiceSpecific,
 
       /**
        * true - CMP is using publisher-customized stack descriptions
        * false - CMP is NOT using publisher-customized stack descriptions
        */
-      useNonStandardStacks: false,
+      useNonStandardStacks: this._tcModel.useNonStandardStacks,
 
       /**
        * Country code of the country that determines the legislation of
        * reference.  Normally corresponds to the country code of the country
        * in which the publisher's business entity is established.
        */
-      publisherCC: PUBLISHER_CC,
+      publisherCC: this._tcModel.publisherCC,
 
       /**
        * Only exists on service-specific TC
@@ -92,29 +73,11 @@ export class TCData {
        * false - There is no special Purpose 1 treatment status. Purpose 1 was
        * disclosed normally (consent) as expected by TCF Policy
        */
-      // purposeOneTreatment: false,
-
-      /**
-       * Only exists on global-scope TC
-       */
-      outOfBand: {
-        /**
-         * true - Vendor is allowed to use an Out-of-Band Legal Basis
-         * false | undefined - Vendor is NOT allowed to use an Out-of-Band Legal Basis
-         */
-        // '[vendor id]': Boolean
-        allowedVendors: {},
-        /**
-         * true - Vendor has been disclosed to the user
-         * false | undefined - Vendor has been disclosed to the user
-         */
-        // '[vendor id]': Boolean
-        disclosedVendors: {}
-      },
-      purpose: this._purpose,
-      vendor: this._vendor,
-      specialFeatureOptins: this._specialFeatureOptins,
-      publisher: this._publisher
+      purposeOneTreatment: this._tcModel.purposeOneTreatment,
+      purpose: this._tcModel.purpose,
+      vendor: this._tcModel.vendor,
+      specialFeatureOptins: this._tcModel.specialFeatures,
+      publisher: this._tcModel.publisher
     }
   }
 }
