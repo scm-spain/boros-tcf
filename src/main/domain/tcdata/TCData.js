@@ -67,7 +67,7 @@ export class TCData {
        * true - if using a service-specific or publisher-specific TC String
        * false - if using a global TC String.
        */
-      isServiceSpecific: false,
+      isServiceSpecific: true,
 
       /**
        * true - CMP is using publisher-customized stack descriptions
