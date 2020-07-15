@@ -14,7 +14,7 @@ export class TCData {
   value() {
     return {
       tcString: this._tcString,
-      tcfPolicyVersion: this._tcModel.tcfPolicyVersion,
+      tcfPolicyVersion: this._tcModel.policyVersion,
       cmpId: this._tcModel.cmpId,
       cmpVersion: this._tcModel.cmpVersion,
 
@@ -76,7 +76,7 @@ export class TCData {
       purposeOneTreatment: this._tcModel.purposeOneTreatment,
       purpose: this._tcModel.purpose,
       vendor: this._tcModel.vendor,
-      specialFeatureOptins: this._tcModel.specialFeatureOptins,
+      specialFeatureOptins: this._tcModel.specialFeatures,
       publisher: this._tcModel.publisher
     }
   }

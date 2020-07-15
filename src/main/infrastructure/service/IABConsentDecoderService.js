@@ -19,7 +19,6 @@ class IABConsentDecoderService extends ConsentDecoderService {
 
     const tcModel = TCString.decode(encodedConsent)
     const model = {
-      tcfPolicyVersion: tcModel.policyVersion,
       cmpId: tcModel.cmpId,
       cmpVersion: tcModel.cmpVersion,
       isServiceSpecific: tcModel.isServiceSpecific,

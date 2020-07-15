@@ -62,7 +62,6 @@ export class GetTCDataUseCase {
         ([key, value]) => vendorIds.includes(key) && (vendor[key] = value)
       )
     }
-
     const tcData = new TCData({
       tcString: encodedConsent,
       tcModel: tcModel,

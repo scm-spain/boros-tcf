@@ -1,4 +1,4 @@
-import 'jsdom-global/register'
+import jsdom from 'jsdom-global'
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
@@ -7,6 +7,7 @@ import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
 
 describe('getTCData', () => {
+  beforeEach(() => jsdom())
   const command = 'getTCData'
   const version = 2
   const givenPurpose = {
@@ -43,10 +44,6 @@ describe('getTCData', () => {
       legitimateInterests: {1: false, 2: false, 3: true}
     }
     const expectedSpecialFeatures = givenSpecialFeatures
-    const expectedEmptyOutOfBand = {
-      allowedVendors: {},
-      disclosedVendors: {}
-    }
     const expectedPublisher = {
       consents: {},
       legitimateInterests: {},
@@ -64,7 +61,7 @@ describe('getTCData', () => {
         specialFeatures: givenSpecialFeatures
       })
       .then(() => cookieStorageMock.load())
-      .then(cookie =>
+      .then(cookie => {
         window.__tcfapi(command, version, (tcData, success) => {
           expect(success).to.be.true
           const {
@@ -72,7 +69,6 @@ describe('getTCData', () => {
             gdprApplies,
             eventStatus,
             cmpStatus,
-            outOfBand,
             purpose,
             vendor,
             specialFeatureOptins,
@@ -82,13 +78,12 @@ describe('getTCData', () => {
           expect(gdprApplies).to.be.true
           expect(eventStatus).to.be.equal(Status.TCLOADED)
           expect(cmpStatus).to.be.equal(Status.CMPSTATUS_LOADED)
-          expect(outOfBand).to.be.deep.equal(expectedEmptyOutOfBand)
           expect(purpose).to.deep.equal(expectedPurpose)
           expect(vendor).to.deep.equal(expectedVendor)
           expect(specialFeatureOptins).to.deep.equal(expectedSpecialFeatures)
           expect(publisher).to.deep.equal(expectedPublisher)
           done()
         })
-      )
+      })
   })
 })

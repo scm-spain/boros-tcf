@@ -1,3 +1,10 @@
+import {
+  BOROS_TCF_ID,
+  BOROS_TCF_VERSION,
+  PUBLISHER_CC,
+  TCF_API_VERSION
+} from '../../core/constants'
+
 export class Consent {
   /**
    *
@@ -64,6 +71,13 @@ export class Consent {
 
   toJSON() {
     return {
+      cmpId: BOROS_TCF_ID,
+      cmpVersion: BOROS_TCF_VERSION,
+      policyVersion: TCF_API_VERSION,
+      publisherCC: PUBLISHER_CC,
+      isServiceSpecific: true,
+      useNonStandardStacks: false,
+      purposeOneTreatment: false,
       vendor: {...this._vendor},
       purpose: {...this._purpose},
       specialFeatures: {...this._specialFeatures},

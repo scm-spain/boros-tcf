@@ -3,6 +3,12 @@ import {ConsentFactory} from '../../../main/domain/consent/ConsentFactory'
 import {GVLFactory} from '../../../main/infrastructure/repository/iab/GVLFactory'
 import {IABConsentEncoderService} from '../../../main/infrastructure/service/IABConsentEncoderService'
 import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
+import {
+  BOROS_TCF_ID,
+  BOROS_TCF_VERSION,
+  PUBLISHER_CC,
+  TCF_API_VERSION
+} from '../../../main/core/constants'
 describe('Consent Factory Should', () => {
   const consentEncoderService = new IABConsentEncoderService({
     gvlFactory: new GVLFactory()
@@ -14,6 +20,13 @@ describe('Consent Factory Should', () => {
       consentDecoderService
     })
     const expectedConsent = {
+      cmpId: BOROS_TCF_ID,
+      cmpVersion: BOROS_TCF_VERSION,
+      policyVersion: TCF_API_VERSION,
+      publisherCC: PUBLISHER_CC,
+      isServiceSpecific: true,
+      useNonStandardStacks: false,
+      purposeOneTreatment: false,
       vendor: {
         consents: {},
         legitimateInterests: {}
