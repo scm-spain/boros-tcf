@@ -22,14 +22,8 @@ export class ConsentFactory {
     return new Consent({...decodedValue, isNew: true})
   }
 
-  createConsent({vendor, purpose, specialFeatures, valid, isNew}) {
-    return new Consent({
-      vendor,
-      purpose,
-      specialFeatures,
-      valid,
-      isNew
-    })
+  createConsent(initialData) {
+    return new Consent(initialData)
   }
 
   createEmpty = () =>

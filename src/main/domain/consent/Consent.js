@@ -25,6 +25,13 @@ export class Consent {
    * @param {boolean} [param.isNew]
    */
   constructor({
+    cmpId = BOROS_TCF_ID,
+    cmpVersion = BOROS_TCF_VERSION,
+    policyVersion = TCF_API_VERSION,
+    publisherCC = PUBLISHER_CC,
+    isServiceSpecific = true,
+    useNonStandardStacks = false,
+    purposeOneTreatment = false,
     vendor,
     purpose,
     specialFeatures,
@@ -37,6 +44,13 @@ export class Consent {
     valid = false,
     isNew = false
   }) {
+    this._cmpId = cmpId
+    this._cmpVersion = cmpVersion
+    this._policyVersion = policyVersion
+    this._publisherCC = publisherCC
+    this._isServiceSpecific = isServiceSpecific
+    this._useNonStandardStacks = useNonStandardStacks
+    this._purposeOneTreatment = purposeOneTreatment
     this._vendor = vendor
     this._purpose = purpose
     this._specialFeatures = specialFeatures
@@ -71,13 +85,13 @@ export class Consent {
 
   toJSON() {
     return {
-      cmpId: BOROS_TCF_ID,
-      cmpVersion: BOROS_TCF_VERSION,
-      policyVersion: TCF_API_VERSION,
-      publisherCC: PUBLISHER_CC,
-      isServiceSpecific: true,
-      useNonStandardStacks: false,
-      purposeOneTreatment: false,
+      cmpId: this._cmpId,
+      cmpVersion: this._cmpVersion,
+      policyVersion: this._policyVersion,
+      publisherCC: this._publisherCC,
+      isServiceSpecific: this._isServiceSpecific,
+      useNonStandardStacks: this._useNonStandardStacks,
+      purposeOneTreatment: this._purposeOneTreatment,
       vendor: {...this._vendor},
       purpose: {...this._purpose},
       specialFeatures: {...this._specialFeatures},
