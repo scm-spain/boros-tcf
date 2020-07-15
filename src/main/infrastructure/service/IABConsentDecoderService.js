@@ -18,10 +18,16 @@ class IABConsentDecoderService extends ConsentDecoderService {
     }
 
     const tcModel = TCString.decode(encodedConsent)
-
     const model = {
+      tcfPolicyVersion: tcModel.policyVersion,
+      cmpId: tcModel.cmpId,
+      cmpVersion: tcModel.cmpVersion,
+      isServiceSpecific: tcModel.isServiceSpecific,
+      useNonStandardStacks: tcModel.useNonStandardStacks,
+      publisherCC: tcModel.publisherCountryCode,
       vendorListVersion: tcModel.vendorListVersion,
       policyVersion: tcModel.policyVersion,
+      purposeOneTreatment: tcModel.purposeOneTreatment,
       vendor: {
         consents: mapToModel(tcModel.vendorConsents),
         legitimateInterests: mapToModel(tcModel.vendorLegitimateInterests)
