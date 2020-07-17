@@ -53,7 +53,7 @@ export class LoadConsentService {
   _createAnInValidConsentAndMergeListVendors({existingConsent, newVendorList}) {
     existingConsent.valid = false
     existingConsent.vendor = this._vendorListHelper.mergeVendors({
-      newVendorList: newVendorList.vendors,
+      newVendorList: newVendorList.value.vendors,
       oldVendors: existingConsent.vendor
     })
     return this._consentFactory.createConsent(existingConsent)
@@ -105,7 +105,7 @@ export class LoadConsentService {
       })
     ) {
       consent.vendor = this._vendorListHelper.setAllVendorsTo({
-        vendorList: newVendorList.vendors,
+        vendorList: newVendorList.value.vendors,
         valueToSet: value
       })
 

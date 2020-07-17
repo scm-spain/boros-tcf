@@ -232,10 +232,12 @@ describe('BorosTcf', () => {
       }
       const givenVendorList = {
         policyVersion: 2,
-        vendors: {
-          1: {},
-          2: {},
-          3: {}
+        value: {
+          vendors: {
+            1: {},
+            2: {},
+            3: {}
+          }
         }
       }
       const vendorListRepository = {
@@ -274,10 +276,12 @@ describe('BorosTcf', () => {
       }
       const givenVendorList = {
         policyVersion: 2,
-        vendors: {
-          1: {},
-          2: {},
-          3: {}
+        value: {
+          vendors: {
+            1: {},
+            2: {},
+            3: {}
+          }
         }
       }
       const vendorListRepository = {
@@ -312,10 +316,12 @@ describe('BorosTcf', () => {
       }
       const givenVendorList = {
         policyVersion: 2,
-        vendors: {
-          1: {},
-          2: {},
-          3: {}
+        value: {
+          vendors: {
+            1: {},
+            2: {},
+            3: {}
+          }
         }
       }
       const vendorListRepository = {
