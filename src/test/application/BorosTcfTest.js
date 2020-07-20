@@ -406,6 +406,21 @@ describe('BorosTcf', () => {
       expect(consent.purpose.consents).to.be.deep.equal({})
       expect(consent.purpose.legitimateInterests).to.be.deep.equal({})
     })
+
+    it('should return empty consent if decoding old consent fails with an error', async () => {
+      const throwableCookieStorage = {
+        load: () => {
+          throw new Error('Error loading cookie')
+        }
+      }
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, throwableCookieStorage)
+        .init()
+
+      const consent = await borosTcf.loadUserConsent()
+      expect(consent.isNew).to.be.true
+      expect(consent.cmpId).to.equal(BOROS_TCF_ID)
+    })
   })
   describe('uiVisible', () => {
     let borosTcf
