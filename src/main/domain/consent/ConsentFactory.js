@@ -32,6 +32,6 @@ export class ConsentFactory {
       purpose: emptyVendorPurpose(),
       specialFeatures: {},
       valid: false,
-      isNew: false
+      isNew: true
     })
 }
