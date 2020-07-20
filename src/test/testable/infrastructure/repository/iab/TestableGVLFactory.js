@@ -56,4 +56,13 @@ export class TestableGVLFactory extends GVLFactory {
   reset() {
     nock.cleanAll()
   }
+
+  mockReply({path, data}) {
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get(path)
+      .reply(200, data, {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true'
+      })
+  }
 }

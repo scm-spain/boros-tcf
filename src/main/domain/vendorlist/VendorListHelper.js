@@ -1,10 +1,10 @@
 export class VendorListHelper {
-  haveAllValuesTo({object, valueToVerify}) {
+  haveAllValuesTo({object, valueToVerify, oldVendorList}) {
     if (Object.entries(object).length === 0) {
       return valueToVerify === false
     }
-    for (const value of Object.values(object)) {
-      if (valueToVerify !== value) {
+    for (const [key, value] of Object.entries(object)) {
+      if (valueToVerify !== value && oldVendorList && oldVendorList[key]) {
         return false
       }
     }
