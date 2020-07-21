@@ -56,7 +56,6 @@ export class TestableGVLFactory extends GVLFactory {
 
   reset() {
     nock.cleanAll()
-    nock.abortPendingRequests()
   }
 
   mockReply({path, data}) {
