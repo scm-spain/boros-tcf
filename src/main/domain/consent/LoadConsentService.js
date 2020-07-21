@@ -5,6 +5,7 @@ import {ConsentDecoderService} from '../consent/ConsentDecoderService'
 import {VendorListRepository} from '../vendorlist/VendorListRepository'
 import {ConsentEncoderService} from './ConsentEncoderService'
 import {VendorListHelper} from '../vendorlist/VendorListHelper'
+import {Version} from '../vendorlist/Version'
 
 export class LoadConsentService {
   constructor({
@@ -74,16 +75,22 @@ export class LoadConsentService {
       return true
     }
 
+    const oldVendorList = await this._vendorListRepository.getVendorList({
+      version: new Version(consent.vendorListVersion)
+    })
+
     return (
       (await this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
         consent,
         newVendorList,
-        value: true
+        value: true,
+        oldVendorList: oldVendorList.value.vendors
       })) ||
       this._consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
         consent,
         newVendorList,
-        value: false
+        value: false,
+        oldVendorList: oldVendorList.value.vendors
       })
     )
   }
@@ -91,17 +98,20 @@ export class LoadConsentService {
   async _consentHaveConsentsAndLIForAllVendorsWithTheSameValue({
     consent,
     newVendorList,
-    value
+    value,
+    oldVendorList
   }) {
     let isValid = false
     if (
       this._vendorListHelper.haveAllValuesTo({
         object: consent.vendor.consents,
-        valueToVerify: value
+        valueToVerify: value,
+        oldVendorList
       }) &&
       this._vendorListHelper.haveAllValuesTo({
         object: consent.vendor.legitimateInterests,
-        valueToVerify: value
+        valueToVerify: value,
+        oldVendorList
       })
     ) {
       consent.vendor = this._vendorListHelper.setAllVendorsTo({

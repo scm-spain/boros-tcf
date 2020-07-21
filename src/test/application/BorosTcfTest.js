@@ -3,6 +3,8 @@ import {expect} from 'chai'
 import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {
+  VendorList45,
+  VendorList46,
   VendorListValueEnglish,
   VendorListValueSpanish
 } from '../fixtures/vendorlist/VendorListValue'
@@ -405,6 +407,32 @@ describe('BorosTcf', () => {
       expect(consent.vendor.legitimateInterests).to.be.deep.equal({})
       expect(consent.purpose.consents).to.be.deep.equal({})
       expect(consent.purpose.legitimateInterests).to.be.deep.equal({})
+    })
+    it('should return valid consent if vendor list version  have changed and user have accepted previously all the vendors, and some vendors does not exist in new vendor list', async () => {
+      const cookieVersion45WithAllVendorsAccepted =
+        'CO2r3W7O2r3W7CBAEAENAtCoAP_AAH_AAAiQGGNX_T5fb2vj-3Z99_tkaYwf95y3p-wzhheMs-8NyYeH7BoGP2MwvBX4JiQKGRgksjKBAQdtHGhcSQgBgIhViTKMYk2MjzNKJLJAilsbe0NYCD9mnsHT3ZCY70-vu__7P3ffwMMav-ny-3tfH9uz77_bI0xg_7zlvT9hnDC8ZZ94bkw8P2DQMfsZheCvwTEgUMjBJZGUCAg7aONC4khADARCrEmUYxJsZHmaUSWSBFLY29oawEH7NPYOnuyEx3p9fd__2fu-_gAA.YAAAAAAAAAAA'
+      cookieStorageMock.save({
+        data: cookieVersion45WithAllVendorsAccepted
+      })
+
+      const mockGVLFactory = new TestableGVLFactory()
+      mockGVLFactory.reset()
+      mockGVLFactory.mockReply({
+        path: '/LATEST?language=es',
+        data: VendorList46.data
+      })
+      mockGVLFactory.mockReply({
+        path: '/45?language=es',
+        data: VendorList45.data
+      })
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .mock(GVLFactory, mockGVLFactory)
+        .init()
+
+      const consent = await borosTcf.loadUserConsent()
+      expect(consent.valid).to.be.true
+      expect(consent.isNew).to.be.false
     })
 
     it('should return empty consent if decoding old consent fails with an error', async () => {

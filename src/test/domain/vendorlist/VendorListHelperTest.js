@@ -4,13 +4,18 @@ import {expect} from 'chai'
 describe('VendorListHelper should', () => {
   const vendorListHelper = new VendorListHelper()
   describe('haveAllValuesTo should', () => {
+    const oldVendorList = {
+      1: {},
+      2: {}
+    }
     it('return true if vendor.consent is an empty object and we are asking for values to false', () => {
       const vendor = {
         consent: {}
       }
       const result = vendorListHelper.haveAllValuesTo({
         object: vendor.consent,
-        valueToVerify: false
+        valueToVerify: false,
+        oldVendorList
       })
       expect(result).to.be.true
     })
@@ -20,7 +25,8 @@ describe('VendorListHelper should', () => {
       }
       const result = vendorListHelper.haveAllValuesTo({
         object: vendor.consent,
-        valueToVerify: true
+        valueToVerify: true,
+        oldVendorList
       })
       expect(result).to.be.false
     })
@@ -33,7 +39,8 @@ describe('VendorListHelper should', () => {
       }
       const result = vendorListHelper.haveAllValuesTo({
         object: vendor.consent,
-        valueToVerify: true
+        valueToVerify: true,
+        oldVendorList
       })
       expect(result).to.be.true
     })
@@ -46,9 +53,27 @@ describe('VendorListHelper should', () => {
       }
       const result = vendorListHelper.haveAllValuesTo({
         object: vendor.consent,
-        valueToVerify: true
+        valueToVerify: true,
+        oldVendorList
       })
       expect(result).to.be.false
+    })
+    it('return true if vendor.consent has a vendor consent to false but in previous oldListVersin did not exist', () => {
+      const vendor = {
+        consent: {
+          1: true,
+          2: false
+        }
+      }
+      const oldVendorListWithoutVendor2 = {
+        1: {}
+      }
+      const result = vendorListHelper.haveAllValuesTo({
+        object: vendor.consent,
+        valueToVerify: true,
+        oldVendorList: oldVendorListWithoutVendor2
+      })
+      expect(result).to.be.true
     })
     describe('setAllVendorsTo', () => {
       it('set all vendors to true', () => {
