@@ -93,7 +93,86 @@ describe('BorosTcf', () => {
     })
 
     it('should generate and save correctly the user consent', () => {
-      return borosTcf
+      const mockGVLFactory = new TestableGVLFactory()
+      mockGVLFactory.reset()
+      mockGVLFactory
+        .mockReply({
+          path: '/LATEST?language=es',
+          data: VendorList46.data
+        })
+        .persist()
+
+      mockGVLFactory
+        .mockReply({
+          path: '/45?language=es',
+          data: VendorList45.data
+        })
+        .persist()
+      const cookieStorageMockTest = new TestableCookieStorageMock()
+      const cookie45WithoutVendors =
+        'CO2r3W7O2r3W7CBAEAENAtCoAP_AAH_AAAiQAAAAAAAA.YAAAAAAAAAAA'
+      cookieStorageMockTest.storage.set('euconsent-v2', cookie45WithoutVendors)
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMockTest)
+        .mock(GVLFactory, mockGVLFactory)
+        .init()
+
+      return borosTcf.loadUserConsent().then(consent => {
+        expect(consent.valid).to.be.true
+        return borosTcf
+          .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
+          .then(() => {
+            const savedConsent = cookieStorageMockTest.storage.get(
+              'euconsent-v2'
+            )
+            console.log(
+              'savedConsent ' +
+                JSON.stringify(
+                  cookieStorageMockTest.storage.get('euconsent-v2')
+                )
+            )
+            expect(savedConsent).to.be.a('string')
+
+            const userConsent = TCString.decode(savedConsent)
+            expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
+            expect(userConsent.cmpVersion).to.equal(BOROS_TCF_VERSION)
+            expect(userConsent.publisherCountryCode).to.equal(PUBLISHER_CC)
+            expect(userConsent.vendorListVersion).to.equal(46)
+            expect(userConsent.vendorConsents.has(2)).to.be.true
+            expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
+            expect(userConsent.vendorConsents.has(1)).to.be.false
+            expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
+          })
+      })
+    })
+    it('should generate and save new user consent with latest vendorlist version', () => {
+      const cookieStorageMock = new TestableCookieStorageMock()
+      const cookieVersion45 =
+        'CO2r3W7O2r3W7CBAEAENAtCoAP_AAH_AAAiQAAAAAAAA.YAAAAAAAAAAA'
+      cookieStorageMock.storage.set('euconsent-v2', cookieVersion45)
+
+      const mockGVLFactory = new TestableGVLFactory()
+      mockGVLFactory.resetCaches()
+      mockGVLFactory.reset()
+      mockGVLFactory.mockReply({
+        path: '/LATEST?language=es',
+        data: VendorList46.data
+      })
+
+      mockGVLFactory
+        .mockReply({
+          path: '/45?language=es',
+          data: VendorList45.data
+        })
+        .persist()
+
+      const borosTcfVersion = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .mock(GVLFactory, mockGVLFactory)
+        .init()
+
+      console.log('Running test')
+      return borosTcfVersion
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() => {
           const savedConsent = cookieStorageMock.storage.get('euconsent-v2')
@@ -103,10 +182,7 @@ describe('BorosTcf', () => {
           expect(userConsent.cmpId).to.equal(BOROS_TCF_ID)
           expect(userConsent.cmpVersion).to.equal(BOROS_TCF_VERSION)
           expect(userConsent.publisherCountryCode).to.equal(PUBLISHER_CC)
-          expect(userConsent.vendorConsents.has(2)).to.be.true
-          expect(userConsent.vendorLegitimateInterests.has(2)).to.be.true
-          expect(userConsent.vendorConsents.has(1)).to.be.false
-          expect(userConsent.vendorLegitimateInterests.has(1)).to.be.false
+          expect(userConsent.vendorListVersion).to.equal(46)
         })
     })
     it('should generate and save correctly the new user consent when an old one exists', () => {
@@ -134,7 +210,10 @@ describe('BorosTcf', () => {
           '2': true
         }
       }
-
+      const cookieStorageMock = new TestableCookieStorageMock()
+      borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() =>
@@ -359,20 +438,32 @@ describe('BorosTcf', () => {
         getVendorList: () => givenVendorList
       }
 
+      const mockGVLFactory = new TestableGVLFactory()
+      mockGVLFactory.resetCaches()
+      mockGVLFactory.reset()
+      mockGVLFactory.mockReply({
+        path: '/LATEST?language=es',
+        data: VendorListValueEnglish.data
+      })
+
+      const cookieStorageMock = new TestableCookieStorageMock()
+      const cookieVersion36 =
+        'CO1wTaiO1wTaiCBADAENAkCAAAAAAAAAAAAAABEAAiAA.IF7NX2T5OI2vjq2ZdF7BEaYwfZxyigMgShhQIsS8NwIeFbBoGP2AgHBG4JCQAGBAkkACBAQIsHGBcCQABgIgRiRCMQEmMjzNKBJJAggkbM0FACDVmnsHS3ZCY70--u__bMAA'
       cookieStorageMock.save({
-        data:
-          'CO1wTaiO1wTaiCBADAENAkCAAAAAAAAAAAAAABEAAiAA.IF7NX2T5OI2vjq2ZdF7BEaYwfZxyigMgShhQIsS8NwIeFbBoGP2AgHBG4JCQAGBAkkACBAQIsHGBcCQABgIgRiRCMQEmMjzNKBJJAggkbM0FACDVmnsHS3ZCY70--u__bMAA'
+        data: cookieVersion36
       })
       const borosTcf = TestableTcfApiInitializer.create()
         .mock(CookieStorage, cookieStorageMock)
+        .mock(GVLFactory, mockGVLFactory)
         .mock(VendorListRepository, vendorListRepository)
         .init()
-
+      console.log('Before first load Consent')
+      const firstConsent = await borosTcf.loadUserConsent()
+      expect(firstConsent.valid).to.be.true
       await borosTcf.saveUserConsent({
         purpose: givenPurpose,
         vendor: givenVendor
       })
-
       const consent = await borosTcf.loadUserConsent()
       expect(consent.valid).to.be.true
     })
