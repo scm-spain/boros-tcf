@@ -12,6 +12,7 @@ export class TestableGVLFactory extends GVLFactory {
     super({
       baseUrl: BASE_URL
     })
+    super.resetCaches()
 
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get('/LATEST?language=es')
@@ -58,7 +59,7 @@ export class TestableGVLFactory extends GVLFactory {
   }
 
   mockReply({path, data}) {
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+    return nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get(path)
       .reply(200, data, {
         'access-control-allow-origin': '*',
