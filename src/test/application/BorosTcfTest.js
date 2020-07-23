@@ -27,14 +27,13 @@ import {StatusRepository} from '../../main/domain/status/StatusRepository'
 
 describe('BorosTcf', () => {
   describe('getVendorList use case', () => {
-    let borosTcf
-    beforeEach(() => {
-      borosTcf = TestableTcfApiInitializer.create()
-        .mock(GVLFactory, new TestableGVLFactory())
-        .init()
-    })
+    const initBoros = ({language} = {}) =>
+      TestableTcfApiInitializer.create()
+        .mock(GVLFactory, new TestableGVLFactory({language}))
+        .init({language})
 
     it('should return the spanish latest vendor list if nothing (language, version) is specified', async () => {
+      const borosTcf = initBoros()
       const vendorList = await borosTcf.getVendorList()
       expect(vendorList.vendorListVersion).to.deep.equal(
         VendorListValueSpanish.data.vendorListVersion
@@ -52,6 +51,7 @@ describe('BorosTcf', () => {
 
     it('should return the translation of a specific version if parameters are specified', async () => {
       const givenVersion = VendorListValueEnglish.data.vendorListVersion
+      const borosTcf = initBoros({language: 'en'})
       const vendorList = await borosTcf.getVendorList({
         version: givenVersion,
         language: 'en'

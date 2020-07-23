@@ -8,9 +8,10 @@ import {
 const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
 export const UNAVAILABLE_VERSION = 9999999
 export class TestableGVLFactory extends GVLFactory {
-  constructor() {
+  constructor({language} = {}) {
     super({
-      baseUrl: BASE_URL
+      baseUrl: BASE_URL,
+      language
     })
     super.resetCaches()
 

@@ -2,7 +2,7 @@
  * @interface
  */
 class VendorListRepository {
-  getVendorList({version, language}) {}
+  getVendorList({version}) {}
 }
 
 export {VendorListRepository}
