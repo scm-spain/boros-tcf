@@ -8,10 +8,12 @@ import {
 const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
 export const UNAVAILABLE_VERSION = 9999999
 export class TestableGVLFactory extends GVLFactory {
-  constructor() {
+  constructor({language} = {}) {
     super({
-      baseUrl: BASE_URL
+      baseUrl: BASE_URL,
+      language
     })
+    super.resetCaches()
 
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get('/LATEST?language=es')
@@ -58,7 +60,7 @@ export class TestableGVLFactory extends GVLFactory {
   }
 
   mockReply({path, data}) {
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+    return nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
       .get(path)
       .reply(200, data, {
         'access-control-allow-origin': '*',
