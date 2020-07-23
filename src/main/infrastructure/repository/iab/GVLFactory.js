@@ -3,37 +3,40 @@ import {
   VENDOR_LIST_DEFAULT_LANGUAGE,
   VENDOR_LIST_LATEST_VERSION
 } from '../../../core/constants'
+import {Language} from '../../../domain/vendorlist/Language'
 
 export class GVLFactory {
-  constructor({baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist'} = {}) {
+  constructor({
+    baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist',
+    language = VENDOR_LIST_DEFAULT_LANGUAGE
+  } = {}) {
     GVL.baseUrl = baseUrl
+    this._language = new Language(language).value
     this._cached = new Map()
   }
 
-  create({
-    version = VENDOR_LIST_LATEST_VERSION,
-    language = VENDOR_LIST_DEFAULT_LANGUAGE
-  } = {}) {
-    const key = this._key({version, language})
+  create({version = VENDOR_LIST_LATEST_VERSION} = {}) {
+    const key = this._key({version})
     if (!this._cached.has(key)) {
-      this._setStaticGVLParameters({language})
+      this._setStaticGVLParameters()
       this._cached.set(key, new GVL(version))
     }
     return this._cached.get(key)
   }
 
-  _key({version, language}) {
-    return `${version}:${language}`
+  _key({version}) {
+    return `${version}:${this._language}`
   }
 
   resetCaches() {
     GVL.emptyCache()
     GVL.emptyLanguageCache()
+    this._cached = new Map()
   }
 
-  _setStaticGVLParameters({language}) {
+  _setStaticGVLParameters() {
     GVL.languageFilename = `${VENDOR_LIST_LATEST_VERSION}?language=[LANG]`
-    GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}?language=${language}`
-    GVL.versionedFilename = `[VERSION]?language=${language}`
+    GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}?language=${this._language}`
+    GVL.versionedFilename = `[VERSION]?language=${this._language}`
   }
 }

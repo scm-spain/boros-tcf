@@ -34,7 +34,7 @@ import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
 
 class TcfApiInitializer {
-  static init() {
+  static init({language} = {}) {
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
@@ -57,7 +57,7 @@ class TcfApiInitializer {
         )
 
         singleton(VendorListRepository, () => new IABVendorListRepository())
-        singleton(GVLFactory, () => new GVLFactory())
+        singleton(GVLFactory, () => new GVLFactory({language}))
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(
