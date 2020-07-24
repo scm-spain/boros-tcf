@@ -38,13 +38,13 @@ export class LoadConsentService {
       return this._consentFactory.createEmptyConsent()
     }
 
-    const result = await this._isValidAndSaveNewConsent({
+    const result = await this._isValid({
       newVendorList,
       consent: existingConsent
     })
 
     return result
-      ? this._createValidConsentWithTheSavedOne()
+      ? this._createValidConsentWithTheSavedOne({savedConsent: existingConsent})
       : this._createAnInValidConsentAndMergeListVendors({
           existingConsent,
           newVendorList
@@ -60,17 +60,27 @@ export class LoadConsentService {
     return this._consentFactory.createConsent(existingConsent)
   }
 
-  async _createValidConsentWithTheSavedOne() {
-    const validEncodedConsent = await this._consentRepository.loadUserConsent()
-    const validConsent = this._consentDecoderService.decode({
-      encodedConsent: validEncodedConsent
-    })
-
-    validConsent.valid = true
-    return this._consentFactory.createConsent(validConsent)
+  async _createValidConsentWithTheSavedOne({savedConsent}) {
+    const consent = await this._renewSavedConsent({savedConsent})
+    consent.valid = true
+    return this._consentFactory.createConsent(consent)
   }
 
-  async _isValidAndSaveNewConsent({newVendorList, consent}) {
+  async _renewSavedConsent({savedConsent}) {
+    const encodedConsent = await this._consentEncoderService.encode({
+      consent: savedConsent
+    })
+    this._consentRepository.saveUserConsent({
+      consent: encodedConsent
+    })
+    const renewedEncodedConsent = this._consentRepository.loadUserConsent()
+    const consent = this._consentDecoderService.decode({
+      encodedConsent: renewedEncodedConsent
+    })
+    return consent
+  }
+
+  async _isValid({newVendorList, consent}) {
     if (newVendorList.version === consent.vendorListVersion) {
       return true
     }
@@ -118,12 +128,6 @@ export class LoadConsentService {
         vendorList: newVendorList.value.vendors,
         valueToSet: value
       })
-
-      const encodedConsent = await this._consentEncoderService.encode({consent})
-      this._consentRepository.saveUserConsent({
-        consent: encodedConsent
-      })
-
       isValid = true
     }
     return isValid

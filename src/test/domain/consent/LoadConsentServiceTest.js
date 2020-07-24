@@ -37,7 +37,8 @@ describe('LoadConsentService Should', () => {
     const encodedConsent =
       'CO1hOaZO1hOaZCBABAENArCAAMAAAEAAAAAAABMAAmAA.IGCNV_T5eb2vj-3Zdt_tkaYwf55y3o-wzhhaIse8NwIeH7BoGP2MwvBX4JiQCGBAkkiKBAQdtHGhcCQABgIhRiTKMYk2MjzNKJLJAilsbO0NYCD9mnsHT3ZCY70--u__7P3fAAAA'
     const consentRepositoryThatReturnsAValidConsent = {
-      loadUserConsent: () => encodedConsent
+      loadUserConsent: () => encodedConsent,
+      saveUserConsent: () => null
     }
 
     const decodedConsent = new IABConsentDecoderService().decode({
