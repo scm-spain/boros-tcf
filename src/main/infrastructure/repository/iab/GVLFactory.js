@@ -1,13 +1,14 @@
 import {GVL} from '@iabtcf/core'
 import {
   VENDOR_LIST_DEFAULT_LANGUAGE,
+  VENDOR_LIST_ENDPOINT,
   VENDOR_LIST_LATEST_VERSION
 } from '../../../core/constants'
 import {Language} from '../../../domain/vendorlist/Language'
 
 export class GVLFactory {
   constructor({
-    baseUrl = 'https://a.dcdn.es/borostcf/v2/vendorlist',
+    baseUrl = VENDOR_LIST_ENDPOINT,
     language = VENDOR_LIST_DEFAULT_LANGUAGE
   } = {}) {
     GVL.baseUrl = baseUrl
