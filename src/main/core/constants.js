@@ -2,14 +2,19 @@
 /**
  * Package Name
  */
-export const PACKAGE_NAME = __PACKAGE_NAME__
+export const PACKAGE_NAME =
+  (typeof __PACKAGE_NAME__ !== 'undefined' && __PACKAGE_NAME__) ||
+  'boros-tcf-dev'
 
 /**
  * Boros TCF Version is the current version.
  * It'll be the minor version as once developed, the IAB's TCF defined API should not change,
  * so major versions are useless to define this information value required by the PingReturn object.
  */
-export const BOROS_TCF_VERSION = __PACKAGE_MINOR_VERSION__
+export const BOROS_TCF_VERSION =
+  (typeof __PACKAGE_MINOR_VERSION__ !== 'undefined' &&
+    __PACKAGE_MINOR_VERSION__) ||
+  1
 
 /**
  * Boros TCF IAB's registered ID
