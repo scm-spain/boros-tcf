@@ -1,8 +1,9 @@
 import {CookieStorage} from './CookieStorage'
 
-export class BrowserCookieStorage extends CookieStorage {
-  constructor({window} = {}) {
+class BrowserCookieStorage extends CookieStorage {
+  constructor({domain = VENDOR_CONSENT_COOKIE_DEFAULT_DOMAIN, window} = {}) {
     super()
+    this._domain = domain
     this._window = window
   }
 
@@ -21,29 +22,21 @@ export class BrowserCookieStorage extends CookieStorage {
   }
 
   save({data}) {
-    const domain = this._parseDomain()
     const cookieValue = [
       `${VENDOR_CONSENT_COOKIE_NAME}=${data}`,
-      `domain=${domain}`,
-      `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
-      `max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE}`,
-      `SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
-    ].join(';')
+      this._domain && `domain=${this._domain}`,
+      `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH};max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE};SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
+    ]
+      .filter(Boolean)
+      .join(';')
     this._window.document.cookie = cookieValue
-  }
-
-  _parseDomain() {
-    const host = this._window.location.hostname || ''
-    const parts = host.split(DOT)
-    if (parts.length > 2) {
-      parts.shift()
-    }
-    return `${DOT}${parts.join('.')}`
   }
 }
 
+export {BrowserCookieStorage}
+
+const VENDOR_CONSENT_COOKIE_DEFAULT_DOMAIN = ''
 const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
 const VENDOR_CONSENT_COOKIE_MAX_AGE = 33696000
 const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
 const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
-const DOT = '.'

@@ -8,6 +8,7 @@ describe('BrowserCookieStorage Should', () => {
       url: 'http://example.com/'
     }).window
     const browserCookieStorage = new BrowserCookieStorage({
+      domain: 'example.com',
       window
     })
 
@@ -28,41 +29,16 @@ describe('BrowserCookieStorage Should', () => {
     expect(cookie).equal('foo')
   })
   it('Write And read a cookie with different domain should be undefined', () => {
-    const givenCookie = 'foo'
-    const dom1 = new JSDOM('<!DOCTYPE html><body></body>', {
-      url: 'http://example1.com/'
+    const window = new JSDOM('<!DOCTYPE html><body></body>', {
+      url: 'http://example.com/'
+    }).window
+    const browserCookieStorage = new BrowserCookieStorage({
+      domain: 'example2.com',
+      window
     })
-    const browserCookieStorage1 = new BrowserCookieStorage({
-      window: dom1.window
-    })
-    const dom2 = new JSDOM('<!DOCTYPE html><body></body>', {
-      url: 'http://example2.com/'
-    })
-    const browserCookieStorage2 = new BrowserCookieStorage({
-      window: dom2.window
-    })
-    browserCookieStorage1.save({data: givenCookie})
-    const cookie1 = browserCookieStorage1.load()
-    const cookie2 = browserCookieStorage2.load()
-    expect(cookie1).to.equal(givenCookie)
-    expect(cookie2).to.be.undefined
-  })
-  it('Should keep the cookie between subdomains', () => {
-    const givenCookie = 'foo'
-    const dom = new JSDOM('<!DOCTYPE html><body></body>', {
-      url: 'http://example1.com/'
-    })
-    const browserCookieStorage1 = new BrowserCookieStorage({
-      window: dom.window
-    })
-    dom.reconfigure({url: 'http://asubdomainof.example1.com/'})
-    const browserCookieStorage2 = new BrowserCookieStorage({
-      window: dom.window
-    })
-    browserCookieStorage1.save({data: givenCookie})
-    const cookie1 = browserCookieStorage1.load()
-    const cookie2 = browserCookieStorage2.load()
-    expect(cookie1).to.equal(givenCookie)
-    expect(cookie2).to.equal(cookie1)
+
+    browserCookieStorage.save({data: 'foo'})
+    const cookie = browserCookieStorage.load()
+    expect(cookie).equal(undefined)
   })
 })
