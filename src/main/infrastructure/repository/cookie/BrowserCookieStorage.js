@@ -54,10 +54,11 @@ export class BrowserCookieStorage extends CookieStorage {
 
   _parseDomain() {
     const host = this._window.location.hostname || ''
-    const parts = host.split(DOT)
-    if (parts.length > 2) {
-      parts.shift()
-    }
+    const parts = host
+      .split(DOT)
+      .reverse()
+      .filter((_, index) => index <= 1)
+      .reverse()
     return `${DOT}${parts.join('.')}`
   }
 }
