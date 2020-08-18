@@ -37,7 +37,7 @@ export class BrowserCookieStorage extends CookieStorage {
       `domain=${host}`,
       `expires= Thu, 01 Jan 1970 00:00:00 GMT`
     ]
-    document.cookie = cookieParts.join(';') // delete cookie with subdomain
+    this._window.document.cookie = cookieParts.join(';') // delete cookie with subdomain
     const consentCookiesAfterDeletion = this._getConsentCookies()
     if (!consentCookiesAfterDeletion.length) {
       this.save({data})
