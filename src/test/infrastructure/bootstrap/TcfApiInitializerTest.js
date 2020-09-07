@@ -25,7 +25,7 @@ describe('TcfApiInitializer', () => {
   })
   it('should process the onReady callback', done => {
     const onReady = api => {
-      expect(api instanceof TcfApiV2).to.be.true
+      expect(api instanceof BorosTcf).to.be.true
       done()
     }
     window.__tcfapi = command => {
