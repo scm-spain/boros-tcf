@@ -2,7 +2,6 @@ import jsdom from 'jsdom-global'
 import {expect} from 'chai'
 import {TcfApiInitializer} from '../../../main/infrastructure/bootstrap/TcfApiInitializer'
 import {BorosTcf} from '../../../main/application/BorosTcf'
-import {TcfApiV2} from '../../../main/application/TcfApiV2'
 
 describe('TcfApiInitializer', () => {
   beforeEach(() => jsdom())
