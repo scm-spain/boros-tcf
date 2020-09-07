@@ -6,7 +6,7 @@ class TcfApiRegistryService {
     this._tcfApiController = tcfApiController
   }
 
-  register() {
+  register({borosTcf}) {
     if (typeof window === 'undefined') return
     const onReady = this._getStubbed(ON_READY_COMMAND)
     const pending = this._getStubbed(PENDING_COMMAND)
@@ -14,7 +14,7 @@ class TcfApiRegistryService {
     window.__tcfapi = (command, version, callback, parameter) =>
       this._tcfApiController.process(command, version, callback, parameter)
 
-    this._run(() => onReady && onReady(this._tcfApiController.api))
+    this._run(() => onReady && onReady(borosTcf))
     this._run(
       () => pending && pending.forEach(pendingFunction => pendingFunction())
     )

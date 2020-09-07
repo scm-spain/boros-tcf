@@ -2,7 +2,6 @@ import jsdom from 'jsdom-global'
 import {expect} from 'chai'
 import {TcfApiInitializer} from '../../../main/infrastructure/bootstrap/TcfApiInitializer'
 import {BorosTcf} from '../../../main/application/BorosTcf'
-import {TcfApiV2} from '../../../main/application/TcfApiV2'
 
 describe('TcfApiInitializer', () => {
   beforeEach(() => jsdom())
@@ -25,7 +24,7 @@ describe('TcfApiInitializer', () => {
   })
   it('should process the onReady callback', done => {
     const onReady = api => {
-      expect(api instanceof TcfApiV2).to.be.true
+      expect(api instanceof BorosTcf).to.be.true
       done()
     }
     window.__tcfapi = command => {

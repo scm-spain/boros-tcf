@@ -30,7 +30,11 @@ class BorosTcf {
     this._saveUserConsentUseCase = saveUserConsentUseCase
     this._getTCDataUseCase = getTCDataUseCase
     this._changeUiVisibleUseCase = changeUiVisibleUseCase
-    statusRepository.getStatus().cmpStatus = Status.CMPSTATUS_LOADED
+    this._statusRepository = statusRepository
+  }
+
+  ready() {
+    this._statusRepository.getStatus().cmpStatus = Status.CMPSTATUS_LOADED
   }
 
   /**
