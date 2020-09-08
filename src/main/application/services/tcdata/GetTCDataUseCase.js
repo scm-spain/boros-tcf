@@ -30,12 +30,7 @@ export class GetTCDataUseCase {
   execute({vendorIds} = {}) {
     if (
       Array.isArray(vendorIds) &&
-      vendorIds.some(
-        vendorId =>
-          typeof vendorId !== 'number' ||
-          Number.isInteger(vendorId) ||
-          vendorId < 1
-      )
+      vendorIds.some(vendorId => this._isInteger(vendorId) || vendorId < 1)
     ) {
       throw Error(
         'vendorIds parameter of getTCData has invalid data. It must be an array of positive integers, or undefined'
@@ -69,5 +64,13 @@ export class GetTCDataUseCase {
       eventStatus: eventStatus
     }).value()
     return tcData
+  }
+
+  _isInteger(value) {
+    return (
+      typeof value === 'number' &&
+      isFinite(value) &&
+      Math.floor(value) === value
+    )
   }
 }
