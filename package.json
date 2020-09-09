@@ -46,7 +46,7 @@
     "babel-preset-sui": "3",
     "chai": "4.2.0",
     "clean-webpack-plugin": "3.0.0",
-    "codecov": "3.6.5",
+    "codecov": "3.7.1",
     "html-webpack-plugin": "4.0.4",
     "jsdom": "16.4.0",
     "jsdom-global": "3.0.2",
@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@iabtcf/core": "^1.0.1",
-    "brusc": "1"
+    "brusc": "1",
+    "core-js": "3"
   }
 }
