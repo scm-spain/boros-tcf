@@ -15,11 +15,11 @@ describe('DomainEventBus Should', () => {
 
   describe('getNumberOfRegisteredEvents', () => {
     it('return zero for getNumberOfRegisteredEvents when is created', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       expect(domainEventBus.getNumberOfRegisteredEvents).to.be.equal(0)
     })
     it('return two for getNumberOfRegisteredEvents when two different events are registered', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
 
       domainEventBus.register({
         eventName: firstEventName,
@@ -32,7 +32,7 @@ describe('DomainEventBus Should', () => {
       expect(domainEventBus.getNumberOfRegisteredEvents).to.be.equal(2)
     })
     it('return one for getNumberOfRegisteredEvents when the same  event is  registered twice', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
 
       domainEventBus.register({
         eventName: firstEventName,
@@ -47,7 +47,7 @@ describe('DomainEventBus Should', () => {
   })
   describe('getNumberOfObserversRegisteredForAnEvent and register', () => {
     it('return zero for getNumberOfObserversRegisteredForAnEvent when is created', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       expect(
         domainEventBus.getNumberOfObserversRegisteredForAnEvent({
           eventName: firstEventName
@@ -55,7 +55,7 @@ describe('DomainEventBus Should', () => {
       ).to.be.equal(0)
     })
     it('return one for each event  when two different events are registered', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
 
       domainEventBus.register({
         eventName: firstEventName,
@@ -77,7 +77,7 @@ describe('DomainEventBus Should', () => {
       ).to.be.equal(1)
     })
     it('return two for an event  when two different observers are registered to the same event', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
 
       domainEventBus.register({
         eventName: firstEventName,
@@ -96,13 +96,13 @@ describe('DomainEventBus Should', () => {
   })
   describe('raise', () => {
     it('when we rise an event without observers, should not crash ', done => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       Promise.resolve()
         .then(() => domainEventBus.raise({eventName: 'unexistingEvent'}))
         .then(() => done())
     })
     it('call all observers once when raise is called', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const spyFirstObserver = sinon.spy(firstObserver)
       const spySecondObserver = sinon.spy(secondObserver)
       domainEventBus.register({
@@ -121,7 +121,7 @@ describe('DomainEventBus Should', () => {
       })
     })
     it('call only the observers for the specific event when raise is called', done => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const spyFirstObserver = sinon.spy(firstObserver)
       const spySecondObserver = sinon.spy(secondObserver)
       domainEventBus.register({
@@ -150,12 +150,12 @@ describe('DomainEventBus Should', () => {
           })
       })
     })
-    it('if first observer throw an exception, second observer shOold be called when raise is called', () => {
+    it('if first observer throw an exception, second observer should be called when raise is called', () => {
       const firstObseverThrowException = () => {
         throw new Error('Error')
       }
 
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const spyFirstObserver = sinon.spy(firstObseverThrowException)
       const spySecondObserver = sinon.spy(secondObserver)
       domainEventBus.register({
@@ -176,7 +176,7 @@ describe('DomainEventBus Should', () => {
   })
   describe('getNumberOfRegisteredEvents and unregister', () => {
     it('after unregister getNumberOfRegisteredEvents should decrease', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const reference = domainEventBus.register({
         eventName: firstEventName,
         observer: firstObserver
@@ -188,7 +188,7 @@ describe('DomainEventBus Should', () => {
       expect(domainEventBus.getNumberOfRegisteredEvents).to.be.equal(0)
     })
     it('after unregister an event that has not been registered should  not crash', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       domainEventBus.unregister({
         eventName: firstEventName,
         reference: null
@@ -198,7 +198,7 @@ describe('DomainEventBus Should', () => {
   })
   describe('getNumberOfObserversRegisteredForAnEvent and unregister', done => {
     it('after unregister getNumberOfObserversRegisteredForAnEvent should decrease', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const reference = domainEventBus.register({
         eventName: firstEventName,
         observer: firstObserver
@@ -222,7 +222,7 @@ describe('DomainEventBus Should', () => {
     it('call all observer except the unregistered one', done => {
       const spyFirstObserver = sinon.spy(firstObserver)
       const spySecondObserver = sinon.spy(secondObserver)
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const reference = domainEventBus.register({
         eventName: firstEventName,
         observer: spyFirstObserver
@@ -251,14 +251,14 @@ describe('DomainEventBus Should', () => {
   })
   describe('unregister', () => {
     it('when unregister and un existent event return false', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const success = domainEventBus.unregister({
         eventName: 'unexitingEvent'
       })
       expect(success).to.be.false
     })
     it('when unregister and an event that exists but reference is not found, then return false', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       domainEventBus.register({
         eventName: firstEventName,
         observer: firstObserver
@@ -270,7 +270,7 @@ describe('DomainEventBus Should', () => {
       expect(success).to.be.false
     })
     it('when unregister and an event that  exists and reference is  found, then return true', () => {
-      const domainEventBus = new DomainEventBus()
+      const domainEventBus = new DomainEventBus({observableFactory})
       const reference = domainEventBus.register({
         eventName: firstEventName,
         observer: firstObserver
@@ -285,7 +285,7 @@ describe('DomainEventBus Should', () => {
   describe('register', () => {
     it('Should fail if observer is not a function', done => {
       try {
-        const domainEventBus = new DomainEventBus()
+        const domainEventBus = new DomainEventBus({observableFactory})
         domainEventBus.register({eventName: 'givenEvent', observer: {}})
         done(new Error('Should fail'))
       } catch (error) {

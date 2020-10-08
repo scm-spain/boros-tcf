@@ -26,6 +26,9 @@ import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
 
 describe('BorosTcf', () => {
+  beforeEach(() => {
+    window.__tcfapi_boros = undefined
+  })
   describe('getVendorList use case', () => {
     const initBoros = ({language} = {}) =>
       TestableTcfApiInitializer.create()
@@ -69,8 +72,6 @@ describe('BorosTcf', () => {
   })
   describe('saveUserConsent', () => {
     const iabConsentDecoderService = new IABConsentDecoderService()
-    let borosTcf
-    let cookieStorageMock
     const givenPurpose = {
       consents: {},
       legitimateInterests: {}
@@ -87,12 +88,6 @@ describe('BorosTcf', () => {
     }
     const cookie45WithoutVendorsConsentsAndIsValid =
       'CO2r3W7O2r3W7CBAEAENAtCoAP_AAH_AAAiQAAAAAAAA.YAAAAAAAAAAA'
-    beforeEach(() => {
-      cookieStorageMock = new TestableCookieStorageMock()
-      borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
-        .init()
-    })
 
     it('should generate and save correctly the user consent', () => {
       const mockGVLFactory = new TestableGVLFactory()
@@ -109,20 +104,20 @@ describe('BorosTcf', () => {
         data: VendorList45.data
       })
 
-      const cookieStorageMockTest = new TestableCookieStorageMock()
-      cookieStorageMockTest.storage.set(
+      const cookieStorageMock = new TestableCookieStorageMock()
+      cookieStorageMock.save(
         'euconsent-v2',
         cookie45WithoutVendorsConsentsAndIsValid
       )
       const borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMockTest)
+        .mock(CookieStorage, cookieStorageMock)
         .mock(GVLFactory, mockGVLFactory)
         .init()
 
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() => {
-          const savedConsent = cookieStorageMockTest.storage.get('euconsent-v2')
+          const savedConsent = cookieStorageMock.load()
           expect(savedConsent).to.be.a('string')
 
           const userConsent = TCString.decode(savedConsent)
@@ -205,6 +200,11 @@ describe('BorosTcf', () => {
         }
       }
 
+      const cookieStorageMock = new TestableCookieStorageMock()
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(CookieStorage, cookieStorageMock)
+        .init()
+
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
         .then(() =>
@@ -214,7 +214,7 @@ describe('BorosTcf', () => {
               vendor: givenVendor2
             })
             .then(() => {
-              const savedConsent = cookieStorageMock.storage.get('euconsent-v2')
+              const savedConsent = cookieStorageMock.load()
               expect(savedConsent).to.be.a('string')
 
               const userConsent = iabConsentDecoderService.decode({
@@ -234,8 +234,6 @@ describe('BorosTcf', () => {
     })
   })
   describe('loadUserConsent', () => {
-    let borosTcf
-    let cookieStorageMock
     const givenPurpose = {
       consents: {},
       legitimateInterests: {}
@@ -250,7 +248,7 @@ describe('BorosTcf', () => {
         '2': true
       }
     }
-    const givenAcceptedAllPurpose = {
+    const givenAllPurposesAcceptance = {
       1: true,
       2: true,
       3: true,
@@ -262,16 +260,14 @@ describe('BorosTcf', () => {
       9: true,
       10: true
     }
-    beforeEach(() => {
-      cookieStorageMock = new TestableCookieStorageMock()
-      borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
-        .init()
-    })
+    const givenAllPurposesAccepted = {
+      consents: {...givenAllPurposesAcceptance},
+      legitimateInterests: {...givenAllPurposesAcceptance}
+    }
 
     it('should load the saved user consent', () => {
       const borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
+        .mock(CookieStorage, new TestableCookieStorageMock())
         .init()
       return borosTcf
         .saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
@@ -286,13 +282,14 @@ describe('BorosTcf', () => {
         })
     })
     it('should load an empty consent if there was not saved user consent and is consent should be not valid', async () => {
+      const borosTcf = TestableTcfApiInitializer.create().init()
       const consentModel = await borosTcf.loadUserConsent()
       expect(consentModel).to.not.be.undefined
       expect(consentModel.valid).to.be.false
       expect(consentModel.isNew).to.be.true
     })
-    it('should return valid  and save new consent(all accepted), when user had consent for all partners (new partners are automatically accepted)', async () => {
-      const givenVendorAllAccepted = {
+    it('should return valid and save new consent(all accepted), when user had consent for all partners (new partners are automatically accepted)', async () => {
+      const givenOldConsentWithAllVendorsAccepted = {
         consents: {
           1: true,
           2: true
@@ -302,7 +299,7 @@ describe('BorosTcf', () => {
           2: true
         }
       }
-      const givenVendorList = {
+      const givenNewVendorListWithNewVendor = {
         policyVersion: 2,
         value: {
           vendors: {
@@ -312,19 +309,21 @@ describe('BorosTcf', () => {
           }
         }
       }
-      const vendorListRepository = {
-        getVendorList: () => givenVendorList
+      const vendorListRepositoryMock = {
+        getVendorList: () => givenNewVendorListWithNewVendor
       }
 
       const borosTcfMocked = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
-        .mock(VendorListRepository, vendorListRepository)
+        .mock(CookieStorage, new TestableCookieStorageMock())
+        .mock(VendorListRepository, vendorListRepositoryMock)
         .init()
 
       await borosTcfMocked.saveUserConsent({
-        purpose: givenAcceptedAllPurpose,
-        vendor: givenVendorAllAccepted
+        purpose: givenAllPurposesAccepted,
+        vendor: givenOldConsentWithAllVendorsAccepted,
+        specialFeatures: {}
       })
+
       const consentModel = await borosTcfMocked.loadUserConsent()
       expect(consentModel.valid).to.be.true
       expect(consentModel.isNew).to.be.false
@@ -361,12 +360,12 @@ describe('BorosTcf', () => {
       }
 
       const borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
+        .mock(CookieStorage, new TestableCookieStorageMock())
         .mock(VendorListRepository, vendorListRepository)
         .init()
 
       await borosTcf.saveUserConsent({
-        purpose: givenAcceptedAllPurpose,
+        purpose: givenAllPurposesAccepted,
         vendor: givenVendorAllDenied
       })
       const consentModel = await borosTcf.loadUserConsent()
@@ -401,12 +400,12 @@ describe('BorosTcf', () => {
       }
 
       const borosTcf = TestableTcfApiInitializer.create()
-        .mock(CookieStorage, cookieStorageMock)
+        .mock(CookieStorage, new TestableCookieStorageMock())
         .mock(VendorListRepository, vendorListRepository)
         .init()
 
       await borosTcf.saveUserConsent({
-        purpose: givenAcceptedAllPurpose,
+        purpose: givenAllPurposesAccepted,
         vendor: givenVendorWithFineGranularity
       })
       const consentModel = await borosTcf.loadUserConsent()
@@ -466,6 +465,7 @@ describe('BorosTcf', () => {
         getVendorList: () => givenVendorList
       }
 
+      const cookieStorageMock = new TestableCookieStorageMock()
       cookieStorageMock.save({
         data:
           'CO1wTaiO1wTaiCBADAENAkCAAAAAAAAAAAAAABEAAiAA.IF7NX2T5OI2vjq2ZdF7BEaYwfZxyigMgShhQIsS8NwIeFbBoGP2AgHBG4JCQAGBAkkACBAQIsHGBcCQABgIgRiRCMQEmMjzNKBJJAggkbM0FACDVmnsHS3ZCY70--u__bMAA'
@@ -489,6 +489,7 @@ describe('BorosTcf', () => {
       expect(consent.purpose.legitimateInterests).to.be.deep.equal({})
     })
     it('should return valid consent if vendor list version  have changed and user have accepted previously all the vendors, and some vendors does not exist in new vendor list', async () => {
+      const cookieStorageMock = new TestableCookieStorageMock()
       const cookieVersion45WithAllVendorsAccepted =
         'CO2r3W7O2r3W7CBAEAENAtCoAP_AAH_AAAiQGGNX_T5fb2vj-3Z99_tkaYwf95y3p-wzhheMs-8NyYeH7BoGP2MwvBX4JiQKGRgksjKBAQdtHGhcSQgBgIhViTKMYk2MjzNKJLJAilsbe0NYCD9mnsHT3ZCY70-vu__7P3ffwMMav-ny-3tfH9uz77_bI0xg_7zlvT9hnDC8ZZ94bkw8P2DQMfsZheCvwTEgUMjBJZGUCAg7aONC4khADARCrEmUYxJsZHmaUSWSBFLY29oawEH7NPYOnuyEx3p9fd__2fu-_gAA.YAAAAAAAAAAA'
       cookieStorageMock.save({

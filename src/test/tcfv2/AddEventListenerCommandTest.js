@@ -24,9 +24,12 @@ describe('AddEventListenerCommand Should', () => {
       window.document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
     }
   }
-  beforeEach(function() {
+
+  beforeEach(() => {
+    window.__tcfapi_boros = undefined
     deleteAllCookies()
   })
+
   describe('General AddEventListenerCommand Scenarios', () => {
     it('when we create an event listener, then listener callback should be immediately called', done => {
       TestableTcfApiInitializer.create().init()
