@@ -1,6 +1,6 @@
 {
   "name": "@adv-ui/boros-tcf",
-  "version": "1.11.3",
+  "version": "1.12.0",
   "description": "Adevinta GDPR - Transparency and Consent Framework - API",
   "main": "dist",
   "scripts": {
