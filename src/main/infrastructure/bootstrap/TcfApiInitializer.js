@@ -35,6 +35,9 @@ import {ObservableFactory} from '../../domain/service/ObservableFactory'
 
 class TcfApiInitializer {
   static init({language} = {}) {
+    if (typeof window !== 'undefined' && window.__tcfapi_boros) {
+      return window.__tcfapi_boros
+    }
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
@@ -85,6 +88,9 @@ class TcfApiInitializer {
     borosTcf.ready()
 
     borosTcf.loadUserConsent({notify: true})
+    if (typeof window !== 'undefined') {
+      window.__tcfapi_boros = borosTcf
+    }
     return borosTcf
   }
 }

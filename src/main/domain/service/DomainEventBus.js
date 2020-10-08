@@ -53,7 +53,7 @@ export class DomainEventBus {
         .then(() => {
           observer.observe({domainEvent: {eventName, payload}})
         })
-        .catch(error => console.log('Error' + error))
+        .catch(error => console.log('Error', error))
     })
   }
 }

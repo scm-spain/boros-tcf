@@ -7,6 +7,11 @@ import {TestableCookieStorageMock} from '../testable/infrastructure/repository/T
 describe('ping', () => {
   const command = 'ping'
   const version = 2
+
+  beforeEach(() => {
+    window.__tcfapi_boros = undefined
+  })
+
   it('should return a PingReturn object according to specs', done => {
     TestableTcfApiInitializer.create().init()
     window.__tcfapi(command, version, (pingReturn, success) => {
