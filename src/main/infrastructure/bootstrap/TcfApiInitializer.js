@@ -61,6 +61,7 @@ class TcfApiInitializer {
         // Services
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
+        singleton(DomainEventBus, () => new DomainEventBus())
         singleton(EventStatusService, () => new EventStatusService())
         singleton(LoadConsentService, () => new LoadConsentService())
 
@@ -80,7 +81,6 @@ class TcfApiInitializer {
           () =>
             new BrowserCookieStorage({domain: window.location.hostname, window})
         )
-        singleton(DomainEventBus, () => new DomainEventBus())
         singleton(VendorListHelper, () => new VendorListHelper())
       }
     })
