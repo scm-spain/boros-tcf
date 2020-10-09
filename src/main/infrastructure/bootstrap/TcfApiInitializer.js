@@ -41,43 +41,47 @@ class TcfApiInitializer {
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
+        // Application Facades
         singleton(TcfApiController, () => new TcfApiController())
         singleton(TcfApiV2, () => new TcfApiV2())
 
-        singleton(VendorListHelper, () => new VendorListHelper())
-
-        singleton(StatusRepository, () => new InMemoryStatusRepository())
-
-        singleton(PingUseCase, () => new PingUseCase())
+        // Use Cases
+        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
+        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
-        singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
-        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
-
+        singleton(PingUseCase, () => new PingUseCase())
         singleton(
           RemoveEventListenerUseCase,
           () => new RemoveEventListenerUseCase()
         )
+        singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
 
-        singleton(VendorListRepository, () => new IABVendorListRepository())
-        singleton(GVLFactory, () => new GVLFactory({language}))
+        // Services
+        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
+        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
+        singleton(EventStatusService, () => new EventStatusService())
+        singleton(LoadConsentService, () => new LoadConsentService())
 
+        // Repositories
         singleton(ConsentRepository, () => new CookieConsentRepository())
+        singleton(StatusRepository, () => new InMemoryStatusRepository())
+        singleton(VendorListRepository, () => new IABVendorListRepository())
+
+        // Factories
+        singleton(ConsentFactory, () => new ConsentFactory())
+        singleton(GVLFactory, () => new GVLFactory({language}))
+        singleton(ObservableFactory, () => new ObservableFactory())
+
+        // Tooling & Helpers
         singleton(
           CookieStorage,
           () =>
             new BrowserCookieStorage({domain: window.location.hostname, window})
         )
-        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
-        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
         singleton(DomainEventBus, () => new DomainEventBus())
-        singleton(EventStatusService, () => new EventStatusService())
-        singleton(ObservableFactory, () => new ObservableFactory())
-
-        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
-        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
-        singleton(LoadConsentService, () => new LoadConsentService())
-        singleton(ConsentFactory, () => new ConsentFactory())
+        singleton(VendorListHelper, () => new VendorListHelper())
       }
     })
 
