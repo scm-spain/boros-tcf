@@ -7,6 +7,7 @@ import {ChangeUiVisibleUseCase} from './services/ui/ChangeUiVisibleUseCase'
 import {GetTCDataUseCase} from './services/tcdata/GetTCDataUseCase'
 import {StatusRepository} from '../domain/status/StatusRepository'
 import {Status} from '../domain/status/Status'
+import {DomainEventBus} from '../domain/service/DomainEventBus'
 
 class BorosTcf {
   /**
@@ -16,6 +17,7 @@ class BorosTcf {
    * @param {SaveUserConsentUseCase} param.saveUserConsentUseCase
    * @param {ChangeUiVisibleUseCase} param.changeUiVisibleUseCase
    * @param {GetTCDataUseCase} param.getTCDataUseCase
+   * @param {DomainEventBus} param.domainEventBus
    */
   constructor({
     getVendorListUseCase = inject(GetVendorListUseCase),
@@ -23,7 +25,8 @@ class BorosTcf {
     saveUserConsentUseCase = inject(SaveUserConsentUseCase),
     getTCDataUseCase = inject(GetTCDataUseCase),
     changeUiVisibleUseCase = inject(ChangeUiVisibleUseCase),
-    statusRepository = inject(StatusRepository)
+    statusRepository = inject(StatusRepository),
+    domainEventBus = inject(DomainEventBus)
   } = {}) {
     this._getVendorListUseCase = getVendorListUseCase
     this._loadUserConsentUseCase = loadUserConsentUseCase
@@ -31,6 +34,7 @@ class BorosTcf {
     this._getTCDataUseCase = getTCDataUseCase
     this._changeUiVisibleUseCase = changeUiVisibleUseCase
     this._statusRepository = statusRepository
+    this._domainEventBus = domainEventBus
   }
 
   ready() {
@@ -81,6 +85,14 @@ class BorosTcf {
    */
   getTCData({vendorIds}) {
     return this._getTCDataUseCase.execute({vendorIds})
+  }
+
+  addEventListener({event, listener}) {
+    return this._domainEventBus.register({eventName: event, observer: listener})
+  }
+
+  removeEventListener({event, id}) {
+    return this._domainEventBus.unregister({eventName: event, reference: id})
   }
 }
 
