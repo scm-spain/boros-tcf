@@ -1,7 +1,6 @@
 import jsdom from 'jsdom-global'
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
@@ -31,7 +30,7 @@ describe('getTCData', () => {
       getStatus: () => statusMock
     }
     const borosTcf = TestableTcfApiInitializer.create()
-      .mock(CookieStorage, cookieStorageMock)
+      .mock('euconsentCookieStorage', cookieStorageMock)
       .mock(StatusRepository, statusRepositoryMock)
       .init()
 
