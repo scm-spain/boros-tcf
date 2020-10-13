@@ -10,7 +10,6 @@ import {BorosTcf} from '../../application/BorosTcf'
 import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository'
 import {ConsentRepository} from '../../domain/consent/ConsentRepository'
 import {CookieConsentRepository} from '../repository/CookieConsentRepository'
-import {CookieStorage} from '../repository/cookie/CookieStorage'
 import {BrowserCookieStorage} from '../repository/cookie/BrowserCookieStorage'
 import {ConsentEncoderService} from '../../domain/consent/ConsentEncoderService'
 import {IABConsentEncoderService} from '../service/IABConsentEncoderService'
@@ -32,6 +31,11 @@ import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStat
 
 import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
+
+import {
+  VENDOR_CONSENT_COOKIE_NAME,
+  BOROS_CONSENT_COOKIE_NAME
+} from '../../core/constants'
 
 class TcfApiInitializer {
   static init({language} = {}) {
@@ -64,9 +68,22 @@ class TcfApiInitializer {
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(
-          CookieStorage,
+          'euconsentCookieStorage',
           () =>
-            new BrowserCookieStorage({domain: window.location.hostname, window})
+            new BrowserCookieStorage({
+              domain: window.location.hostname,
+              window,
+              cookieName: VENDOR_CONSENT_COOKIE_NAME
+            })
+        )
+        singleton(
+          'borosTcfCookieStorage',
+          () =>
+            new BrowserCookieStorage({
+              domain: window.location.hostname,
+              window,
+              cookieName: BOROS_CONSENT_COOKIE_NAME
+            })
         )
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())

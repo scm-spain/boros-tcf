@@ -1,9 +1,15 @@
 import {CookieStorage} from './CookieStorage'
+import {
+  VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
+  VENDOR_CONSENT_COOKIE_MAX_AGE,
+  VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+} from '../../../core/constants'
 
 export class BrowserCookieStorage extends CookieStorage {
-  constructor({window}) {
+  constructor({window, cookieName}) {
     super()
     this._window = window
+    this._cookieName = cookieName
   }
 
   load() {
@@ -13,9 +19,12 @@ export class BrowserCookieStorage extends CookieStorage {
   }
 
   save({data}) {
+    if (typeof data !== 'string') {
+      data = this._parseData({data})
+    }
     const domain = this._parseDomain()
     const cookieValue = [
-      `${VENDOR_CONSENT_COOKIE_NAME}=${data}`,
+      `${this._cookieName}=${data}`,
       `domain=${domain}`,
       `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
       `max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE}`,
@@ -32,7 +41,7 @@ export class BrowserCookieStorage extends CookieStorage {
     const data = consentCookies[0].split('=')[1]
     const host = this._window.location.hostname || ''
     const cookieParts = [
-      `${VENDOR_CONSENT_COOKIE_NAME}=`,
+      `${this._cookieName}=`,
       `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
       `domain=${host}`,
       `expires= Thu, 01 Jan 1970 00:00:00 GMT`
@@ -47,7 +56,7 @@ export class BrowserCookieStorage extends CookieStorage {
   _getConsentCookies() {
     const cookies = `; ${this._window.document.cookie}`.split(';')
     const consentCookies = cookies
-      .filter(cookie => cookie.includes(`${VENDOR_CONSENT_COOKIE_NAME}=`))
+      .filter(cookie => cookie.includes(`${this._cookieName}=`))
       .map(cookie => cookie.trim())
     return consentCookies
   }
@@ -61,10 +70,22 @@ export class BrowserCookieStorage extends CookieStorage {
       .reverse()
     return `${DOT}${parts.join('.')}`
   }
+
+  _parseData({data}) {
+    const {
+      policyVersion,
+      cmpVersion,
+      purpose: {consents},
+      specialFeatureOptions
+    } = data
+    const usedData = {
+      policyVersion,
+      cmpVersion,
+      purpose: {consents},
+      specialFeatureOptions
+    }
+    return JSON.stringify(usedData)
+  }
 }
 
-const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
-const VENDOR_CONSENT_COOKIE_MAX_AGE = 33696000
-const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
-const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
 const DOT = '.'

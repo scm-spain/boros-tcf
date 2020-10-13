@@ -9,23 +9,25 @@
 
 ## Table of Contents
 
-* [About](#about)
-* [Features](#features)
-* [Technical features](#technical-features)
-* [Configuration](#configuration)
-* [Usage](#usage)
-* [License](#license)
-
+- [About](#about)
+- [Features](#features)
+- [License](#license)
 
 ## About
+
+**Boros TCF** is a stand alone Consent Management Provider solution compliant with the "Transparency & Consent Framework version 2.0" standard established by the [IAB Europe](https://iabeurope.eu/tcf-2-0/).
 
 ## Features
 
 * Initialization with Stub, [see details here](https://github.com/scm-spain/boros-tcf-stub)
- 
-## Technical features
+* Extra cookie storage
 
-## Usage
+  A cookie named "borosTcf" is stored with the user consents stringified data.
+  The structure of that cookie is:
+  ```
+  {policyVersion: 2, cmpVersion: 12, purpose: {consents: {1: true, 2: true, 3: false, ....}}, specialFeatureOptions: {1: true}}
+  ```
 
 ## License
+
 Boros TCF is [MIT licensed](./LICENSE).
