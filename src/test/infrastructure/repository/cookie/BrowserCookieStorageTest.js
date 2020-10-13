@@ -93,7 +93,7 @@ describe('BrowserCookieStorage Should', () => {
       window
     })
     const givenData = {
-      tcfPolicyVersion: 2,
+      policyVersion: 2,
       cmpVersion: 12,
       purpose: {consents: {1: true, 2: true, 3: false}},
       specialFeatureOptions: {1: true}
@@ -121,14 +121,14 @@ describe('BrowserCookieStorage Should', () => {
     }
     const givenSpecialFeatureOptions = {1: true}
     const givenData = {
-      tcfPolicyVersion: givenTcfPolicyVersion,
+      policyVersion: givenTcfPolicyVersion,
       cmpVersion: givenCmpVersion,
       vendors: givenVendors,
       purpose: givenPurposes,
       specialFeatureOptions: givenSpecialFeatureOptions
     }
     const expectedCookieData = JSON.stringify({
-      tcfPolicyVersion: givenTcfPolicyVersion,
+      policyVersion: givenTcfPolicyVersion,
       cmpVersion: givenCmpVersion,
       purpose: {consents: givenPurposes.consents},
       specialFeatureOptions: givenSpecialFeatureOptions
