@@ -27,5 +27,26 @@
 
 ## Usage
 
+`npm i @adv-ui/boros-tcf`
+
+### Initialization
+
+```
+import BorosTcf from '@adv-ui/boros-tcf'
+
+const borosTcf = BorosTcf.init()
+```
+
+**Allowed initialization parameters**
+
+`BorosTcf.init({language, reporter})`
+
+- `language` (optional, defaults to 'es'), a valid two-letter ISO 639-1 language code
+- `reporter` (optional), an object which must have a `notify(event, payload)` method. Boros TCF relevant actions will be notified to the reporter, which can be used p.ex. to debug.
+
+> Boros TCF actually will report events
+> - LISTENER_ERROR: any error on registered event status listeners  
+> - EVENT_STATUS_CHANGED: any cmp status, ui status or event status change
+
 ## License
 Boros TCF is [MIT licensed](./LICENSE).

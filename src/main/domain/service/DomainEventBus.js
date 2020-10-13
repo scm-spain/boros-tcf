@@ -1,10 +1,13 @@
 import {ObservableFactory} from './ObservableFactory'
 import {inject} from '../../core/ioc/ioc'
+import {EVENT_LISTENER_ERROR} from '../../core/constants'
 
 export class DomainEventBus {
-  constructor({observableFactory = inject(ObservableFactory)} = {}) {
+  constructor({observableFactory = inject(ObservableFactory), reporter} = {}) {
     this._observableFactory = observableFactory
     this._events = new Map()
+    this._reporter =
+      reporter && typeof reporter.notify === 'function' ? reporter : null
   }
 
   get getNumberOfRegisteredEvents() {
@@ -45,6 +48,11 @@ export class DomainEventBus {
   }
 
   raise({eventName, payload = {}}) {
+    if (this._reporter) {
+      try {
+        this._reporter.notify(eventName, payload)
+      } catch (ignored) {}
+    }
     if (!this._events.has(eventName)) {
       return
     }
@@ -53,7 +61,20 @@ export class DomainEventBus {
         .then(() => {
           observer.observe({domainEvent: {eventName, payload}})
         })
-        .catch(error => console.log('Error', error))
+        .catch(error => {
+          if (eventName !== EVENT_LISTENER_ERROR) {
+            this.raise({
+              eventName: EVENT_LISTENER_ERROR,
+              payload: {
+                eventName,
+                payload,
+                error
+              }
+            })
+          } else {
+            console.error('Unhandled error in observer', error)
+          }
+        })
     })
   }
 }

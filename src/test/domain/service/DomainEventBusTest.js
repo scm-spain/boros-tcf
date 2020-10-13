@@ -173,6 +173,20 @@ describe('DomainEventBus Should', () => {
         timeout: 1000
       })
     })
+    it('should notify to the given reporter', () => {
+      const reporter = {
+        notify: sinon.spy()
+      }
+      const givenEventName = 'TEST_EVENT'
+      const givenPayload = {
+        a: 'test'
+      }
+      const domainEventBus = new DomainEventBus({observableFactory, reporter})
+      domainEventBus.raise({eventName: givenEventName, payload: givenPayload})
+      expect(reporter.notify.callCount).to.equal(1)
+      expect(reporter.notify.getCall(0).args[0]).to.equal(givenEventName)
+      expect(reporter.notify.getCall(0).args[1]).to.deep.equal(givenPayload)
+    })
   })
   describe('getNumberOfRegisteredEvents and unregister', () => {
     it('after unregister getNumberOfRegisteredEvents should decrease', () => {

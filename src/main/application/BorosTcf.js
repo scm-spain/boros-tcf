@@ -86,14 +86,6 @@ class BorosTcf {
   getTCData({vendorIds}) {
     return this._getTCDataUseCase.execute({vendorIds})
   }
-
-  addEventListener({event, listener}) {
-    return this._domainEventBus.register({eventName: event, observer: listener})
-  }
-
-  removeEventListener({event, id}) {
-    return this._domainEventBus.unregister({eventName: event, reference: id})
-  }
 }
 
 export {BorosTcf}

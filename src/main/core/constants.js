@@ -48,3 +48,6 @@ export const VENDOR_LIST_ENDPOINT =
  * in which the publisher's business entity is established.
  */
 export const PUBLISHER_CC = 'ES'
+
+export const LISTENER_ERROR = 'LISTENER_ERROR'
+export const EVENT_STATUS_CHANGED = 'EVENT_STATUS_CHANGED'

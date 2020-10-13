@@ -34,7 +34,7 @@ import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
 
 class TcfApiInitializer {
-  static init({language} = {}) {
+  static init({language, reporter} = {}) {
     if (typeof window !== 'undefined' && window.__tcfapi_boros) {
       return window.__tcfapi_boros
     }
@@ -61,7 +61,7 @@ class TcfApiInitializer {
         // Services
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
-        singleton(DomainEventBus, () => new DomainEventBus())
+        singleton(DomainEventBus, () => new DomainEventBus({reporter}))
         singleton(EventStatusService, () => new EventStatusService())
         singleton(LoadConsentService, () => new LoadConsentService())
 
