@@ -10,7 +10,6 @@ import {BorosTcf} from '../../application/BorosTcf'
 import {VendorListRepository} from '../../domain/vendorlist/VendorListRepository'
 import {ConsentRepository} from '../../domain/consent/ConsentRepository'
 import {CookieConsentRepository} from '../repository/CookieConsentRepository'
-import {CookieStorage} from '../repository/cookie/CookieStorage'
 import {BrowserCookieStorage} from '../repository/cookie/BrowserCookieStorage'
 import {ConsentEncoderService} from '../../domain/consent/ConsentEncoderService'
 import {IABConsentEncoderService} from '../service/IABConsentEncoderService'
@@ -32,6 +31,12 @@ import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStat
 
 import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
+
+const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
+const BOROS_CONSENT_COOKIE_NAME = 'borosTcf'
+const VENDOR_CONSENT_COOKIE_MAX_AGE = 33696000
+const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
+const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
 
 class TcfApiInitializer {
   static init({language} = {}) {
@@ -64,9 +69,28 @@ class TcfApiInitializer {
 
         singleton(ConsentRepository, () => new CookieConsentRepository())
         singleton(
-          CookieStorage,
+          'euconsentCookieStorage',
           () =>
-            new BrowserCookieStorage({domain: window.location.hostname, window})
+            new BrowserCookieStorage({
+              domain: window.location.hostname,
+              window,
+              cookieName: VENDOR_CONSENT_COOKIE_NAME,
+              cookieDefaultPath: VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
+              CookieMaxAge: VENDOR_CONSENT_COOKIE_MAX_AGE,
+              CookieSameSiteVlue: VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+            })
+        )
+        singleton(
+          'borosTcfCookieStorage',
+          () =>
+            new BrowserCookieStorage({
+              domain: window.location.hostname,
+              window,
+              cookieName: BOROS_CONSENT_COOKIE_NAME,
+              cookieDefaultPath: VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
+              CookieMaxAge: VENDOR_CONSENT_COOKIE_MAX_AGE,
+              CookieSameSiteVlue: VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+            })
         )
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())
         singleton(ConsentDecoderService, () => new IABConsentDecoderService())
