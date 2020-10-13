@@ -7,10 +7,7 @@ describe('BrowserCookieStorage Should', () => {
     new BrowserCookieStorage({
       domain: window.location.hostname,
       window,
-      cookieName,
-      cookieDefaultPath: '/',
-      CookieMaxAge: 33696000,
-      CookieSameSiteVlue: 'Lax'
+      cookieName
     })
 
   it('Write And read a cookie', () => {

@@ -32,11 +32,10 @@ import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStat
 import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
 
-const VENDOR_CONSENT_COOKIE_NAME = 'euconsent-v2'
-const BOROS_CONSENT_COOKIE_NAME = 'borosTcf'
-const VENDOR_CONSENT_COOKIE_MAX_AGE = 33696000
-const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
-const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
+import {
+  VENDOR_CONSENT_COOKIE_NAME,
+  BOROS_CONSENT_COOKIE_NAME
+} from '../../core/constants'
 
 class TcfApiInitializer {
   static init({language} = {}) {
@@ -74,10 +73,7 @@ class TcfApiInitializer {
             new BrowserCookieStorage({
               domain: window.location.hostname,
               window,
-              cookieName: VENDOR_CONSENT_COOKIE_NAME,
-              cookieDefaultPath: VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
-              CookieMaxAge: VENDOR_CONSENT_COOKIE_MAX_AGE,
-              CookieSameSiteVlue: VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+              cookieName: VENDOR_CONSENT_COOKIE_NAME
             })
         )
         singleton(
@@ -86,10 +82,7 @@ class TcfApiInitializer {
             new BrowserCookieStorage({
               domain: window.location.hostname,
               window,
-              cookieName: BOROS_CONSENT_COOKIE_NAME,
-              cookieDefaultPath: VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
-              CookieMaxAge: VENDOR_CONSENT_COOKIE_MAX_AGE,
-              CookieSameSiteVlue: VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+              cookieName: BOROS_CONSENT_COOKIE_NAME
             })
         )
         singleton(ConsentEncoderService, () => new IABConsentEncoderService())

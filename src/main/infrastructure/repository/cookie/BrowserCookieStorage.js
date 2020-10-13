@@ -1,19 +1,15 @@
 import {CookieStorage} from './CookieStorage'
+import {
+  VENDOR_CONSENT_COOKIE_DEFAULT_PATH,
+  VENDOR_CONSENT_COOKIE_MAX_AGE,
+  VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE
+} from '../../../core/constants'
 
 export class BrowserCookieStorage extends CookieStorage {
-  constructor({
-    window,
-    cookieName,
-    cookieDefaultPath,
-    CookieMaxAge,
-    CookieSameSiteVlue
-  }) {
+  constructor({window, cookieName}) {
     super()
     this._window = window
     this._cookieName = cookieName
-    this._cookieDefaultPath = cookieDefaultPath
-    this._CookieMaxAge = CookieMaxAge
-    this._CookieSameSiteVlue = CookieSameSiteVlue
   }
 
   load() {
@@ -30,9 +26,9 @@ export class BrowserCookieStorage extends CookieStorage {
     const cookieValue = [
       `${this._cookieName}=${data}`,
       `domain=${domain}`,
-      `path=${this._cookieDefaultPath}`,
-      `max-age=${this._CookieMaxAge}`,
-      `SameSite=${this._CookieSameSiteVlue}`
+      `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
+      `max-age=${VENDOR_CONSENT_COOKIE_MAX_AGE}`,
+      `SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
     ].join(';')
     this._window.document.cookie = cookieValue
   }
@@ -46,7 +42,7 @@ export class BrowserCookieStorage extends CookieStorage {
     const host = this._window.location.hostname || ''
     const cookieParts = [
       `${this._cookieName}=`,
-      `path=${this._cookieDefaultPath}`,
+      `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
       `domain=${host}`,
       `expires= Thu, 01 Jan 1970 00:00:00 GMT`
     ]
