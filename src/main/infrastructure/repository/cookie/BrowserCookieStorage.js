@@ -77,13 +77,13 @@ export class BrowserCookieStorage extends CookieStorage {
 
   _parseData({data}) {
     const {
-      tcfPolicyVersion,
+      policyVersion,
       cmpVersion,
       purpose: {consents},
       specialFeatureOptions
     } = data
     const usedData = {
-      tcfPolicyVersion,
+      policyVersion,
       cmpVersion,
       purpose: {consents},
       specialFeatureOptions
