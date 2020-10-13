@@ -3,7 +3,7 @@
  */
 class ConsentRepository {
   loadUserConsent() {}
-  saveUserConsent({consent}) {}
+  saveUserConsent({encodedConsent, decodedConsent}) {}
 }
 
 export {ConsentRepository}
