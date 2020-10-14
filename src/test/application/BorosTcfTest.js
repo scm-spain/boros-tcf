@@ -24,6 +24,7 @@ import {IABConsentDecoderService} from '../../main/infrastructure/service/IABCon
 
 import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
+import {waitCondition} from '../../main/core/service/waitCondition'
 
 describe('BorosTcf', () => {
   beforeEach(() => {
@@ -535,7 +536,9 @@ describe('BorosTcf', () => {
     let borosTcf
     let domainEventBus
     beforeEach(() => {
-      domainEventBus = new DomainEventBus()
+      domainEventBus = {
+        raise: () => null
+      }
       const statusMock = {
         eventStatus: Status.TCLOADED,
         cmpStatus: Status.CMPSTATUS_LOADED
@@ -551,16 +554,44 @@ describe('BorosTcf', () => {
     it('should raise useractioncomplete eventStatus when visible is false', () => {
       const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
       borosTcf.uiVisible({visible: false})
-      expect(spyDomainEventBus.calledOnce).to.be.true
-      const {payload} = spyDomainEventBus.firstCall.args[0]
+      const eventStatusCalls = spyDomainEventBus
+        .getCalls()
+        .filter(call => call.args[0].eventName === 'event_status')
+      expect(eventStatusCalls.length).to.equal(1)
+      const {payload} = eventStatusCalls[0].args[0]
       expect(payload.TCData.eventStatus).to.be.equal(Status.USERACTIONCOMPLETE)
     })
     it('should raise cmpuishown Event when visible is true', () => {
       const spyDomainEventBus = sinon.spy(domainEventBus, 'raise')
       borosTcf.uiVisible({visible: true})
-      expect(spyDomainEventBus.calledOnce).to.be.true
-      const {payload} = spyDomainEventBus.firstCall.args[0]
+      const eventStatusCalls = spyDomainEventBus
+        .getCalls()
+        .filter(call => call.args[0].eventName === 'event_status')
+      expect(eventStatusCalls.length).to.equal(1)
+      const {payload} = eventStatusCalls[0].args[0]
       expect(payload.TCData.eventStatus).equal(Status.CMPUISHOWN)
+    })
+  })
+  describe('initialization', () => {
+    it('should accept a reporter to collect domain events', async () => {
+      const mockGVLFactory = new TestableGVLFactory()
+      mockGVLFactory.reset()
+      mockGVLFactory.mockReply({
+        path: '/LATEST?language=es',
+        data: VendorList46.data
+      })
+
+      const reporter = {
+        reported: [],
+        notify: (event, payload) => reporter.reported.push({event, payload})
+      }
+
+      const borosTcf = TestableTcfApiInitializer.create()
+        .mock(GVLFactory, mockGVLFactory)
+        .init({reporter})
+
+      borosTcf.getTCData({})
+      await waitCondition({condition: () => reporter.reported.length > 0})
     })
   })
 })

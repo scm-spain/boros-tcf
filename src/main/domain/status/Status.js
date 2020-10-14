@@ -1,8 +1,6 @@
 import {inject} from '../../core/ioc/ioc'
 import {ConsentRepository} from '../consent/ConsentRepository'
 import {ConsentDecoderService} from '../consent/ConsentDecoderService'
-import {DomainEventBus} from '../service/DomainEventBus'
-import {EVENT_STATUS_CHANGED} from '../../core/constants'
 
 export class Status {
   /**
@@ -56,11 +54,9 @@ export class Status {
    * @param {ConsentDecoderService} param.consentDecoderService
    */
   constructor({
-    domainEventBus = inject(DomainEventBus),
     consentRepository = inject(ConsentRepository),
     consentDecoderService = inject(ConsentDecoderService)
   } = {}) {
-    this._domainEventBus = domainEventBus
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
     this._cmpStatus = Status.CMPSTATUS_LOADING
@@ -83,16 +79,7 @@ export class Status {
   }
 
   set cmpStatus(cmpStatus) {
-    const oldValue = this._cmpStatus
     this._cmpStatus = cmpStatus
-    this._domainEventBus.raise({
-      eventName: EVENT_STATUS_CHANGED,
-      payload: {
-        status: VALUE_CMP_STATUS,
-        oldValue,
-        newValue: cmpStatus
-      }
-    })
   }
 
   get displayStatus() {
@@ -100,16 +87,7 @@ export class Status {
   }
 
   set displayStatus(displayStatus) {
-    const oldValue = this._displayStatus
     this._displayStatus = displayStatus
-    this._domainEventBus.raise({
-      eventName: EVENT_STATUS_CHANGED,
-      payload: {
-        status: VALUE_DISPLAY_STATUS,
-        oldValue,
-        newValue: displayStatus
-      }
-    })
   }
 
   get eventStatus() {
@@ -117,16 +95,7 @@ export class Status {
   }
 
   set eventStatus(eventStatus) {
-    const oldValue = this._eventStatus
     this._eventStatus = eventStatus
-    this._domainEventBus.raise({
-      eventName: EVENT_STATUS_CHANGED,
-      payload: {
-        status: VALUE_EVENT_STATUS,
-        oldValue,
-        newValue: eventStatus
-      }
-    })
   }
 
   /**
@@ -144,7 +113,3 @@ export class Status {
     return decodedConsent.vendorListVersion
   }
 }
-
-const VALUE_CMP_STATUS = 'cmp'
-const VALUE_EVENT_STATUS = 'event'
-const VALUE_DISPLAY_STATUS = 'ui'

@@ -46,7 +46,9 @@ const borosTcf = BorosTcf.init()
 
 > Boros TCF actually will report events
 > - LISTENER_ERROR: any error on registered event status listeners  
-> - EVENT_STATUS_CHANGED: any cmp status, ui status or event status change
+> - USE_CASE_CALLED: any call to the use cases, which has finished OK 
+> - USE_CASE_ERROR: any call to the use cases, which has failed due to an error 
+> - LOAD_CONSENT_ERROR: loading the stored consent catched an error and an empty consent will be returned 
 
 ## License
 Boros TCF is [MIT licensed](./LICENSE).

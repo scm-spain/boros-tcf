@@ -32,6 +32,8 @@ import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStat
 
 import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
+import {tcfInstanceAdapter} from '../adapter/tcfInstanceAdapter'
+import {UseCaseAdapterFactory} from '../adapter/UseCaseAdapterFactory'
 
 class TcfApiInitializer {
   static init({language, reporter} = {}) {
@@ -74,6 +76,7 @@ class TcfApiInitializer {
         singleton(ConsentFactory, () => new ConsentFactory())
         singleton(GVLFactory, () => new GVLFactory({language}))
         singleton(ObservableFactory, () => new ObservableFactory())
+        singleton(UseCaseAdapterFactory, () => new UseCaseAdapterFactory())
 
         // Tooling & Helpers
         singleton(
@@ -82,7 +85,8 @@ class TcfApiInitializer {
             new BrowserCookieStorage({domain: window.location.hostname, window})
         )
         singleton(VendorListHelper, () => new VendorListHelper())
-      }
+      },
+      adapter: tcfInstanceAdapter
     })
 
     const registryService = new TcfApiRegistryService()
