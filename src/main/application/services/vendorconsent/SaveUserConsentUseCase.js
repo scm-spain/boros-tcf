@@ -30,7 +30,10 @@ export class SaveUserConsentUseCase extends AsyncUseCase {
     const consent = await this._consentEncoderService.encode({
       consent: incomingConsent
     })
-    this._consentRepository.saveUserConsent({consent})
+    this._consentRepository.saveUserConsent({
+      encodedConsent: consent,
+      decodedConsent: incomingConsent
+    })
   }
 }
 

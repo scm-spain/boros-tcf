@@ -83,6 +83,14 @@ export class Consent {
     return this._valid
   }
 
+  get cmpVersion() {
+    return this._cmpVersion
+  }
+
+  get policyVersion() {
+    return this._policyVersion
+  }
+
   toJSON() {
     return {
       cmpId: this._cmpId,

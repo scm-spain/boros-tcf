@@ -1,7 +1,6 @@
 import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 
 describe('ping', () => {
@@ -60,7 +59,7 @@ describe('ping', () => {
     const givenVersion = 2
     const cookieStorageMock = new TestableCookieStorageMock()
     const borosTcf = TestableTcfApiInitializer.create()
-      .mock(CookieStorage, cookieStorageMock)
+      .mock('euconsentCookieStorage', cookieStorageMock)
       .init()
     await borosTcf.saveUserConsent({purpose: givenPurpose, vendor: givenVendor})
     await borosTcf.getVendorList()
@@ -87,7 +86,7 @@ describe('ping', () => {
   it('should return undefined gvlVersion if there is no consent', async () => {
     const cookieStorageMock = new TestableCookieStorageMock()
     TestableTcfApiInitializer.create()
-      .mock(CookieStorage, cookieStorageMock)
+      .mock('euconsentCookieStorage', cookieStorageMock)
       .init()
 
     const {pingReturn} = await new Promise(resolve =>

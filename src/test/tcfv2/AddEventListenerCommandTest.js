@@ -8,7 +8,6 @@ import {CookieConsentRepository} from '../../main/infrastructure/repository/Cook
 import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
 import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepository'
-import {CookieStorage} from '../../main/infrastructure/repository/cookie/CookieStorage'
 
 describe('AddEventListenerCommand Should', () => {
   const command = 'addEventListener'
@@ -148,7 +147,7 @@ describe('AddEventListenerCommand Should', () => {
     })
     TestableTcfApiInitializer.create()
       .mock(VendorListRepository, vendorListRepository)
-      .mock(CookieStorage, cookieStorageMock)
+      .mock('euconsentCookieStorage', cookieStorageMock)
       .init()
     window.__tcfapi(command, version, callback)
 
@@ -218,7 +217,7 @@ describe('AddEventListenerCommand Should', () => {
       const cookieStorageMock = new TestableCookieStorageMock()
       const borosTcf = TestableTcfApiInitializer.create()
         .mock(VendorListRepository, vendorListRepository)
-        .mock(CookieStorage, cookieStorageMock)
+        .mock('euconsentCookieStorage', cookieStorageMock)
         .init()
       window.__tcfapi(command, version, callback)
       borosTcf

@@ -1,19 +1,23 @@
 import {ConsentRepository} from '../../domain/consent/ConsentRepository'
 import {inject} from '../../core/ioc/ioc'
-import {CookieStorage} from './cookie/CookieStorage'
 
 class CookieConsentRepository extends ConsentRepository {
-  constructor(cookieStorage = inject(CookieStorage)) {
+  constructor(
+    euconsentCookieStorage = inject('euconsentCookieStorage'),
+    borosTcfCookieStorage = inject('borosTcfCookieStorage')
+  ) {
     super()
-    this._cookieStorage = cookieStorage
+    this._euconsentCookieStorage = euconsentCookieStorage
+    this._borosTcfCookieStorage = borosTcfCookieStorage
   }
 
   loadUserConsent() {
-    return this._cookieStorage.load() || ''
+    return this._euconsentCookieStorage.load() || ''
   }
 
-  saveUserConsent({consent}) {
-    this._cookieStorage.save({data: consent})
+  saveUserConsent({encodedConsent, decodedConsent}) {
+    this._euconsentCookieStorage.save({data: encodedConsent})
+    this._borosTcfCookieStorage.save({data: decodedConsent})
   }
 }
 

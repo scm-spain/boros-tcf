@@ -71,7 +71,8 @@ export class LoadConsentService {
       consent: savedConsent
     })
     this._consentRepository.saveUserConsent({
-      consent: encodedConsent
+      encodedConsent: encodedConsent,
+      decodedConsent: savedConsent
     })
     const renewedEncodedConsent = this._consentRepository.loadUserConsent()
     const consent = this._consentDecoderService.decode({
