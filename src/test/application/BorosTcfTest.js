@@ -580,17 +580,15 @@ describe('BorosTcf', () => {
         data: VendorList46.data
       })
 
-      const reporter = {
-        reported: [],
-        notify: (event, payload) => reporter.reported.push({event, payload})
-      }
+      const reported = []
+      const reporter = (event, payload) => reported.push({event, payload})
 
       const borosTcf = TestableTcfApiInitializer.create()
         .mock(GVLFactory, mockGVLFactory)
         .init({reporter})
 
       borosTcf.getTCData({})
-      await waitCondition({condition: () => reporter.reported.length > 0})
+      await waitCondition({condition: () => reported.length > 0})
     })
   })
 })

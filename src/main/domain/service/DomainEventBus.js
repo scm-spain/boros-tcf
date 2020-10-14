@@ -6,8 +6,7 @@ export class DomainEventBus {
   constructor({observableFactory = inject(ObservableFactory), reporter} = {}) {
     this._observableFactory = observableFactory
     this._events = new Map()
-    this._reporter =
-      reporter && typeof reporter.notify === 'function' ? reporter : null
+    this._reporter = typeof reporter === 'function' ? reporter : null
   }
 
   get getNumberOfRegisteredEvents() {
@@ -50,7 +49,7 @@ export class DomainEventBus {
   raise({eventName, payload = {}}) {
     if (this._reporter) {
       try {
-        this._reporter.notify(eventName, payload)
+        this._reporter(eventName, payload)
       } catch (ignored) {}
     }
     if (!this._events.has(eventName)) {

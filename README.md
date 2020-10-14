@@ -43,7 +43,7 @@ const borosTcf = BorosTcf.init()
 `BorosTcf.init({language, reporter})`
 
 - `language` (optional, defaults to 'es'), a valid two-letter ISO 639-1 language code
-- `reporter` (optional), an object which must have a `notify(event, payload)` method. Boros TCF relevant actions will be notified to the reporter, which can be used p.ex. to debug.
+- `reporter` (optional), a function which can receive `(event, payload)` parameters. Boros TCF relevant actions will be notified to the reporter, which can be used p.ex. to debug.
 
 > Boros TCF actually will report events
 > - LISTENER_ERROR: any error on registered event status listeners  
