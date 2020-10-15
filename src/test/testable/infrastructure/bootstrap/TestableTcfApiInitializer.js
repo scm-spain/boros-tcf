@@ -16,7 +16,7 @@ class TestableTcfApiInitializer {
     return this
   }
 
-  init({language} = {}) {
+  init({language, reporter} = {}) {
     iocReset(IOC_MODULE)
     iocModule({
       module: IOC_MODULE,
@@ -27,7 +27,7 @@ class TestableTcfApiInitializer {
       },
       chain: true
     })
-    return TcfApiInitializer.init({language})
+    return TcfApiInitializer.init({language, reporter})
   }
 }
 

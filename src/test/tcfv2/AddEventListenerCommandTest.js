@@ -66,7 +66,8 @@ describe('AddEventListenerCommand Should', () => {
       const domainEventBus = {
         register: () => {
           throw new Error('Error registering')
-        }
+        },
+        raise: () => null
       }
       TestableTcfApiInitializer.create()
         .mock(DomainEventBus, domainEventBus)

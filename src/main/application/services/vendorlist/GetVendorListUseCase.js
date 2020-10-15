@@ -1,9 +1,11 @@
 import {VendorListRepository} from '../../../domain/vendorlist/VendorListRepository'
 import {inject} from '../../../core/ioc/ioc'
 import {Version} from '../../../domain/vendorlist/Version'
+import {AsyncUseCase} from '../AsyncUseCase'
 
-class GetVendorListUseCase {
+export class GetVendorListUseCase extends AsyncUseCase {
   constructor({vendorListRepository = inject(VendorListRepository)} = {}) {
+    super()
     this._vendorListRepository = vendorListRepository
   }
 
@@ -15,4 +17,4 @@ class GetVendorListUseCase {
   }
 }
 
-export {GetVendorListUseCase}
+GetVendorListUseCase.ID = 'GetVendorListUseCase'

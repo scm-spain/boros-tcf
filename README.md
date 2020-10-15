@@ -28,6 +28,29 @@
   {policyVersion: 2, cmpVersion: 12, purpose: {consents: {1: true, 2: true, 3: false, ....}}, specialFeatureOptions: {1: true}}
   ```
 
+`npm i @adv-ui/boros-tcf`
+
+### Initialization
+
+```
+import BorosTcf from '@adv-ui/boros-tcf'
+
+const borosTcf = BorosTcf.init()
+```
+
+**Allowed initialization parameters**
+
+`BorosTcf.init({language, reporter})`
+
+- `language` (optional, defaults to 'es'), a valid two-letter ISO 639-1 language code
+- `reporter` (optional), a function which can receive `(event, payload)` parameters. Boros TCF relevant actions will be notified to the reporter, which can be used p.ex. to debug.
+
+> Boros TCF actually will report events
+> - LISTENER_ERROR: any error on registered event status listeners  
+> - USE_CASE_CALLED: any call to the use cases, which has finished OK 
+> - USE_CASE_ERROR: any call to the use cases, which has failed due to an error 
+> - LOAD_CONSENT_ERROR: loading the stored consent catched an error and an empty consent will be returned 
+
 ## License
 
 Boros TCF is [MIT licensed](./LICENSE).

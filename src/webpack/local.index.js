@@ -1,6 +1,8 @@
 import BorosTcf from '../main'
 
-BorosTcf.init()
+const reporter = (event, payload) => console.log(`BorosTCF [${event}]`, payload)
+
+BorosTcf.init({reporter})
 
 window.__tcfapi('ping', 2, data => {
   console.log('PING > ', data)

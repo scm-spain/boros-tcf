@@ -1,14 +1,16 @@
 import {inject} from '../../../core/ioc/ioc'
 import {PingReturn} from '../../../domain/ping/PingReturn.js'
 import {StatusRepository} from '../../../domain/status/StatusRepository'
+import {SyncUseCase} from '../SyncUseCase'
 
-export class PingUseCase {
+export class PingUseCase extends SyncUseCase {
   /**
    *
    * @param {Object} param
    * @param {StatusRepository} param.statusRepository
    */
   constructor({statusRepository = inject(StatusRepository)} = {}) {
+    super()
     this._status = statusRepository.getStatus()
   }
 
@@ -19,3 +21,5 @@ export class PingUseCase {
     return pingReturn.value()
   }
 }
+
+PingUseCase.ID = 'PingUseCase'

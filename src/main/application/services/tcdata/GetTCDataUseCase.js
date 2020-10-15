@@ -4,7 +4,8 @@ import {ConsentRepository} from '../../../domain/consent/ConsentRepository'
 import {ConsentDecoderService} from '../../../domain/consent/ConsentDecoderService'
 import {StatusRepository} from '../../../domain/status/StatusRepository'
 import {ConsentFactory} from '../../../domain/consent/ConsentFactory'
-export class GetTCDataUseCase {
+import {SyncUseCase} from '../SyncUseCase'
+export class GetTCDataUseCase extends SyncUseCase {
   /**
    *
    * @param {Object} param
@@ -16,6 +17,7 @@ export class GetTCDataUseCase {
     consentDecoderService = inject(ConsentDecoderService),
     consentFactory = inject(ConsentFactory)
   } = {}) {
+    super()
     this._statusRepository = statusRepository
     this._consentRepository = consentRepository
     this._consentDecoderService = consentDecoderService
@@ -66,3 +68,5 @@ export class GetTCDataUseCase {
     return tcData
   }
 }
+
+GetTCDataUseCase.ID = 'GetTCDataUseCase'

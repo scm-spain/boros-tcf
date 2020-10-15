@@ -31,6 +31,8 @@ import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStat
 
 import {TcfApiV2} from '../../application/TcfApiV2'
 import {ObservableFactory} from '../../domain/service/ObservableFactory'
+import {tcfInstanceAdapter} from '../adapter/tcfInstanceAdapter'
+import {UseCaseAdapterFactory} from '../adapter/UseCaseAdapterFactory'
 
 import {
   VENDOR_CONSENT_COOKIE_NAME,
@@ -38,35 +40,49 @@ import {
 } from '../../core/constants'
 
 class TcfApiInitializer {
-  static init({language} = {}) {
+  static init({language, reporter} = {}) {
     if (typeof window !== 'undefined' && window.__tcfapi_boros) {
       return window.__tcfapi_boros
     }
     iocModule({
       module: IOC_MODULE,
       initializer: ({singleton}) => {
+        // Application Facades
         singleton(TcfApiController, () => new TcfApiController())
         singleton(TcfApiV2, () => new TcfApiV2())
 
-        singleton(VendorListHelper, () => new VendorListHelper())
-
-        singleton(StatusRepository, () => new InMemoryStatusRepository())
-
-        singleton(PingUseCase, () => new PingUseCase())
+        // Use Cases
+        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
+        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
         singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
         singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
-        singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
-        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
-
+        singleton(PingUseCase, () => new PingUseCase())
         singleton(
           RemoveEventListenerUseCase,
           () => new RemoveEventListenerUseCase()
         )
+        singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
 
-        singleton(VendorListRepository, () => new IABVendorListRepository())
-        singleton(GVLFactory, () => new GVLFactory({language}))
+        // Services
+        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
+        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
+        singleton(DomainEventBus, () => new DomainEventBus({reporter}))
+        singleton(EventStatusService, () => new EventStatusService())
+        singleton(LoadConsentService, () => new LoadConsentService())
 
+        // Repositories
         singleton(ConsentRepository, () => new CookieConsentRepository())
+        singleton(StatusRepository, () => new InMemoryStatusRepository())
+        singleton(VendorListRepository, () => new IABVendorListRepository())
+
+        // Factories
+        singleton(ConsentFactory, () => new ConsentFactory())
+        singleton(GVLFactory, () => new GVLFactory({language}))
+        singleton(ObservableFactory, () => new ObservableFactory())
+        singleton(UseCaseAdapterFactory, () => new UseCaseAdapterFactory())
+
+        // Tooling & Helpers
         singleton(
           'euconsentCookieStorage',
           () =>
@@ -85,17 +101,9 @@ class TcfApiInitializer {
               cookieName: BOROS_CONSENT_COOKIE_NAME
             })
         )
-        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
-        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
-        singleton(DomainEventBus, () => new DomainEventBus())
-        singleton(EventStatusService, () => new EventStatusService())
-        singleton(ObservableFactory, () => new ObservableFactory())
-
-        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
-        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
-        singleton(LoadConsentService, () => new LoadConsentService())
-        singleton(ConsentFactory, () => new ConsentFactory())
-      }
+        singleton(VendorListHelper, () => new VendorListHelper())
+      },
+      adapter: tcfInstanceAdapter
     })
 
     const registryService = new TcfApiRegistryService()

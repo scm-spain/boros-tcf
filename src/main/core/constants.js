@@ -73,3 +73,23 @@ export const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
  * Cookies same site local value
  */
 export const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
+
+/**
+ * Event raised when event listener execution fails
+ */
+export const EVENT_LISTENER_ERROR = 'LISTENER_ERROR'
+
+/**
+ * Event raised any time a use case has finished its execution correctly
+ */
+export const EVENT_USE_CASE_CALLED = 'USE_CASE_CALLED'
+
+/**
+ * Event raised any time a use case ends with error
+ */
+export const EVENT_USE_CASE_ERROR = 'USE_CASE_ERROR'
+
+/**
+ * Event raised any time the consent is requested but its loading fails for any reason and an empty consent is returned
+ */
+export const EVENT_LOAD_CONSENT_ERROR = 'LOAD_CONSENT_ERROR'
