@@ -49,7 +49,6 @@ export class Status {
   /**
    *
    * @param {Object} param
-   * @param {DomainEventBus} param.domainEventBus
    * @param {ConsentRepository} param.consentRepository
    * @param {ConsentDecoderService} param.consentDecoderService
    */
