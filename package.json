@@ -70,7 +70,7 @@
     "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
   },
   "dependencies": {
-    "@iabtcf/core": "1",
+    "@iabtcf/core": "1.0.1",
     "brusc": "1",
     "core-js": "3"
   }
