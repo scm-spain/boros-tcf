@@ -22,10 +22,44 @@
 * Initialization with Stub, [see details here](https://github.com/scm-spain/boros-tcf-stub)
 * Extra cookie storage
 
-  A cookie named "borosTcf" is stored with the user consents stringified data.
-  The structure of that cookie is:
+  A cookie named "borosTcf" is stored with the user consents stringified data, encoded in Base64.
+  
+  Sample `borosTcf` value: `eyJwb2xpY3lWZXJzaW9uIjoyLCJjbXBWZXJzaW9uIjoxLCJwdXJwb3NlIjp7ImNvbnNlbnRzIjp7IjEiOnRydWUsIjIiOnRydWUsIjMiOnRydWUsIjQiOnRydWUsIjUiOnRydWUsIjYiOnRydWUsIjciOnRydWUsIjgiOnRydWUsIjkiOnRydWUsIjEwIjp0cnVlfX0sInNwZWNpYWxGZWF0dXJlcyI6eyIxIjp0cnVlfX0=`
+  
+  The encoded data in this sample value, and the cookie encoded data structure is:
   ```
-  {policyVersion: 2, cmpVersion: 12, purpose: {consents: {1: true, 2: true, 3: false, ....}}, specialFeatureOptions: {1: true}}
+  {
+    "policyVersion": 2,
+    "cmpVersion": 1,
+    "purpose": {
+      "consents": {
+        "1": true,
+        "2": true,
+        "3": true,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": true
+      }
+    },
+    "specialFeatures": {
+      "1": true
+    }
+  }
+  ```
+  
+  To decode the cookie, p.ex.:
+  
+  ```
+  // Java
+  String decoded = new String(Base64.getDecoder().decode(cookieValue));
+  
+  // Node
+  const decoded = Buffer.from(cookieValue, 'base64').toString()
+  
   ```
 
 `npm i @adv-ui/boros-tcf`

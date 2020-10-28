@@ -93,13 +93,14 @@ describe('BrowserCookieStorage Should', () => {
       policyVersion: 2,
       cmpVersion: 12,
       purpose: {consents: {1: true, 2: true, 3: false}},
-      specialFeatureOptions: {1: true}
+      specialFeatures: {1: true}
     }
     const expectedCookieData = JSON.stringify(givenData)
 
     browserCookieStorage.save({data: givenData})
     const cookie = browserCookieStorage.load()
-    expect(cookie).equal(expectedCookieData)
+    const decodedCookie = Buffer.from(cookie, 'base64').toString()
+    expect(decodedCookie).equal(expectedCookieData)
   })
   it('Write and read a cookie with correct parsed data', () => {
     const window = new JSDOM('<!DOCTYPE html><body></body>', {
@@ -116,23 +117,24 @@ describe('BrowserCookieStorage Should', () => {
       consents: {1: true, 2: true, 3: false},
       legitimateInterests: {1: true, 2: true, 3: false}
     }
-    const givenSpecialFeatureOptions = {1: true}
+    const givenSpecialFeatures = {1: true}
     const givenData = {
       policyVersion: givenTcfPolicyVersion,
       cmpVersion: givenCmpVersion,
       vendors: givenVendors,
       purpose: givenPurposes,
-      specialFeatureOptions: givenSpecialFeatureOptions
+      specialFeatures: givenSpecialFeatures
     }
     const expectedCookieData = JSON.stringify({
       policyVersion: givenTcfPolicyVersion,
       cmpVersion: givenCmpVersion,
       purpose: {consents: givenPurposes.consents},
-      specialFeatureOptions: givenSpecialFeatureOptions
+      specialFeatures: givenSpecialFeatures
     })
 
     browserCookieStorage.save({data: givenData})
     const cookie = browserCookieStorage.load()
-    expect(cookie).equal(expectedCookieData)
+    const decodedCookie = Buffer.from(cookie, 'base64').toString()
+    expect(decodedCookie).equal(expectedCookieData)
   })
 })
