@@ -76,15 +76,17 @@ export class BrowserCookieStorage extends CookieStorage {
       policyVersion,
       cmpVersion,
       purpose: {consents},
-      specialFeatureOptions
+      specialFeatures
     } = data
     const usedData = {
       policyVersion,
       cmpVersion,
       purpose: {consents},
-      specialFeatureOptions
+      specialFeatures
     }
-    return JSON.stringify(usedData)
+    const stringData = JSON.stringify(usedData)
+    const base64Data = this._window.btoa(stringData)
+    return base64Data
   }
 }
 

@@ -17,7 +17,9 @@ class CookieConsentRepository extends ConsentRepository {
 
   saveUserConsent({encodedConsent, decodedConsent}) {
     this._euconsentCookieStorage.save({data: encodedConsent})
-    this._borosTcfCookieStorage.save({data: decodedConsent})
+    try {
+      this._borosTcfCookieStorage.save({data: decodedConsent})
+    } catch (ignored) {}
   }
 }
 
