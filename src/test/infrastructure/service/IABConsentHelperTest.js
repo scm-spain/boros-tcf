@@ -15,4 +15,12 @@ describe.skip('IABConsentHelper', () => {
     console.log('Encoded consent:')
     console.log(result.encodedConsent)
   })
+  it('decode a consent', async () => {
+    const givenConsent = COOKIE.V36_ALL_ACCEPTED
+
+    const decoder = new IABConsentDecoderService()
+    const result = decoder.decode({encodedConsent: givenConsent})
+    console.log('Decoded consent:')
+    console.log(result)
+  })
 })
