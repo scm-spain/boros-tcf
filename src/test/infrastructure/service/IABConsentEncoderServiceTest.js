@@ -7,7 +7,7 @@ import {
 import {COOKIE} from '../../fixtures/cookie'
 import {iabDecodeConsent} from '../../testable/infrastructure/consent/IABConsentUtils'
 
-describe.only('IABConsentEncoderService', () => {
+describe('IABConsentEncoderService', () => {
   const givenLatestGvlVersion = LATEST_VERSION
   let iabConsentEncoderService
 
