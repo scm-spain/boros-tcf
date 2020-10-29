@@ -6,27 +6,29 @@ import {GVL_44_ES} from '../../../../fixtures/vendorlist/vendorlist.v44.ES'
 import {GVL_44_EN} from '../../../../fixtures/vendorlist/vendorlist.v44.EN'
 
 export const UNAVAILABLE_VERSION = 9999999
+export const OLDEST_GVL_VERSION = 36
 export const LATEST_VERSION = 44
+
 const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
 const DATA = [
   {
     language: 'es',
-    version: 36,
+    version: OLDEST_GVL_VERSION,
     vendorList: GVL_36_ES
   },
   {
     language: 'en',
-    version: 36,
+    version: OLDEST_GVL_VERSION,
     vendorList: GVL_36_EN
   },
   {
     language: 'es',
-    version: 44,
+    version: LATEST_VERSION,
     vendorList: GVL_44_ES
   },
   {
     language: 'en',
-    version: 44,
+    version: LATEST_VERSION,
     vendorList: GVL_44_EN
   }
 ]
