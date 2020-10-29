@@ -28,6 +28,7 @@ export class Consent {
     cmpId = BOROS_TCF_ID,
     cmpVersion = BOROS_TCF_VERSION,
     policyVersion = TCF_API_VERSION,
+    vendorListVersion,
     publisherCC = PUBLISHER_CC,
     isServiceSpecific = true,
     useNonStandardStacks = false,
@@ -47,6 +48,7 @@ export class Consent {
     this._cmpId = cmpId
     this._cmpVersion = cmpVersion
     this._policyVersion = policyVersion
+    this._vendorListVersion = vendorListVersion
     this._publisherCC = publisherCC
     this._isServiceSpecific = isServiceSpecific
     this._useNonStandardStacks = useNonStandardStacks
@@ -91,11 +93,16 @@ export class Consent {
     return this._policyVersion
   }
 
+  get vendorListVersion() {
+    return this._vendorListVersion
+  }
+
   toJSON() {
     return {
       cmpId: this._cmpId,
       cmpVersion: this._cmpVersion,
       policyVersion: this._policyVersion,
+      vendorListVersion: this._vendorListVersion,
       publisherCC: this._publisherCC,
       isServiceSpecific: this._isServiceSpecific,
       useNonStandardStacks: this._useNonStandardStacks,
