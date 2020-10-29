@@ -68,7 +68,7 @@ export class BrowserCookieStorage extends CookieStorage {
       .reverse()
       .filter((_, index) => index <= 1)
       .reverse()
-    return `${DOT}${parts.join('.')}`
+    return parts.length === 1 ? parts[0] : `${DOT}${parts.join('.')}`
   }
 
   _parseData({data}) {
