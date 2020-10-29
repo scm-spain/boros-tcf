@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const GVL_v44_EN = {
+export const GVL_44_EN = {
   "gvlSpecificationVersion": 2,
   "vendorListVersion": 44,
   "tcfPolicyVersion": 2,

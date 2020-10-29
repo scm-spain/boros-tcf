@@ -1,58 +1,60 @@
 import nock from 'nock'
 import {GVLFactory} from '../../../../../main/infrastructure/repository/iab/GVLFactory'
-import {
-  VendorListValueEnglish,
-  VendorListValueSpanish
-} from '../../../../fixtures/vendorlist/VendorListValue'
+import {GVL_36_EN} from '../../../../fixtures/vendorlist/vendorlist.v36.EN'
+import {GVL_36_ES} from '../../../../fixtures/vendorlist/vendorlist.v36.ES'
+import {GVL_44_ES} from '../../../../fixtures/vendorlist/vendorlist.v44.ES'
+import {GVL_44_EN} from '../../../../fixtures/vendorlist/vendorlist.v44.EN'
 
-const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
 export const UNAVAILABLE_VERSION = 9999999
+export const LATEST_VERSION = 44
+const BASE_URL = 'http://mock.borostcf.com/borostcf/v2/vendorlist'
+const DATA = [
+  {
+    language: 'es',
+    version: 36,
+    vendorList: GVL_36_ES
+  },
+  {
+    language: 'en',
+    version: 36,
+    vendorList: GVL_36_EN
+  },
+  {
+    language: 'es',
+    version: 44,
+    vendorList: GVL_44_ES
+  },
+  {
+    language: 'en',
+    version: 44,
+    vendorList: GVL_44_EN
+  }
+]
 export class TestableGVLFactory extends GVLFactory {
-  constructor({language} = {}) {
+  constructor({language = 'es', latestVersion = LATEST_VERSION} = {}) {
     super({
       baseUrl: BASE_URL,
       language
     })
     super.resetCaches()
+    this.reset()
 
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get('/LATEST?language=es')
-      .reply(200, VendorListValueSpanish.data, {
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true'
-      })
-      .persist()
-
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get('/LATEST?language=en')
-      .reply(200, VendorListValueEnglish.data, {
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true'
-      })
-      .persist()
-
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get('/36?language=en')
-      .reply(200, VendorListValueEnglish.data, {
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true'
-      })
-      .persist()
-
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get('/36?language=es')
-      .reply(200, VendorListValueSpanish.data, {
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true'
-      })
-      .persist()
-
-    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get(`/${UNAVAILABLE_VERSION}?language=es`)
-      .replyWithError({
-        message: 'Unavailable',
-        code: 'WHATEVER_ERROR'
-      })
+    let latestFound = false
+    DATA.filter(data => data.version <= latestVersion).forEach(data => {
+      if (data.version === latestVersion) {
+        latestFound = true
+        this._nockOkResponse({...data, version: 'LATEST'})
+      }
+      this._nockOkResponse(data)
+    })
+    if (!latestFound) {
+      throw new Error(
+        'TestableGVLFactory does not have a valid latest version: ' +
+          latestVersion
+      )
+    }
+    this._nockKoResponse({version: UNAVAILABLE_VERSION, language: 'es'})
+    this._nockKoResponse({version: UNAVAILABLE_VERSION, language: 'en'})
   }
 
   reset() {
@@ -66,5 +68,24 @@ export class TestableGVLFactory extends GVLFactory {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true'
       })
+  }
+
+  _nockKoResponse({version, language}) {
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get(`/${version}?language=${language}`)
+      .replyWithError({
+        message: 'Unavailable',
+        code: 'WHATEVER_ERROR'
+      })
+  }
+
+  _nockOkResponse({version, language, vendorList}) {
+    nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
+      .get(`/${version}?language=${language}`)
+      .reply(200, vendorList, {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true'
+      })
+      .persist()
   }
 }
