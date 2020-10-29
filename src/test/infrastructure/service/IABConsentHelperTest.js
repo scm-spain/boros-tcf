@@ -1,4 +1,4 @@
-import {iabEncodeConsent} from '../../testable/infrastructure/consent/IABEncodeConsent'
+import {iabEncodeConsent} from '../../testable/infrastructure/consent/IABConsentUtils'
 import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
 import {COOKIE} from '../../fixtures/cookie'
 

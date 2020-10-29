@@ -1,5 +1,8 @@
 import {TestableGVLFactory} from '../repository/iab/TestableGVLFactory'
 import {IABConsentEncoderService} from '../../../../main/infrastructure/service/IABConsentEncoderService'
+import {IABConsentDecoderService} from '../../../../main/infrastructure/service/IABConsentDecoderService'
+
+const decoder = new IABConsentDecoderService()
 
 export const iabEncodeConsent = async ({
   latestVersion,
@@ -51,4 +54,8 @@ export const iabEncodeConsent = async ({
     vendorsWithLegitimateInterests,
     encodedConsent
   }
+}
+
+export const iabDecodeConsent = ({encodedConsent}) => {
+  return decoder.decode({encodedConsent})
 }
