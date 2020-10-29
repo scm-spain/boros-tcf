@@ -1,4 +1,6 @@
 import {iabEncodeConsent} from '../../testable/infrastructure/consent/IABEncodeConsent'
+import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
+import {COOKIE} from '../../fixtures/cookie'
 
 describe.skip('IABConsentHelper', () => {
   it('encode a consent with all accepted', async () => {
