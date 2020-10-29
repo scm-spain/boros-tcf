@@ -1,11 +1,11 @@
 import {IABConsentEncoderService} from '../../../main/infrastructure/service/IABConsentEncoderService'
 import {expect} from 'chai'
 import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
-import {GVLFactory} from '../../../main/infrastructure/repository/iab/GVLFactory'
+import {TestableGVLFactory} from '../../testable/infrastructure/repository/iab/TestableGVLFactory'
 describe('IABConsentEncoderService Should', () => {
   const iabConsentDecoderService = new IABConsentDecoderService()
   const iabConsentEncoderService = new IABConsentEncoderService({
-    gvlFactory: new GVLFactory()
+    gvlFactory: new TestableGVLFactory()
   })
   it('encode and decode String and the result should be the same object', async () => {
     const consent = {

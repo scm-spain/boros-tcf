@@ -2,12 +2,6 @@ import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TCString} from '@iabtcf/core'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
-import {
-  VendorList45,
-  VendorList46,
-  VendorListValueEnglish,
-  VendorListValueSpanish
-} from '../fixtures/vendorlist/VendorListValue'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
 import {
   BOROS_TCF_ID,

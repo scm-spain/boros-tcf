@@ -4,7 +4,7 @@ import {Consent} from '../../../main/domain/consent/Consent'
 import {IABConsentDecoderService} from '../../../main/infrastructure/service/IABConsentDecoderService'
 import {VendorList} from '../../../main/domain/vendorlist/VendorList'
 import {IABConsentEncoderService} from '../../../main/infrastructure/service/IABConsentEncoderService'
-import {GVLFactory} from '../../../main/infrastructure/repository/iab/GVLFactory'
+import {TestableGVLFactory} from '../../testable/infrastructure/repository/iab/TestableGVLFactory'
 
 describe('LoadConsentService Should', () => {
   describe('when the consent not exists', () => {
@@ -54,7 +54,7 @@ describe('LoadConsentService Should', () => {
     }
     const consentDecoderService = new IABConsentDecoderService()
     const consentEncoderService = new IABConsentEncoderService({
-      gvlFactory: new GVLFactory()
+      gvlFactory: new TestableGVLFactory()
     })
 
     it('when retrieved vendor list have the same version we return valid consent and a copy of existing consent', async () => {
