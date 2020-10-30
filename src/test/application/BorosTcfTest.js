@@ -19,10 +19,7 @@ import {VendorListRepository} from '../../main/domain/vendorlist/VendorListRepos
 import {Status} from '../../main/domain/status/Status'
 import {StatusRepository} from '../../main/domain/status/StatusRepository'
 import {waitCondition} from '../../main/core/service/waitCondition'
-import {
-  iabDecodeConsent,
-  iabGenerateConsent
-} from '../testable/infrastructure/consent/IABConsentUtils'
+import {iabDecodeConsent} from '../testable/infrastructure/consent/IABConsentUtils'
 import {inject} from '../../main/core/ioc/ioc'
 import {ConsentRepository} from '../../main/domain/consent/ConsentRepository'
 import {COOKIE} from '../fixtures/cookie'
@@ -460,19 +457,10 @@ describe('BorosTcf', () => {
   })
   describe('initialization', () => {
     it('should accept a reporter to collect domain events', async () => {
-      const mockGVLFactory = new TestableGVLFactory()
-      mockGVLFactory.reset()
-      mockGVLFactory.mockReply({
-        path: '/LATEST?language=es',
-        data: VendorList46.data
-      })
-
       const reported = []
       const reporter = (event, payload) => reported.push({event, payload})
 
-      const borosTcf = TestableTcfApiInitializer.create()
-        .mock(GVLFactory, mockGVLFactory)
-        .init({reporter})
+      const borosTcf = TestableTcfApiInitializer.create().init({reporter})
 
       borosTcf.getTCData({})
       await waitCondition({condition: () => reported.length > 0})
