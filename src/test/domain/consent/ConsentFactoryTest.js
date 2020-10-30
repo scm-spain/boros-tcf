@@ -16,7 +16,7 @@ import {
 describe('Consent Factory Should', () => {
   it('Create Empty consent', async () => {
     const consentEncoderService = new IABConsentEncoderService({
-      gvlFactory: new TestableGVLFactory({latestVersion: OLDEST_GVL_VERSION})
+      gvlFactory: new TestableGVLFactory({latestGvlVersion: OLDEST_GVL_VERSION})
     })
     const consentDecoderService = new IABConsentDecoderService()
     const consentFactory = new ConsentFactory({

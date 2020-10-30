@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {
-  LATEST_VERSION,
+  LATEST_GVL_VERSION,
   TestableGVLFactory,
   UNAVAILABLE_VERSION
 } from '../testable/infrastructure/repository/iab/TestableGVLFactory'
@@ -14,11 +14,11 @@ import {
 describe('getVendorList', () => {
   const givenCommand = 'getVendorList'
   const givenVersion = 2
-  const givenVendorListVersion = LATEST_VERSION
+  const givenVendorListVersion = LATEST_GVL_VERSION
 
   beforeEach(() => {
     const testableGVLFactory = new TestableGVLFactory({
-      latestVersion: givenVendorListVersion
+      latestGvlVersion: givenVendorListVersion
     })
     TestableTcfApiInitializer.create()
       .mock(GVLFactory, testableGVLFactory)

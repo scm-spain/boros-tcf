@@ -5,10 +5,13 @@ import {GVLFactory} from '../../../../main/infrastructure/repository/iab/GVLFact
 import {TestableGVLFactory} from '../repository/iab/TestableGVLFactory'
 
 class TestableTcfApiInitializer {
-  constructor() {
+  constructor({language, latestGvlVersion} = {}) {
     this._mocks = new Map()
     // default mocks
-    this._mocks.set(GVLFactory, new TestableGVLFactory())
+    this._mocks.set(
+      GVLFactory,
+      new TestableGVLFactory({language, latestGvlVersion})
+    )
   }
 
   static create() {
