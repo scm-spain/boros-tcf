@@ -5,13 +5,8 @@ import {GVLFactory} from '../../../../main/infrastructure/repository/iab/GVLFact
 import {TestableGVLFactory} from '../repository/iab/TestableGVLFactory'
 
 class TestableTcfApiInitializer {
-  constructor({language, latestGvlVersion} = {}) {
+  constructor() {
     this._mocks = new Map()
-    // default mocks
-    this._mocks.set(
-      GVLFactory,
-      new TestableGVLFactory({language, latestGvlVersion})
-    )
   }
 
   static create() {
@@ -23,7 +18,13 @@ class TestableTcfApiInitializer {
     return this
   }
 
-  init({language, reporter} = {}) {
+  init({language, reporter, latestGvlVersion} = {}) {
+    // default mocks
+    this._keepOrAdd(
+      GVLFactory,
+      () => new TestableGVLFactory({language, latestGvlVersion})
+    )
+
     iocReset(IOC_MODULE)
     iocModule({
       module: IOC_MODULE,
@@ -35,6 +36,12 @@ class TestableTcfApiInitializer {
       chain: true
     })
     return TcfApiInitializer.init({language, reporter})
+  }
+
+  _keepOrAdd(mockKey, mockInitializer) {
+    if (!this._mocks.has(mockKey)) {
+      this._mocks.set(mockKey, mockInitializer())
+    }
   }
 }
 

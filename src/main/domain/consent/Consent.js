@@ -61,6 +61,26 @@ export class Consent {
     this._isNew = isNew
   }
 
+  updateVendors({vendorList, consentVendorsAcceptanceStatus}) {
+    const updated = {
+      consents: {},
+      legitimateInterests: {}
+    }
+    Object.keys(vendorList.vendors).forEach(key => {
+      updated.consents[key] = consentVendorsAcceptanceStatus.resolveConsent({
+        current: this._vendor.consents[key]
+      })
+      updated.legitimateInterests[
+        key
+      ] = consentVendorsAcceptanceStatus.resolveLegitimateInterest({
+        current: this._vendor.legitimateInterests[key]
+      })
+    })
+    this._vendor = updated
+    this._vendorListVersion = vendorList.version
+    this._valid = consentVendorsAcceptanceStatus.isValid()
+  }
+
   get vendor() {
     return this._vendor
   }

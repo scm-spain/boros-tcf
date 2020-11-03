@@ -12,7 +12,11 @@ class CookieConsentRepository extends ConsentRepository {
   }
 
   loadUserConsent() {
-    return this._euconsentCookieStorage.load() || ''
+    try {
+      return this._euconsentCookieStorage.load() || ''
+    } catch (error) {
+      return ''
+    }
   }
 
   saveUserConsent({encodedConsent, decodedConsent}) {

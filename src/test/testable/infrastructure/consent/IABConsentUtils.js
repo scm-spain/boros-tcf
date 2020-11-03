@@ -1,18 +1,21 @@
-import {TestableGVLFactory} from '../repository/iab/TestableGVLFactory'
 import {IABConsentEncoderService} from '../../../../main/infrastructure/service/IABConsentEncoderService'
 import {IABConsentDecoderService} from '../../../../main/infrastructure/service/IABConsentDecoderService'
+import {IABVendorListRepository} from '../../../../main/infrastructure/repository/iab/IABVendorListRepository'
 
 const decoder = new IABConsentDecoderService()
 
 export const iabGenerateConsent = async ({
-  latestGvlVersion,
-  acceptance = true
+  gvlFactory,
+  allPurposeConsents = true,
+  allPurposeLegitimateInterests = true,
+  allSpecialFeatures = true,
+  allVendorConsents = true,
+  allVendorLegitimateInterests = true,
+  editedVendorConsents = false,
+  editedVendorLegitimateInterests = false
 } = {}) => {
-  const gvlFactory = new TestableGVLFactory({
-    latestGvlVersion
-  })
-  const gvl = gvlFactory.create()
-  await gvl.readyPromise
+  const vendorListRepository = new IABVendorListRepository({gvlFactory})
+  const vendorList = await vendorListRepository.getVendorList()
   const decodedConsent = {
     purpose: {
       consents: {},
@@ -24,31 +27,41 @@ export const iabGenerateConsent = async ({
       legitimateInterests: {}
     }
   }
-  Object.keys(gvl.purposes).forEach(purpose => {
-    decodedConsent.purpose.consents[purpose] = acceptance
-    decodedConsent.purpose.legitimateInterests[purpose] = acceptance
+  Object.keys(vendorList.purposes).forEach(purpose => {
+    decodedConsent.purpose.consents[purpose] = allPurposeConsents
+    decodedConsent.purpose.legitimateInterests[
+      purpose
+    ] = allPurposeLegitimateInterests
   })
-  Object.keys(gvl.specialFeatures).forEach(specialFeature => {
-    decodedConsent.specialFeatures[specialFeature] = acceptance
+  Object.keys(vendorList.specialFeatures).forEach(specialFeature => {
+    decodedConsent.specialFeatures[specialFeature] = allSpecialFeatures
   })
   let vendorsCount = 0
   let vendorsWithPurposes = 0
   let vendorsWithLegitimateInterests = 0
-  Object.keys(gvl.vendors).forEach(vendor => {
+  Object.keys(vendorList.vendors).forEach((vendor, index) => {
     vendorsCount++
-    if (gvl.vendors[vendor].purposes.length > 0) {
+    if (vendorList.vendors[vendor].purposes.length > 0) {
       vendorsWithPurposes++
     }
-    if (gvl.vendors[vendor].legIntPurposes.length > 0) {
+    if (vendorList.vendors[vendor].legIntPurposes.length > 0) {
       vendorsWithLegitimateInterests++
     }
-    decodedConsent.vendor.consents[vendor] = acceptance
-    decodedConsent.vendor.legitimateInterests[vendor] = acceptance
+    decodedConsent.vendor.consents[vendor] = editedVendorConsents
+      ? index % 2 === 0
+      : allVendorConsents
+    decodedConsent.vendor.legitimateInterests[
+      vendor
+    ] = editedVendorLegitimateInterests
+      ? index % 2 === 0
+      : allVendorLegitimateInterests
   })
-  const encoder = new IABConsentEncoderService({gvlFactory})
-  const encodedConsent = await encoder.encode({consent: decodedConsent})
+  const encodedConsent = await iabEncodeConsent({
+    decodedConsent,
+    gvlFactory
+  })
   return {
-    vendorListVersion: gvl.vendorListVersion,
+    vendorListVersion: vendorList.vendorListVersion,
     vendorsCount,
     vendorsWithPurposes,
     vendorsWithLegitimateInterests,
@@ -59,4 +72,12 @@ export const iabGenerateConsent = async ({
 
 export const iabDecodeConsent = ({encodedConsent}) => {
   return decoder.decode({encodedConsent})
+}
+
+export const iabEncodeConsent = async ({decodedConsent, gvlFactory}) => {
+  const encoder = new IABConsentEncoderService({gvlFactory})
+  return encoder.encode({
+    consent: decodedConsent,
+    vendorListVersion: decodedConsent.vendorListVersion
+  })
 }

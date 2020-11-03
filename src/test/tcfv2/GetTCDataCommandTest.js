@@ -9,7 +9,7 @@ describe('getTCData', () => {
   beforeEach(() => jsdom())
   const command = 'getTCData'
   const version = 2
-  const givenCookie = COOKIE.V44_ALL_ACCEPTED
+  const givenCookie = COOKIE.LATEST_GVL_ALL_ACCEPTED
 
   it('should return all props correctly setted', done => {
     const cookieStorageMock = new TestableCookieStorageMock()
