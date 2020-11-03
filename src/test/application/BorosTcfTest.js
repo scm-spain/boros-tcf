@@ -265,7 +265,6 @@ describe('BorosTcf', () => {
 
         expect(valid).to.be.false
         expect(isNew).to.be.true
-        console.log(consent)
         validateConsentHasCommonData({consent})
       })
       it('should load the consent as valid, and renew it with all new vendors to consented if all vendors were consented', async () => {
