@@ -4,6 +4,7 @@ coverage
 .idea
 .eslintignore
 .github
+.dependabot
 resources
 package
 *.tgz
