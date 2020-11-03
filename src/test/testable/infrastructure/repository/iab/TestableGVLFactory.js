@@ -1,9 +1,9 @@
 import nock from 'nock'
 import {GVLFactory} from '../../../../../main/infrastructure/repository/iab/GVLFactory'
-import {GVL_36_EN} from '../../../../fixtures/vendorlist/vendorlist.v36.EN'
-import {GVL_36_ES} from '../../../../fixtures/vendorlist/vendorlist.v36.ES'
-import {GVL_44_ES} from '../../../../fixtures/vendorlist/vendorlist.v44.ES'
-import {GVL_44_EN} from '../../../../fixtures/vendorlist/vendorlist.v44.EN'
+import GVL_36_EN from '../../../../fixtures/vendorlist/vendorlist.v36.EN.json'
+import GVL_36_ES from '../../../../fixtures/vendorlist/vendorlist.v36.ES.json'
+import GVL_44_ES from '../../../../fixtures/vendorlist/vendorlist.v44.ES.json'
+import GVL_44_EN from '../../../../fixtures/vendorlist/vendorlist.v44.EN.json'
 
 export const UNAVAILABLE_VERSION = 9999999
 export const OLDEST_GVL_VERSION = 36

@@ -10,7 +10,6 @@ import {
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {
   GVL_EN_LANGUAGE,
-  GVL_ES_LANGUAGE,
   LATEST_GVL_EN_DATA,
   LATEST_GVL_ES_DATA,
   LATEST_GVL_VERSION,
