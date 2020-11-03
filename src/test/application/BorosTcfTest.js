@@ -32,6 +32,7 @@ import {inject} from '../../main/core/ioc/ioc'
 import {ConsentRepository} from '../../main/domain/consent/ConsentRepository'
 import {COOKIE} from '../fixtures/cookie'
 import {VendorList} from '../../main/domain/vendorlist/VendorList'
+import {TcfApiInitializer} from '../../main/infrastructure/bootstrap/TcfApiInitializer'
 
 describe('BorosTcf', () => {
   const vendorListWithoutDate = vendorList => {
@@ -76,6 +77,19 @@ describe('BorosTcf', () => {
       expect(vendorListWithoutDate(vendorList)).to.deep.equal(
         vendorListWithoutDate(OLDEST_GVL_EN_DATA.vendorList)
       )
+    })
+
+    it('should fail if requested version is invalid', async () => {
+      const givenLanguage = GVL_EN_LANGUAGE
+      const givenVersion = 'versionX'
+
+      const borosTcf = initBoros({language: givenLanguage})
+      try {
+        await borosTcf.getVendorList({version: givenVersion})
+        throw new Error('should have failed')
+      } catch (error) {
+        expect(error.message).to.include('Invalid version')
+      }
     })
   })
 
@@ -411,6 +425,16 @@ describe('BorosTcf', () => {
 
       borosTcf.getTCData({})
       await waitCondition({condition: () => reported.length > 0})
+    })
+    it('should fail if language is invalid', () => {
+      const givenLanguage = 'XYZ'
+
+      try {
+        TcfApiInitializer.init({language: givenLanguage})
+        throw new Error('should have failed')
+      } catch (error) {
+        expect(error.message).to.include('Invalid language')
+      }
     })
   })
 })

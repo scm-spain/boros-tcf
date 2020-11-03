@@ -4,6 +4,7 @@ import {IABVendorListRepository} from '../../../../main/infrastructure/repositor
 
 const decoder = new IABConsentDecoderService()
 
+/* istanbul ignore next */
 export const iabGenerateConsent = async ({
   gvlFactory,
   allPurposeConsents = true,
