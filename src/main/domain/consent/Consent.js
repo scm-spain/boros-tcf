@@ -4,6 +4,7 @@ import {
   PUBLISHER_CC,
   TCF_API_VERSION
 } from '../../core/constants'
+import {VendorAcceptanceStatus} from '../vendorlist/VendorAcceptanceStatus'
 
 export class Consent {
   /**
@@ -28,6 +29,7 @@ export class Consent {
     cmpId = BOROS_TCF_ID,
     cmpVersion = BOROS_TCF_VERSION,
     policyVersion = TCF_API_VERSION,
+    vendorListVersion,
     publisherCC = PUBLISHER_CC,
     isServiceSpecific = true,
     useNonStandardStacks = false,
@@ -47,6 +49,7 @@ export class Consent {
     this._cmpId = cmpId
     this._cmpVersion = cmpVersion
     this._policyVersion = policyVersion
+    this._vendorListVersion = vendorListVersion
     this._publisherCC = publisherCC
     this._isServiceSpecific = isServiceSpecific
     this._useNonStandardStacks = useNonStandardStacks
@@ -57,6 +60,30 @@ export class Consent {
     this._publisher = publisher
     this._valid = valid
     this._isNew = isNew
+  }
+
+  updateVendors({oldVendorList, newVendorList}) {
+    const updated = {
+      consents: {},
+      legitimateInterests: {}
+    }
+    const consentVendorsAcceptanceStatus = new VendorAcceptanceStatus({
+      consent: this,
+      vendorList: oldVendorList
+    })
+    Object.keys(newVendorList.vendors).forEach(key => {
+      updated.consents[key] = consentVendorsAcceptanceStatus.resolveConsent({
+        current: this._vendor.consents[key]
+      })
+      updated.legitimateInterests[
+        key
+      ] = consentVendorsAcceptanceStatus.resolveLegitimateInterest({
+        current: this._vendor.legitimateInterests[key]
+      })
+    })
+    this._vendor = updated
+    this._vendorListVersion = newVendorList.version
+    this._valid = consentVendorsAcceptanceStatus.isValid()
   }
 
   get vendor() {
@@ -91,11 +118,16 @@ export class Consent {
     return this._policyVersion
   }
 
+  get vendorListVersion() {
+    return this._vendorListVersion
+  }
+
   toJSON() {
     return {
       cmpId: this._cmpId,
       cmpVersion: this._cmpVersion,
       policyVersion: this._policyVersion,
+      vendorListVersion: this._vendorListVersion,
       publisherCC: this._publisherCC,
       isServiceSpecific: this._isServiceSpecific,
       useNonStandardStacks: this._useNonStandardStacks,

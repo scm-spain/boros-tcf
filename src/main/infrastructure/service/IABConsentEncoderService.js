@@ -14,17 +14,11 @@ class IABConsentEncoderService extends ConsentEncoderService {
     this._gvlFactory = gvlFactory
   }
 
-  async encode({consent = {}, previousEncodedConsent} = {}) {
+  async encode({consent = {}, vendorListVersion} = {}) {
     const {vendor = {}, purpose = {}, specialFeatures = {}} = consent
-    let tcModel
-    if (previousEncodedConsent) {
-      tcModel = TCString.decode(previousEncodedConsent)
-      tcModel.gvl = this._gvlFactory.create({
-        version: tcModel.vendorListVersion
-      })
-    } else {
-      tcModel = new TCModel(this._gvlFactory.create())
-    }
+    const tcModel = new TCModel(
+      this._gvlFactory.create({version: vendorListVersion})
+    )
     tcModel.gdprApplies = true
     tcModel.isServiceSpecific = true
     tcModel.cmpId = BOROS_TCF_ID

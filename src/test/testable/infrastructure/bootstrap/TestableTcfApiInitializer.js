@@ -1,6 +1,8 @@
 import {iocModule, iocReset} from 'brusc'
 import {IOC_MODULE} from '../../../../main/core/ioc/ioc'
 import {TcfApiInitializer} from '../../../../main/infrastructure/bootstrap/TcfApiInitializer'
+import {GVLFactory} from '../../../../main/infrastructure/repository/iab/GVLFactory'
+import {TestableGVLFactory} from '../repository/iab/TestableGVLFactory'
 
 class TestableTcfApiInitializer {
   constructor() {
@@ -16,7 +18,13 @@ class TestableTcfApiInitializer {
     return this
   }
 
-  init({language, reporter} = {}) {
+  init({language, reporter, latestGvlVersion} = {}) {
+    // default mocks
+    this._keepOrAdd(
+      GVLFactory,
+      () => new TestableGVLFactory({language, latestGvlVersion})
+    )
+
     iocReset(IOC_MODULE)
     iocModule({
       module: IOC_MODULE,
@@ -28,6 +36,12 @@ class TestableTcfApiInitializer {
       chain: true
     })
     return TcfApiInitializer.init({language, reporter})
+  }
+
+  _keepOrAdd(mockKey, mockInitializer) {
+    if (!this._mocks.has(mockKey)) {
+      this._mocks.set(mockKey, mockInitializer())
+    }
   }
 }
 

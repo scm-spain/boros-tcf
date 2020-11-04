@@ -25,7 +25,6 @@ import {DomainEventBus} from '../../domain/service/DomainEventBus'
 import {ChangeUiVisibleUseCase} from '../../application/services/ui/ChangeUiVisibleUseCase'
 import {RemoveEventListenerUseCase} from '../../application/services/event/RemoveEventListenerUseCase'
 import {EventStatusService} from '../../domain/service/EventStatusService'
-import {VendorListHelper} from '../../domain/vendorlist/VendorListHelper'
 import {StatusRepository} from '../../domain/status/StatusRepository'
 import {InMemoryStatusRepository} from '../../infrastructure/status/InMemoryStatusRepository'
 
@@ -101,7 +100,6 @@ class TcfApiInitializer {
               cookieName: BOROS_CONSENT_COOKIE_NAME
             })
         )
-        singleton(VendorListHelper, () => new VendorListHelper())
       },
       adapter: tcfInstanceAdapter
     })

@@ -3,10 +3,10 @@ import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {
+  LATEST_GVL_VERSION,
   TestableGVLFactory,
   UNAVAILABLE_VERSION
 } from '../testable/infrastructure/repository/iab/TestableGVLFactory'
-import {VendorListValueSpanish} from '../fixtures/vendorlist/VendorListValue'
 
 /**
  * @see https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md#getvendorlist
@@ -14,10 +14,12 @@ import {VendorListValueSpanish} from '../fixtures/vendorlist/VendorListValue'
 describe('getVendorList', () => {
   const givenCommand = 'getVendorList'
   const givenVersion = 2
+  const givenVendorListVersion = LATEST_GVL_VERSION
 
   beforeEach(() => {
-    const testableGVLFactory = new TestableGVLFactory()
-    testableGVLFactory.resetCaches()
+    const testableGVLFactory = new TestableGVLFactory({
+      latestGvlVersion: givenVendorListVersion
+    })
     TestableTcfApiInitializer.create()
       .mock(GVLFactory, testableGVLFactory)
       .init()
@@ -31,9 +33,7 @@ describe('getVendorList', () => {
     )
       .then(({vendorList, success}) => {
         expect(success).to.be.true
-        expect(vendorList.purposes[1]).to.be.deep.equal(
-          VendorListValueSpanish.data.purposes[1]
-        )
+        expect(vendorList.vendorListVersion).to.equal(givenVendorListVersion)
       })
       .then(() => done())
       .catch(error => done(error))
