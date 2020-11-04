@@ -4,6 +4,7 @@ import {
   PUBLISHER_CC,
   TCF_API_VERSION
 } from '../../core/constants'
+import {VendorAcceptanceStatus} from '../vendorlist/VendorAcceptanceStatus'
 
 export class Consent {
   /**
@@ -61,12 +62,16 @@ export class Consent {
     this._isNew = isNew
   }
 
-  updateVendors({vendorList, consentVendorsAcceptanceStatus}) {
+  updateVendors({oldVendorList, newVendorList}) {
     const updated = {
       consents: {},
       legitimateInterests: {}
     }
-    Object.keys(vendorList.vendors).forEach(key => {
+    const consentVendorsAcceptanceStatus = new VendorAcceptanceStatus({
+      consent: this,
+      vendorList: oldVendorList
+    })
+    Object.keys(newVendorList.vendors).forEach(key => {
       updated.consents[key] = consentVendorsAcceptanceStatus.resolveConsent({
         current: this._vendor.consents[key]
       })
@@ -77,7 +82,7 @@ export class Consent {
       })
     })
     this._vendor = updated
-    this._vendorListVersion = vendorList.version
+    this._vendorListVersion = newVendorList.version
     this._valid = consentVendorsAcceptanceStatus.isValid()
   }
 

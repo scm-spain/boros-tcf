@@ -5,7 +5,6 @@ import {ConsentDecoderService} from '../consent/ConsentDecoderService'
 import {VendorListRepository} from '../vendorlist/VendorListRepository'
 import {ConsentEncoderService} from './ConsentEncoderService'
 import {Version} from '../vendorlist/Version'
-import {VendorAcceptanceStatus} from '../vendorlist/VendorAcceptanceStatus'
 
 export class LoadConsentService {
   constructor({
@@ -43,13 +42,9 @@ export class LoadConsentService {
       const oldVendorList = await this._vendorListRepository.getVendorList({
         version: new Version(consent.vendorListVersion)
       })
-      const consentVendorsAcceptanceStatus = new VendorAcceptanceStatus({
-        consent,
-        vendorList: oldVendorList
-      })
       consent.updateVendors({
-        vendorList: newVendorList,
-        consentVendorsAcceptanceStatus
+        oldVendorList,
+        newVendorList
       })
     }
 
