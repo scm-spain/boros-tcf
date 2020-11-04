@@ -10,6 +10,9 @@ describe.skip('IABConsentHelper', () => {
     const givenVersionToEncodeConsent = 36
     const givenAcceptance = true
 
+    const givenVendorConsentsEdited = false
+    const givenVendorLegitimateInterestsEdited = false
+
     const gvlFactory = new TestableGVLFactory({
       latestGvlVersion: givenVersionToEncodeConsent
     })
@@ -20,10 +23,9 @@ describe.skip('IABConsentHelper', () => {
       allSpecialFeatures: givenAcceptance,
       allVendorConsents: givenAcceptance,
       allVendorLegitimateInterests: givenAcceptance,
-      editedVendorConsents: true,
-      editedVendorLegitimateInterests: false
+      editedVendorConsents: givenVendorConsentsEdited,
+      editedVendorLegitimateInterests: givenVendorLegitimateInterestsEdited
     })
-    // console.log('iabGenerateConsent', result)
     console.log('Encoded consent:')
     console.log(result.encodedConsent)
   })
