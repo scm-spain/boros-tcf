@@ -2,11 +2,7 @@ import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
 import {TestableCookieStorageMock} from '../testable/infrastructure/repository/TestableCookieStorageMock'
-import {
-  BOROS_TCF_ID,
-  BOROS_TCF_VERSION,
-  TCF_API_VERSION
-} from '../../main/core/constants'
+import {BOROS_TCF_ID, TCF_API_VERSION} from '../../main/core/constants'
 import {GVLFactory} from '../../main/infrastructure/repository/iab/GVLFactory'
 import {
   GVL_EN_LANGUAGE,
@@ -33,6 +29,7 @@ import {ConsentRepository} from '../../main/domain/consent/ConsentRepository'
 import {COOKIE} from '../fixtures/cookie'
 import {VendorList} from '../../main/domain/vendorlist/VendorList'
 import {TcfApiInitializer} from '../../main/infrastructure/bootstrap/TcfApiInitializer'
+import {equalConsentsValidation} from '../testable/utils'
 
 describe('BorosTcf', () => {
   const vendorListWithoutDate = vendorList => {
@@ -109,7 +106,7 @@ describe('BorosTcf', () => {
       const cookieConsent = cookieRepsitory.loadUserConsent()
       const decodedCookie = iabDecodeConsent({encodedConsent: cookieConsent})
 
-      expect(decodedCookie).to.deep.equal(givenConsent)
+      equalConsentsValidation(decodedCookie, givenConsent)
     })
 
     it('should replace an old consent and save new one with the latest vendor list', async () => {
@@ -145,7 +142,7 @@ describe('BorosTcf', () => {
       } = decodedCookie
       expect(givenConsentGvlVersion).to.equal(OLDEST_GVL_VERSION)
       expect(decodedCookieGvlVersion).to.equal(LATEST_GVL_VERSION)
-      expect(restOfDecodedCookie).to.deep.equal(restOfGivenConsent)
+      equalConsentsValidation(restOfDecodedCookie, restOfGivenConsent)
     })
   })
   describe('loadUserConsent', () => {
@@ -163,7 +160,7 @@ describe('BorosTcf', () => {
       expectedVendorListVersion = LATEST_GVL_VERSION
     } = {}) => {
       expect(consent.cmpId).to.equal(BOROS_TCF_ID)
-      expect(consent.cmpVersion).to.equal(BOROS_TCF_VERSION)
+      expect(consent.cmpVersion).to.exist
       expect(consent.policyVersion).to.equal(TCF_API_VERSION)
       expect(consent.vendorListVersion).to.equal(expectedVendorListVersion)
       expect(consent.publisherCC).to.have.length(2)
@@ -188,7 +185,7 @@ describe('BorosTcf', () => {
       const decodedConsentSaved = iabDecodeConsent({
         encodedConsent: consentRepository.loadUserConsent()
       })
-      expect(decodedConsentSaved).to.deep.equal(decodedConsentReturned)
+      equalConsentsValidation(decodedConsentSaved, decodedConsentReturned)
     }
 
     const validateConsentAllLastVendorsTo = async ({
@@ -224,7 +221,7 @@ describe('BorosTcf', () => {
         const decodedExistingConsent = iabDecodeConsent({
           encodedConsent: givenCookie
         })
-        expect(restOfConsent).to.deep.equal(decodedExistingConsent)
+        equalConsentsValidation(restOfConsent, decodedExistingConsent)
       })
       it('should return new consent if reading the cookie throws an error', async () => {
         const cookieStorageMock = {

@@ -6,6 +6,7 @@ import {
 } from '../../testable/infrastructure/repository/iab/TestableGVLFactory'
 import {COOKIE} from '../../fixtures/cookie'
 import {iabDecodeConsent} from '../../testable/infrastructure/consent/IABConsentUtils'
+import {equalConsentsValidation} from '../../testable/utils'
 
 describe('IABConsentEncoderService', () => {
   const givenLatestGvlVersion = LATEST_GVL_VERSION
@@ -32,7 +33,7 @@ describe('IABConsentEncoderService', () => {
         consent: givenConsent
       })
       const decodedConsent = iabDecodeConsent({encodedConsent})
-      expect(decodedConsent).to.deep.equal(expectedDecodedConsent)
+      equalConsentsValidation(decodedConsent, expectedDecodedConsent)
     })
   })
 
@@ -45,7 +46,7 @@ describe('IABConsentEncoderService', () => {
 
       const encodedConsent = await iabConsentEncoderService.encode()
       const decodedConsent = iabDecodeConsent({encodedConsent})
-      expect(decodedConsent).to.deep.equal(expectedDecodedConsent)
+      equalConsentsValidation(decodedConsent, expectedDecodedConsent)
     })
   })
 })

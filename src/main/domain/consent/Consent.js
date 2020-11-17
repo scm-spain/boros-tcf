@@ -28,6 +28,8 @@ export class Consent {
   constructor({
     cmpId = BOROS_TCF_ID,
     cmpVersion = BOROS_TCF_VERSION,
+    created,
+    lastUpdated,
     policyVersion = TCF_API_VERSION,
     vendorListVersion,
     publisherCC = PUBLISHER_CC,
@@ -48,6 +50,8 @@ export class Consent {
   }) {
     this._cmpId = cmpId
     this._cmpVersion = cmpVersion
+    this._created = created
+    this._lastUpdated = lastUpdated
     this._policyVersion = policyVersion
     this._vendorListVersion = vendorListVersion
     this._publisherCC = publisherCC

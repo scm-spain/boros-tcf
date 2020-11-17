@@ -21,6 +21,8 @@ class IABConsentDecoderService extends ConsentDecoderService {
     const model = {
       cmpId: tcModel.cmpId,
       cmpVersion: tcModel.cmpVersion,
+      created: tcModel.created,
+      lastUpdated: tcModel.lastUpdated,
       isServiceSpecific: tcModel.isServiceSpecific,
       useNonStandardStacks: tcModel.useNonStandardStacks,
       publisherCC: tcModel.publisherCountryCode,
@@ -49,9 +51,7 @@ class IABConsentDecoderService extends ConsentDecoderService {
       }
     }
 
-    return {
-      ...model
-    }
+    return model
   }
 }
 
