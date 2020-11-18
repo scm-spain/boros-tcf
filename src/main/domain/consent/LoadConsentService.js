@@ -46,19 +46,18 @@ export class LoadConsentService {
         consentVendorList: oldVendorList,
         newVendorList
       })
-    }
 
-    if (consent.valid) {
-      const encodedConsent = await this._consentEncoderService.encode({
-        consent,
-        vendorListVersion: consent.vendorListVersion
-      })
-      this._consentRepository.saveUserConsent({
-        encodedConsent: encodedConsent,
-        decodedConsent: consent
-      })
+      if (consent.valid) {
+        const encodedConsent = await this._consentEncoderService.encode({
+          consent,
+          vendorListVersion: consent.vendorListVersion
+        })
+        this._consentRepository.saveUserConsent({
+          encodedConsent: encodedConsent,
+          decodedConsent: consent
+        })
+      }
     }
-
     return consent
   }
 }
