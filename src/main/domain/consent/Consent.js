@@ -54,8 +54,8 @@ export class Consent {
     this._scope = scope
     this._cmpId = cmpId
     this._cmpVersion = cmpVersion
-    this._created = created?.valueOf()
-    this._lastUpdated = lastUpdated?.valueOf()
+    this._created = created
+    this._lastUpdated = lastUpdated
     this._policyVersion = policyVersion
     this._vendorListVersion = vendorListVersion
     this._publisherCC = publisherCC

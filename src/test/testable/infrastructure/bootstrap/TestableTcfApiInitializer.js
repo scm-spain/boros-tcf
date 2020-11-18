@@ -18,7 +18,7 @@ class TestableTcfApiInitializer {
     return this
   }
 
-  init({language, reporter, latestGvlVersion} = {}) {
+  init({language, reporter, latestGvlVersion, scope} = {}) {
     // default mocks
     this._keepOrAdd(
       GVLFactory,
@@ -35,7 +35,7 @@ class TestableTcfApiInitializer {
       },
       chain: true
     })
-    return TcfApiInitializer.init({language, reporter})
+    return TcfApiInitializer.init({language, reporter, scope})
   }
 
   _keepOrAdd(mockKey, mockInitializer) {

@@ -146,13 +146,13 @@ describe('BorosTcf', () => {
     })
   })
   describe('loadUserConsent', () => {
-    const initBoros = ({givenCookie} = {}) => {
+    const initBoros = ({givenCookie, scope} = {}) => {
       const cookieStorageMock = new TestableCookieStorageMock()
       givenCookie && cookieStorageMock.save({data: givenCookie})
 
       return TestableTcfApiInitializer.create()
         .mock('euconsentCookieStorage', cookieStorageMock)
-        .init()
+        .init({scope})
     }
 
     const validateConsentHasCommonData = ({
@@ -205,6 +205,16 @@ describe('BorosTcf', () => {
           `no legInt: ${id}`
         ).to.equal(legitimateInterestsTo)
       })
+    }
+
+    const getExpirationAfterCookieUpdateDay = ({cookie, expireAfterDays}) => {
+      const decodedConsent = iabDecodeConsent({encodedConsent: cookie})
+      const {lastUpdated} = decodedConsent
+      const today = Date.now()
+      const dayInMillis = 86400000
+      const diffInMillis = today - lastUpdated.valueOf()
+      const diffInDays = Math.floor(diffInMillis / dayInMillis)
+      return diffInDays + expireAfterDays
     }
 
     describe('given an existing cookie saved with latest vendor list', () => {
@@ -361,9 +371,72 @@ describe('BorosTcf', () => {
 
         validateConsentHasCommonData({consent})
       })
+      it('should load the consent as valid if all scoped purposes are accepted', async () => {
+        const givenCookie =
+          COOKIE.OLDEST_GVL_ALL_ACCEPTED_SCOPED_SPECIAL_FEATURE_1_ONLY
+
+        const scope = {
+          purposes: [1, 2, 3],
+          specialFeatures: [1],
+          options: {
+            onRejectionResurfaceAfterDays: 0
+          }
+        }
+        const borosTcf = initBoros({givenCookie, scope})
+
+        const consent = await borosTcf.loadUserConsent()
+        const {valid, isNew} = consent
+
+        expect(valid).to.be.true
+        expect(isNew).to.be.false
+      })
+      it('should load the consent as invalid if purposes are rejected and onRejectionResurfaceAfterDays option is reached', async () => {
+        const givenCookie = COOKIE.OLDEST_GVL_ALL_REJECTED
+        const givenOnRejectionResurfaceAfterDays = 0 // cookie lastUpdated same day to force revalidation
+
+        const recalculatedAfterDays = getExpirationAfterCookieUpdateDay({
+          cookie: givenCookie,
+          expireAfterDays: givenOnRejectionResurfaceAfterDays
+        })
+        const scope = {
+          purposes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          specialFeatures: [1],
+          options: {
+            onRejectionResurfaceAfterDays: recalculatedAfterDays
+          }
+        }
+        const borosTcf = initBoros({givenCookie, scope})
+
+        const consent = await borosTcf.loadUserConsent()
+        const {valid, isNew} = consent
+
+        expect(valid).to.be.false
+        expect(isNew).to.be.false
+      })
+      it('should load the consent as valid if purposes are rejected and onRejectionResurfaceAfterDays option is not reached', async () => {
+        const givenCookie = COOKIE.OLDEST_GVL_ALL_REJECTED
+        const givenOnRejectionResurfaceAfterDays = 1 // cookie lastUpdated plus one day
+
+        const recalculatedAfterDays = getExpirationAfterCookieUpdateDay({
+          cookie: givenCookie,
+          expireAfterDays: givenOnRejectionResurfaceAfterDays
+        })
+        const scope = {
+          options: {
+            onRejectionResurfaceAfterDays: recalculatedAfterDays
+          }
+        }
+        const borosTcf = initBoros({givenCookie, scope})
+
+        const consent = await borosTcf.loadUserConsent()
+        const {valid, isNew} = consent
+
+        expect(valid).to.be.true
+        expect(isNew).to.be.false
+      })
     })
 
-    describe('given no exsiting cookie', () => {
+    describe('given no existing cookie', () => {
       it('should load an empty consent returned as new', async () => {
         const borosTcf = initBoros()
         const consent = await borosTcf.loadUserConsent()
