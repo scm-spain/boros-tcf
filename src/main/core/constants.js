@@ -16,6 +16,12 @@ export const BOROS_TCF_VERSION =
   1
 
 /**
+ * Boros TCF NPM library version.
+ */
+export const LIB_TCF_VERSION =
+  (typeof __PACKAGE_VERSION__ !== 'undefined' && __PACKAGE_VERSION__) || '0.0.1'
+
+/**
  * Boros TCF IAB's registered ID
  */
 export const BOROS_TCF_ID = 129
@@ -77,6 +83,11 @@ export const VENDOR_CONSENT_COOKIE_DEFAULT_PATH = '/'
  * Cookies same site local value
  */
 export const VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE = 'Lax'
+
+/**
+ * Event raised on TCF READY
+ */
+export const EVENT_TCF_READY = 'TCF_READY'
 
 /**
  * Event raised when event listener execution fails

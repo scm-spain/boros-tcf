@@ -7,6 +7,8 @@ import {ChangeUiVisibleUseCase} from './services/ui/ChangeUiVisibleUseCase'
 import {GetTCDataUseCase} from './services/tcdata/GetTCDataUseCase'
 import {StatusRepository} from '../domain/status/StatusRepository'
 import {Status} from '../domain/status/Status'
+import {DomainEventBus} from '../domain/service/DomainEventBus'
+import {EVENT_TCF_READY, LIB_TCF_VERSION} from '../core/constants'
 
 class BorosTcf {
   /**
@@ -18,6 +20,7 @@ class BorosTcf {
    * @param {GetTCDataUseCase} param.getTCDataUseCase
    */
   constructor({
+    domainEventBus = inject(DomainEventBus),
     getVendorListUseCase = inject(GetVendorListUseCase),
     loadUserConsentUseCase = inject(LoadUserConsentUseCase),
     saveUserConsentUseCase = inject(SaveUserConsentUseCase),
@@ -25,6 +28,7 @@ class BorosTcf {
     changeUiVisibleUseCase = inject(ChangeUiVisibleUseCase),
     statusRepository = inject(StatusRepository)
   } = {}) {
+    this._domainEventBus = domainEventBus
     this._getVendorListUseCase = getVendorListUseCase
     this._loadUserConsentUseCase = loadUserConsentUseCase
     this._saveUserConsentUseCase = saveUserConsentUseCase
@@ -35,6 +39,12 @@ class BorosTcf {
 
   ready() {
     this._statusRepository.getStatus().cmpStatus = Status.CMPSTATUS_LOADED
+    this._domainEventBus.raise({
+      eventName: EVENT_TCF_READY,
+      payload: {
+        version: LIB_TCF_VERSION
+      }
+    })
   }
 
   /**
