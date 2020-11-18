@@ -15,7 +15,8 @@ export class ConsentAcceptanceStatus {
       this._status[NODE_SPECIAL_FEATURES] === STATUS_ALL_TRUE
     if (
       allTrue ||
-      !this._consent.scope?.options?.onRejectionResurfaceAfterDays
+      typeof this._consent.scope?.options?.onRejectionResurfaceAfterDays !==
+        'number'
     ) {
       return true
     }
@@ -24,9 +25,9 @@ export class ConsentAcceptanceStatus {
       this._consent.lastUpdated || this._consent.created || new Date()
     const timeDiffInMillis = now - consentDate.valueOf()
     const timeDiffInDays = Math.floor(timeDiffInMillis / DAY_IN_MILLIS)
-    return (
+    const isNotExpired =
       timeDiffInDays < this._consent.scope.options.onRejectionResurfaceAfterDays
-    )
+    return isNotExpired
   }
 
   _initialize() {
