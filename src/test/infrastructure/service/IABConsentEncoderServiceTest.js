@@ -1,5 +1,4 @@
 import {IABConsentEncoderService} from '../../../main/infrastructure/service/IABConsentEncoderService'
-import {expect} from 'chai'
 import {
   LATEST_GVL_VERSION,
   TestableGVLFactory

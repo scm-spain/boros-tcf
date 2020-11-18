@@ -13,6 +13,11 @@ describe.skip('IABConsentHelper', () => {
     const givenVendorConsentsEdited = false
     const givenVendorLegitimateInterestsEdited = false
 
+    const givenScope = {
+      purposes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      specialFeatures: [1, 2]
+    }
+
     const gvlFactory = new TestableGVLFactory({
       latestGvlVersion: givenVersionToEncodeConsent
     })
@@ -24,7 +29,8 @@ describe.skip('IABConsentHelper', () => {
       allVendorConsents: givenAcceptance,
       allVendorLegitimateInterests: givenAcceptance,
       editedVendorConsents: givenVendorConsentsEdited,
-      editedVendorLegitimateInterests: givenVendorLegitimateInterestsEdited
+      editedVendorLegitimateInterests: givenVendorLegitimateInterestsEdited,
+      scope: givenScope
     })
     console.log('Encoded consent:')
     console.log(result.encodedConsent)

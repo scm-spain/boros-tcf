@@ -5,11 +5,13 @@ import {
   TCF_API_VERSION
 } from '../../core/constants'
 import {VendorAcceptanceStatus} from '../vendorlist/VendorAcceptanceStatus'
+import {ConsentAcceptanceStatus} from './ConsentAcceptanceStatus'
 
 export class Consent {
   /**
    *
    * @param {Object} param
+   * @param {Object} param.scope
    * @param {Object} param.vendor
    * @param {Object.<Number, Boolean>} param.vendor.consents
    * @param {Object.<Number, Boolean>} param.vendor.legitimateInterests
@@ -26,6 +28,7 @@ export class Consent {
    * @param {boolean} [param.isNew]
    */
   constructor({
+    scope = {},
     cmpId = BOROS_TCF_ID,
     cmpVersion = BOROS_TCF_VERSION,
     created,
@@ -48,10 +51,11 @@ export class Consent {
     valid = false,
     isNew = false
   }) {
+    this._scope = scope
     this._cmpId = cmpId
     this._cmpVersion = cmpVersion
-    this._created = created
-    this._lastUpdated = lastUpdated
+    this._created = created?.valueOf()
+    this._lastUpdated = lastUpdated?.valueOf()
     this._policyVersion = policyVersion
     this._vendorListVersion = vendorListVersion
     this._publisherCC = publisherCC
@@ -66,28 +70,45 @@ export class Consent {
     this._isNew = isNew
   }
 
-  updateVendors({oldVendorList, newVendorList}) {
-    const updated = {
-      consents: {},
-      legitimateInterests: {}
+  checkValidity({consentVendorList, newVendorList}) {
+    if (
+      !newVendorList &&
+      this._vendorListVersion !== consentVendorList.version
+    ) {
+      this._valid = false
+      return
     }
-    const consentVendorsAcceptanceStatus = new VendorAcceptanceStatus({
+
+    const consentAcceptanceStatus = new ConsentAcceptanceStatus({
       consent: this,
-      vendorList: oldVendorList
+      vendorList: consentVendorList
     })
-    Object.keys(newVendorList.vendors).forEach(key => {
-      updated.consents[key] = consentVendorsAcceptanceStatus.resolveConsent({
-        current: this._vendor.consents[key]
+
+    let validConsentVendors = true
+    if (newVendorList && newVendorList.version !== this._vendorListVersion) {
+      const updated = {
+        consents: {},
+        legitimateInterests: {}
+      }
+      const consentVendorsAcceptanceStatus = new VendorAcceptanceStatus({
+        consent: this,
+        vendorList: consentVendorList
       })
-      updated.legitimateInterests[
-        key
-      ] = consentVendorsAcceptanceStatus.resolveLegitimateInterest({
-        current: this._vendor.legitimateInterests[key]
+      Object.keys(newVendorList.vendors).forEach(key => {
+        updated.consents[key] = consentVendorsAcceptanceStatus.resolveConsent({
+          current: this._vendor.consents[key]
+        })
+        updated.legitimateInterests[
+          key
+        ] = consentVendorsAcceptanceStatus.resolveLegitimateInterest({
+          current: this._vendor.legitimateInterests[key]
+        })
       })
-    })
-    this._vendor = updated
-    this._vendorListVersion = newVendorList.version
-    this._valid = consentVendorsAcceptanceStatus.isValid()
+      this._vendor = updated
+      this._vendorListVersion = newVendorList.version
+      validConsentVendors = consentVendorsAcceptanceStatus.isValid()
+    }
+    this._valid = consentAcceptanceStatus.isValid() && validConsentVendors
   }
 
   get vendor() {
@@ -124,6 +145,18 @@ export class Consent {
 
   get vendorListVersion() {
     return this._vendorListVersion
+  }
+
+  get created() {
+    return this._created
+  }
+
+  get lastUpdated() {
+    return this._lastUpdated
+  }
+
+  get scope() {
+    return this._scope
   }
 
   toJSON() {
