@@ -39,7 +39,7 @@ import {
 } from '../../core/constants'
 
 class TcfApiInitializer {
-  static init({language, reporter} = {}) {
+  static init({language, reporter, scope} = {}) {
     if (typeof window !== 'undefined' && window.__tcfapi_boros) {
       return window.__tcfapi_boros
     }
@@ -76,7 +76,7 @@ class TcfApiInitializer {
         singleton(VendorListRepository, () => new IABVendorListRepository())
 
         // Factories
-        singleton(ConsentFactory, () => new ConsentFactory())
+        singleton(ConsentFactory, () => new ConsentFactory({scope}))
         singleton(GVLFactory, () => new GVLFactory({language}))
         singleton(ObservableFactory, () => new ObservableFactory())
         singleton(UseCaseAdapterFactory, () => new UseCaseAdapterFactory())

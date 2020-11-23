@@ -13,7 +13,11 @@ export const iabGenerateConsent = async ({
   allVendorConsents = true,
   allVendorLegitimateInterests = true,
   editedVendorConsents = false,
-  editedVendorLegitimateInterests = false
+  editedVendorLegitimateInterests = false,
+  scope = {
+    purposes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    specialFeatures: [1, 2]
+  }
 } = {}) => {
   const vendorListRepository = new IABVendorListRepository({gvlFactory})
   const vendorList = await vendorListRepository.getVendorList()
@@ -29,13 +33,19 @@ export const iabGenerateConsent = async ({
     }
   }
   Object.keys(vendorList.purposes).forEach(purpose => {
-    decodedConsent.purpose.consents[purpose] = allPurposeConsents
-    decodedConsent.purpose.legitimateInterests[
-      purpose
-    ] = allPurposeLegitimateInterests
+    decodedConsent.purpose.consents[purpose] =
+      (scope.purposes.includes(parseInt(purpose)) && allPurposeConsents) ||
+      false
+    decodedConsent.purpose.legitimateInterests[purpose] =
+      (scope.purposes.includes(parseInt(purpose)) &&
+        allPurposeLegitimateInterests) ||
+      false
   })
   Object.keys(vendorList.specialFeatures).forEach(specialFeature => {
-    decodedConsent.specialFeatures[specialFeature] = allSpecialFeatures
+    decodedConsent.specialFeatures[specialFeature] =
+      (scope.specialFeatures.includes(parseInt(specialFeature)) &&
+        allSpecialFeatures) ||
+      false
   })
   let vendorsCount = 0
   let vendorsWithPurposes = 0
