@@ -108,7 +108,7 @@ describe('BorosTcf', () => {
 
       equalConsentsValidation(decodedCookie, givenConsent)
     })
-    it.only('should save a consent creating euconsent-v2 and borosTcf cookie with scoped values', async () => {
+    it('should save a consent creating euconsent-v2 and borosTcf cookie with scoped values', async () => {
       const givenGvlVersion = LATEST_GVL_VERSION
       const givenConsent = iabDecodeConsent({
         encodedConsent: COOKIE.LATEST_GVL_ALL_ACCEPTED

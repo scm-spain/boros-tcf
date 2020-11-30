@@ -54,7 +54,7 @@ class CookieConsentRepository extends ConsentRepository {
     const consents = {}
     const scopedVendors = this._scope?.interestConsentVendors || []
     scopedVendors.forEach(key => {
-      consents[key] = vendors[key]
+      consents[key] = vendors[key] === true
     })
     return consents
   }
