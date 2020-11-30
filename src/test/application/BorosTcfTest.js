@@ -108,7 +108,39 @@ describe('BorosTcf', () => {
 
       equalConsentsValidation(decodedCookie, givenConsent)
     })
+    it.only('should save a consent creating euconsent-v2 and borosTcf cookie with scoped values', async () => {
+      const givenGvlVersion = LATEST_GVL_VERSION
+      const givenConsent = iabDecodeConsent({
+        encodedConsent: COOKIE.LATEST_GVL_ALL_ACCEPTED
+      })
+      const givenInterestConsentVendors = [32, 565]
+      const givenScope = {
+        interestConsentVendors: givenInterestConsentVendors
+      }
+      const borosTcf = TestableTcfApiInitializer.create({
+        latestGvlVersion: givenGvlVersion
+      }).init({scope: givenScope})
 
+      await borosTcf.saveUserConsent(givenConsent)
+
+      const euconsentCookieStorage = inject('euconsentCookieStorage')
+      const borosTcfCookieStorage = inject('borosTcfCookieStorage')
+
+      const euconsentV2Cookie = euconsentCookieStorage.load()
+      const borosTcfCookie = borosTcfCookieStorage.load()
+
+      const decodedEuconsentV2Cookie = iabDecodeConsent({
+        encodedConsent: euconsentV2Cookie
+      })
+      const decodedBorosTcfCookie = JSON.parse(atob(borosTcfCookie))
+      const borosTcfInterestVendors =
+        decodedBorosTcfCookie?.vendor?.consents || {}
+
+      equalConsentsValidation(decodedEuconsentV2Cookie, givenConsent)
+      givenInterestConsentVendors.forEach(key => {
+        expect(borosTcfInterestVendors[key], 'failed check: ' + key).to.be.true
+      })
+    })
     it('should replace an old consent and save new one with the latest vendor list', async () => {
       const givenGvlVersion = LATEST_GVL_VERSION
       const givenOldConsentCookie = COOKIE.OLDEST_GVL_ALL_ACCEPTED

@@ -19,9 +19,6 @@ export class BrowserCookieStorage extends CookieStorage {
   }
 
   save({data}) {
-    if (typeof data !== 'string') {
-      data = this._parseData({data})
-    }
     const domain = this._parseDomain()
     const cookieValue = [
       `${this._cookieName}=${data}`,
@@ -69,24 +66,6 @@ export class BrowserCookieStorage extends CookieStorage {
       .filter((_, index) => index <= 1)
       .reverse()
     return parts.length === 1 ? parts[0] : `${DOT}${parts.join('.')}`
-  }
-
-  _parseData({data}) {
-    const {
-      policyVersion,
-      cmpVersion,
-      purpose: {consents},
-      specialFeatures
-    } = data
-    const usedData = {
-      policyVersion,
-      cmpVersion,
-      purpose: {consents},
-      specialFeatures
-    }
-    const stringData = JSON.stringify(usedData)
-    const base64Data = this._window.btoa(stringData)
-    return base64Data
   }
 }
 
