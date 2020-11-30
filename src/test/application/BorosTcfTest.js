@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import 'jsdom-global/register'
 import {expect} from 'chai'
 import {TestableTcfApiInitializer} from '../testable/infrastructure/bootstrap/TestableTcfApiInitializer'
