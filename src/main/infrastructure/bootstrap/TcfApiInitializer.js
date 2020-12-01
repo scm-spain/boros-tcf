@@ -71,7 +71,10 @@ class TcfApiInitializer {
         singleton(LoadConsentService, () => new LoadConsentService())
 
         // Repositories
-        singleton(ConsentRepository, () => new CookieConsentRepository())
+        singleton(
+          ConsentRepository,
+          () => new CookieConsentRepository({window, scope})
+        )
         singleton(StatusRepository, () => new InMemoryStatusRepository())
         singleton(VendorListRepository, () => new IABVendorListRepository())
 
