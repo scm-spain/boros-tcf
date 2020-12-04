@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@iabtcf/core": "1.1.4",
-    "brusc": "1",
+    "brusc": "2",
     "core-js": "3"
   }
 }
