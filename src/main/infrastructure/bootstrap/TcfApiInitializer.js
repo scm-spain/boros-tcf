@@ -1,5 +1,5 @@
-import {iocModule} from 'brusc'
-import {IOC_MODULE} from '../../core/ioc/ioc'
+import Brusc from 'brusc'
+import {inject} from '../../core/ioc/ioc'
 import {PingUseCase} from '../../application/services/ping/PingUseCase'
 import {GetVendorListUseCase} from '../../application/services/vendorlist/GetVendorListUseCase'
 import {LoadUserConsentUseCase} from '../../application/services/vendorconsent/LoadUserConsentUseCase'
@@ -43,69 +43,70 @@ class TcfApiInitializer {
     if (typeof window !== 'undefined' && window.__tcfapi_boros) {
       return window.__tcfapi_boros
     }
-    iocModule({
-      module: IOC_MODULE,
-      initializer: ({singleton}) => {
-        // Application Facades
-        singleton(TcfApiController, () => new TcfApiController())
-        singleton(TcfApiV2, () => new TcfApiV2())
+    Brusc.define(inject)
+      // Application Facades
+      .singleton(TcfApiController, () => new TcfApiController())
+      .singleton(TcfApiV2, () => new TcfApiV2())
 
-        // Use Cases
-        singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
-        singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
-        singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
-        singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
-        singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
-        singleton(PingUseCase, () => new PingUseCase())
-        singleton(
-          RemoveEventListenerUseCase,
-          () => new RemoveEventListenerUseCase()
-        )
-        singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
+      // Use Cases
+      .singleton(AddEventListenerUseCase, () => new AddEventListenerUseCase())
+      .singleton(ChangeUiVisibleUseCase, () => new ChangeUiVisibleUseCase())
+      .singleton(GetTCDataUseCase, () => new GetTCDataUseCase())
+      .singleton(GetVendorListUseCase, () => new GetVendorListUseCase())
+      .singleton(LoadUserConsentUseCase, () => new LoadUserConsentUseCase())
+      .singleton(PingUseCase, () => new PingUseCase())
+      .singleton(
+        RemoveEventListenerUseCase,
+        () => new RemoveEventListenerUseCase()
+      )
+      .singleton(SaveUserConsentUseCase, () => new SaveUserConsentUseCase())
 
-        // Services
-        singleton(ConsentDecoderService, () => new IABConsentDecoderService())
-        singleton(ConsentEncoderService, () => new IABConsentEncoderService())
-        singleton(DomainEventBus, () => new DomainEventBus({reporter}))
-        singleton(EventStatusService, () => new EventStatusService())
-        singleton(LoadConsentService, () => new LoadConsentService())
+      // Services
+      .singleton(ConsentDecoderService, () => new IABConsentDecoderService())
+      .singleton(ConsentEncoderService, () => new IABConsentEncoderService())
+      .singleton(DomainEventBus, () => new DomainEventBus({reporter}))
+      .singleton(EventStatusService, () => new EventStatusService())
+      .singleton(LoadConsentService, () => new LoadConsentService())
 
-        // Repositories
-        singleton(
-          ConsentRepository,
-          () => new CookieConsentRepository({window, scope})
-        )
-        singleton(StatusRepository, () => new InMemoryStatusRepository())
-        singleton(VendorListRepository, () => new IABVendorListRepository())
+      // Repositories
+      .singleton(
+        ConsentRepository,
+        () => new CookieConsentRepository({window, scope})
+      )
+      .singleton(StatusRepository, () => new InMemoryStatusRepository())
+      .singleton(VendorListRepository, () => new IABVendorListRepository())
 
-        // Factories
-        singleton(ConsentFactory, () => new ConsentFactory({scope}))
-        singleton(GVLFactory, () => new GVLFactory({language}))
-        singleton(ObservableFactory, () => new ObservableFactory())
-        singleton(UseCaseAdapterFactory, () => new UseCaseAdapterFactory())
+      // Factories
+      .singleton(ConsentFactory, () => new ConsentFactory({scope}))
+      .singleton(GVLFactory, () => new GVLFactory({language}))
+      .singleton(ObservableFactory, () => new ObservableFactory())
+      .singleton(UseCaseAdapterFactory, () => new UseCaseAdapterFactory())
 
-        // Tooling & Helpers
-        singleton(
-          'euconsentCookieStorage',
-          () =>
-            new BrowserCookieStorage({
-              domain: window.location.hostname,
-              window,
-              cookieName: VENDOR_CONSENT_COOKIE_NAME
-            })
-        )
-        singleton(
-          'borosTcfCookieStorage',
-          () =>
-            new BrowserCookieStorage({
-              domain: window.location.hostname,
-              window,
-              cookieName: BOROS_CONSENT_COOKIE_NAME
-            })
-        )
-      },
-      adapter: tcfInstanceAdapter
-    })
+      // Tooling & Helpers
+      .singleton(
+        'euconsentCookieStorage',
+        () =>
+          new BrowserCookieStorage({
+            domain: window.location.hostname,
+            window,
+            cookieName: VENDOR_CONSENT_COOKIE_NAME
+          })
+      )
+      .singleton(
+        'borosTcfCookieStorage',
+        () =>
+          new BrowserCookieStorage({
+            domain: window.location.hostname,
+            window,
+            cookieName: BOROS_CONSENT_COOKIE_NAME
+          })
+      )
+      .adapter({
+        name: 'UseCaseAdatper',
+        match: () => true,
+        adapt: tcfInstanceAdapter
+      })
+      .create()
 
     const registryService = new TcfApiRegistryService()
     const borosTcf = new BorosTcf()
