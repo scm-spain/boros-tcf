@@ -24,7 +24,7 @@ class TcfApiController {
 
   _reject(callback) {
     try {
-      callback(null, false)
+      typeof callback === 'function' && callback(null, false)
     } catch (ignored) {}
   }
 
