@@ -72,7 +72,7 @@ export class EventStatusService {
     const tcData = this._getTCDataUseCase.execute()
     tcData.listenerId = reference
 
-    callback(tcData, true)
+    typeof callback === 'function' && callback(tcData, true)
   }
 
   removeEventListener({callback, listenerId}) {
@@ -80,7 +80,7 @@ export class EventStatusService {
       eventName: EVENT_STATUS,
       reference: listenerId
     })
-    callback(success)
+    typeof callback === 'function' && callback(success)
   }
 }
 
