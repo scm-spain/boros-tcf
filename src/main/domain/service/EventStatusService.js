@@ -65,7 +65,7 @@ export class EventStatusService {
         observer: callback
       })
     } catch (error) {
-      callback(null, false)
+      typeof callback === 'function' && callback(null, false)
       return
     }
 

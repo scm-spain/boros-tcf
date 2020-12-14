@@ -33,11 +33,13 @@ class TcfApiV2 {
   }
 
   getTCData(callback, vendorIds) {
-    callback(this._getTCDataUseCase.execute({vendorIds}), true)
+    typeof callback === 'function' &&
+      callback(this._getTCDataUseCase.execute({vendorIds}), true)
   }
 
   ping(callback) {
-    callback(this._pingUseCase.execute(), true)
+    typeof callback === 'function' &&
+      callback(this._pingUseCase.execute(), true)
   }
 
   addEventListener(callback) {
@@ -51,10 +53,13 @@ class TcfApiV2 {
   getVendorList(callback, vendorListVersion) {
     return this._getVendorListUseCase
       .execute({vendorListVersion})
-      .then(vendorList => callback(vendorList, true))
+      .then(
+        vendorList =>
+          typeof callback === 'function' && callback(vendorList, true)
+      )
       .catch(error => {
         console.log('Error obtaining the vendor list', error)
-        callback(null, false)
+        typeof callback === 'function' && callback(null, false)
       })
   }
 }
