@@ -41,7 +41,8 @@ export class BrowserCookieStorage extends CookieStorage {
       `${this._cookieName}=`,
       `path=${VENDOR_CONSENT_COOKIE_DEFAULT_PATH}`,
       `domain=${host}`,
-      `expires= Thu, 01 Jan 1970 00:00:00 GMT`
+      `expires= Thu, 01 Jan 1970 00:00:00 GMT`,
+      `SameSite=${VENDOR_CONSENT_COOKIE_SAME_SITE_LOCAL_VALUE}`
     ]
     this._window.document.cookie = cookieParts.join(';') // delete cookie with subdomain
     const consentCookiesAfterDeletion = this._getConsentCookies()
