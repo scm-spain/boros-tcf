@@ -50,7 +50,7 @@ export const VENDOR_LIST_LATEST_VERSION = 'LATEST'
  * Base endpoint to get access to remote Vendor List resources
  */
 export const VENDOR_LIST_ENDPOINT =
-  'https://ms-adit--operations-gateway.spain.advgo.net/borostcf/v2/vendorlist'
+  'https://adit.spain.advgo.net/borostcf/v2/vendorlist'
 
 /**
  * Country code of the country that determines the legislation of
