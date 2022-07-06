@@ -36,8 +36,8 @@ export class GVLFactory {
   }
 
   _setStaticGVLParameters() {
-    GVL.languageFilename = `${VENDOR_LIST_LATEST_VERSION}?language=[LANG]`
-    GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}?language=${this._language}`
-    GVL.versionedFilename = `[VERSION]?language=${this._language}`
+    GVL.languageFilename = `${VENDOR_LIST_LATEST_VERSION}/[LANG]`
+    GVL.latestFilename = `${VENDOR_LIST_LATEST_VERSION}/${this._language}`
+    GVL.versionedFilename = `[VERSION]/${this._language}`
   }
 }
