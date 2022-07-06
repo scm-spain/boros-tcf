@@ -87,7 +87,7 @@ export class TestableGVLFactory extends GVLFactory {
 
   _nockKoResponse({version, language}) {
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get(`/${version}?language=${language}`)
+      .get(`/${version}/${language}`)
       .replyWithError({
         message: 'Unavailable',
         code: 'WHATEVER_ERROR'
@@ -96,7 +96,7 @@ export class TestableGVLFactory extends GVLFactory {
 
   _nockOkResponse({version, language, vendorList}) {
     nock('http://mock.borostcf.com/borostcf/v2/vendorlist')
-      .get(`/${version}?language=${language}`)
+      .get(`/${version}/${language}`)
       .reply(200, vendorList, {
         'access-control-allow-origin': '*',
         'access-control-allow-credentials': 'true'
